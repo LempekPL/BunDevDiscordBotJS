@@ -1,0 +1,58 @@
+{
+	"settings": {
+        "ownerid": "ownerid",
+        "subowners": [],
+        "prefix": "(default)bot prefix",
+        "botname": "your bot name",
+        "betaroleid": "role id for betatesters",
+        "supportServer": "support server guild id",
+        "emojiServer": "emoji server guild id"
+    }, 
+    "tokens": {
+		"token": "bot token here",
+        "spotify": {
+            "id":"https://developer.spotify.com/dashboard/applications/",
+            "secret":""
+        },
+        "badosz": "https://obrazium.com/",
+        "lempek": "my api"
+	},
+    "lavalink":{
+        "host": "ip",
+        "port": 80,
+        "restport": 2333,
+        "password": "pass"
+	},
+	"database": {
+		"host": "ip",
+		"port": 28015,
+		"db": "database",
+		"username": "username",
+		"password": "pass"
+    },
+    "c":[
+        "embed colors",
+        "you can add how many you want",
+        "in hex ofc #d41c1c",
+        "#d4d41c"
+    ],
+    "webhooks": {
+        "image": "webhook link",
+        "all": "webhook link",
+        "guilds": "webhook link",
+        "reports": "webhook link"
+    },
+    "socialLinks":{
+        "youtube":"https://www.youtube.com/channel/UCL6-HSEiD28U5ddwL5l9fFA",
+        "twitch":"https://www.twitch.tv/lempekpl",
+        "twitter":"https://twitter.com/LEMPEKPL",
+        "reddit":"https://www.reddit.com/user/LempekPL",
+        "github": "https://github.com/LempekPL",
+        "steam":"https://steamcommunity.com/id/LempekPL",
+        "ownwebsite":"https://lempek.tk",
+        "spotify": "https://open.spotify.com/user/uzw52te8sueqlr05dfgxxbit9",
+        "soundcloud": "https://soundcloud.com/lempekpl",
+        "instagram":"",
+        "facebook":""
+    }
+}
