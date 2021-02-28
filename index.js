@@ -23,6 +23,7 @@ let ShoukakuOptions = {
 class BotClient extends Discord.Client {
     queue = {};
     util = {};
+    db = {};
     config = config;
     shoukaku = new Shoukaku(this, LavalinkServer, ShoukakuOptions);
 }
@@ -31,6 +32,8 @@ class BotClient extends Discord.Client {
 let client = new BotClient();
 require('./client/events/eventsLoader')(client);
 require('./client/commandLoader')(client);
+require('./client/commandLoader')(client);
+client.db = require("./util/db.js");
 
 // connecting bot
 client.login(config.tokens.token).catch(console.error);

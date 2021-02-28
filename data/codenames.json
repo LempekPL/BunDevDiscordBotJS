@@ -26,5 +26,19 @@
         "zjimagemanipulation": "imgman",
         "zother":"other",
         "zowner":"owner"
-    }
+    },
+    "codes": [
+        "basic",
+        "beta",
+        "lkapi",
+        "mod",
+        "user",
+        "music",
+        "txt",
+        "txtman",
+        "img",
+        "imgman",
+        "other",
+        "owner"
+    ]
 }

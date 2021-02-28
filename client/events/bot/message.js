@@ -1,6 +1,4 @@
 let Discord = require('discord.js');
-let config = require("../../../data/config.json");
-let db = require('../../../util/db.js');
 let cooldown = new Set();
 let slowmode;
 
@@ -8,22 +6,22 @@ module.exports = async (message, client) => {
     //filter
     if (message.author.bot) return;
     // checking database
-    await db.checkGuild(message.guild.id);
-    await db.checkUser(message.author.id);
-    await db.checkBot(client.user.id);
+    await client.db.checkGuild(message.guild.id);
+    await client.db.checkUser(message.author.id);
+    await client.db.checkBot(client.user.id);
 
-    let prefix = await db.get("guilds", message.guild.id, "prefix");
-    if (prefix == undefined) prefix = config.settings.prefix;
+    let prefix = await client.db.get("guilds", message.guild.id, "prefix");
+    if (prefix == undefined) prefix = client.config.settings.prefix;
     if (message.content == `<@${client.user.id}>` || message.content == `<@!${client.user.id}>`) {
         message.reply("My prefix is `" + prefix + "`");
     }
     if (!message.content.startsWith(prefix)) return;
 
     //bot global bans
-    let gbans = await db.get("bot", client.user.id, "globalBans");
+    let gbans = await client.db.get("bot", client.user.id, "globalBans");
     if (gbans.length > 0) {
         if (gbans.includes(message.author.id)) {
-            await require("../../../util/util").gban(message, client);
+            await client.util.gban(message, client);
             return;
         }
     }
@@ -57,26 +55,26 @@ async function runcmd(command, commandfile, args, message, client) {
             await commandfile.run(client, message, args);
 
             // used commands counting
-            let comCount = await db.get("bot", client.user.id, "commands");
-            let userCommand = await db.get("users", message.author.id, "favCommands");
+            let comCount = await client.db.get("bot", client.user.id, "commands");
+            let userCommand = await client.db.get("users", message.author.id, "favCommands");
             await comCount++;
             if (!userCommand[commandfile.info.name]) {
                 userCommand[commandfile.info.name] = 1;
             } else {
                 userCommand[commandfile.info.name]++;
             }
-            await db.update("bot", client.user.id, "commands", comCount);
-            await db.update("users", message.author.id, "favCommands", userCommand);
+            await client.db.update("bot", client.user.id, "commands", comCount);
+            await client.db.update("users", message.author.id, "favCommands", userCommand);
 
 
             // ignoring owners
-            if (message.author.id != config.settings.ownerid || !config.settings.subowners.includes(message.author.id)) {
+            if (!(message.author.id == client.config.settings.ownerid || client.config.settings.subowners.includes(message.author.id))) {
                 // ingnore cooldown for server administrators
                 if (!message.member.hasPermission("ADMINISTRATOR")) {
                     cooldown.add(message.author.id);
                 }
                 // logging used command
-                let whook = new Discord.WebhookClient(config.webhooks.all.split("/")[5], config.webhooks.all.split("/")[6]);
+                let whook = new Discord.WebhookClient(client.config.webhooks.all.split("/")[5], client.config.webhooks.all.split("/")[6]);
                 let loggen = new Discord.MessageEmbed;
                 loggen.setTitle(message.author.tag + " used command: " + command);
                 loggen.setDescription(message.content);

@@ -94,7 +94,7 @@ let bot = {
 
 // creating tables in database
 let connection;
-let load = async function load() {
+module.exports.load = async () => {
     try {
         connection = await r.connect(database);
         await Promise.all([
@@ -110,7 +110,7 @@ let load = async function load() {
 };
 
 // checking if the guild data is correct to the template
-let checkGuild = async function checkGuild(gid) {
+module.exports.checkGuild = async (gid) => {
     try {
         let guild = await r.table('guilds').get(gid).toJSON().run(connection);
         let baziz = await JSON.parse(guild);
@@ -138,7 +138,7 @@ let checkGuild = async function checkGuild(gid) {
 };
 
 // checking if the user data is correct to the template
-let checkUser = async function checkUser(uid) {
+module.exports.checkUser = async (uid) => {
     try {
         let user = await r.table('users').get(uid).toJSON().run(connection);
         let baziz = await JSON.parse(user);
@@ -166,7 +166,7 @@ let checkUser = async function checkUser(uid) {
 };
 
 // checking if the bot data is correct to the template
-let checkBot = async function checkBot(bid) {
+module.exports.checkBot = async (bid) => {
     try {
         let bote = await r.table('bot').get(bid).toJSON().run(connection);
         let baziz = await JSON.parse(bote);
@@ -199,7 +199,7 @@ let checkBot = async function checkBot(bid) {
     k - data to update
     v - new value
 */
-let update = async function update(obj, id, k, v) {
+module.exports.update = async (obj, id, k, v) => {
     if (obj && id && k && v) {
         try {
             await r.table(obj).get(id).update({
@@ -220,7 +220,7 @@ let update = async function update(obj, id, k, v) {
     id - id in the table
     name - data to get
 */
-let get = async function get(obj, id, name) {
+module.exports.get = async (obj, id, name) => {
     if (id) {
         if (id == null) return false;
         try {
@@ -242,7 +242,7 @@ let get = async function get(obj, id, name) {
 /*  obj - table
     id - id in the table
 */
-let del = async function del(obj, id) {
+module.exports.del = async (obj, id) => {
     if (id) {
         if (id == null) return false;
         try {
@@ -256,11 +256,3 @@ let del = async function del(obj, id) {
         return false;
     }
 };
-
-exports.checkGuild = checkGuild;
-exports.checkUser = checkUser;
-exports.checkBot = checkBot;
-exports.load = load;
-exports.update = update;
-exports.get = get;
-exports.del = del;

@@ -1,3 +1,5 @@
+let db = require("../db.js");
+
 module.exports.blockCheck = async (type, message) => {
     let discatgui = await db.get("guilds", message.guild.id, "disabledCategory");
     let discatuse = await db.get("users", message.author.id, "disabledCategory");

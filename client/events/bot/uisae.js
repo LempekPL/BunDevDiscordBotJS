@@ -1,14 +1,11 @@
 //universal information system about errors //? client.emit("uisae", "X##", message, "");
 let Discord = require('discord.js');
-let config = require("../../../data/config.json");
-let db = require('../../../util/db.js');
-let c = config.c;
 
 module.exports = async (error = null, message, addinfo = null, client) => {
-    let i = Math.floor(Math.random() * (c.length - 1) + 1);
-    let ce = c[i];
-    let prefix = await db.get("guilds", message.guild.id, "prefix");
-    if (prefix == undefined || prefix == null || !prefix) prefix = config.settings.prefix;
+    let i = Math.floor(Math.random() * (client.config.c.length - 1) + 1);
+    let ce = client.config.c[i];
+    let prefix = await client.db.get("guilds", message.guild.id, "prefix");
+    if (prefix == undefined || prefix == null || !prefix) prefix = client.config.settings.prefix;
     let embed = new Discord.MessageEmbed();
     embed.setColor(ce);
     switch (error) {
@@ -133,11 +130,11 @@ module.exports = async (error = null, message, addinfo = null, client) => {
             embed.addField(`Bot doesn't know what error is it. Additonal info:`, addinfo);
             break;
     }
-    if (config.settings.subowners.length == 0) {
-        embed.setFooter("© " + client.users.cache.get(config.settings.ownerid).username, client.users.cache.get(config.settings.ownerid).avatarURL());
+    if (client.config.settings.subowners.length == 0) {
+        embed.setFooter("© " + client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
     } else {
-        let owners = client.users.cache.get(config.settings.ownerid).username
-        config.settings.subowners.forEach(sub => {
+        let owners = client.users.cache.get(client.config.settings.ownerid).username
+        client.config.settings.subowners.forEach(sub => {
             owners += ` & ${client.users.cache.get(sub).username}`;
         });
         embed.setFooter("© " + owners, client.user.avatarURL());

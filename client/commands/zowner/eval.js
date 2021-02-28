@@ -1,9 +1,4 @@
 let Discord = require("discord.js");
-let db = require('../../../util/db.js');
-let util = require("../../../util/util");
-let config = require("../../../data/config.json");
-let index = require("../../../index.js");
-let prefix = config.prefix;
 
 module.exports.info = {
     name: "eval",
@@ -13,9 +8,9 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    let i = Math.floor(Math.random() * config.c.length);
-    let ce = config.c[i];
-    if (message.author.id != config.settings.ownerid  && !config.settings.subowners.includes(message.author.id)) return client.emit("uisae", "B99", message, "");
+    let i = Math.floor(Math.random() * client.config.c.length);
+    let ce = client.config.c[i];
+    if (message.author.id != client.config.settings.ownerid  && !client.config.settings.subowners.includes(message.author.id)) return client.emit("uisae", "B99", message, "");
     let evalv = null;
     let text = args.slice(0).join(" ");
     try {
@@ -30,7 +25,7 @@ module.exports.run = async (client, message, args) => {
     eembed.setTitle("INPUT:");
     eembed.setDescription("```js\n" + text + "\n```");
     eembed.addField("OUTPUT:", "```js\n" + evalv + "\n```");
-    if (!String(evalv).includes(config.tokens.token)) {
+    if (!String(evalv).includes(client.config.tokens.token)) {
         message.channel.send(eembed);
     }
 }

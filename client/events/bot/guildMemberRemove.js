@@ -1,6 +1,6 @@
 let db = require("../../../util/db.js");
 
-module.exports = async member => {
+module.exports = async (member) => {
     await db.get("guilds",member.guild.id,"goodbye").then(goodbye => {
         if(goodbye == undefined || goodbye == null || !goodbye) return;
         if(!goodbye.enabled || goodbye.msg == "" || goodbye.channel == "") return;

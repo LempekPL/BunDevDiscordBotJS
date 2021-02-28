@@ -1,7 +1,5 @@
-let db = require("../../../util/db.js");
-
 module.exports = async (oldState, newState, client) => {
-    await db.get("guilds",newState.guild.id,"voiceBans").then(async bans => {
+    await client.db.get("guilds",newState.guild.id,"voiceBans").then(async bans => {
         var vChannel = newState.channel;
         if(!vChannel) return;
         if(!bans) return;

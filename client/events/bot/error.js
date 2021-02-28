@@ -1,3 +1,5 @@
+let Discord = require("discord.js");
+
 module.exports = (err) => {
     console.log("Crash:");
     console.log(err);

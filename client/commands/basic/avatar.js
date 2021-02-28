@@ -1,8 +1,4 @@
 let Discord = require("discord.js");
-let db = require('../../../util/db');
-let util = require("../../../util/util");
-let config = require("../../../data/config.json");
-let whook = new Discord.WebhookClient(config.webhooks.image.split("/")[5], config.webhooks.image.split("/")[6]);
 let allowedformat = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
 let allowedsize = Array.from({
     length: 9
@@ -18,10 +14,11 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await util.blockCheck(util.codename(__dirname),message)) return;
-    let i = Math.floor(Math.random() * config.c.length);
-    let ce = config.c[i];
-    let prefix = await db.get("guilds",message.guild.id,"prefix");
+    if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
+    let i = Math.floor(Math.random() * client.config.c.length);
+    let ce = client.config.c[i];
+    let whook = new Discord.WebhookClient(client.config.webhooks.image.split("/")[5], client.config.webhooks.image.split("/")[6]);
+    let prefix = await client.db.get("guilds",message.guild.id,"prefix");
     let embed = new Discord.MessageEmbed;
     let img = {
         format: 'png',
@@ -72,7 +69,7 @@ module.exports.run = async (client, message, args) => {
                 > default: true\n
                 > -h or --help shows this info`)
                 embed.setColor(ce)
-                embed.setFooter("© "+client.users.cache.get(config.settings.ownerid).username, client.users.cache.get(config.settings.ownerid).avatarURL());
+                embed.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
                 embed.setTimestamp();
                 return message.channel.send(embed);
     
@@ -82,7 +79,7 @@ module.exports.run = async (client, message, args) => {
         }
     }
 
-    util.searchUser(message, userselect).then(user => {
+    client.util.searchUser(message, userselect).then(user => {
         if (args[1] == "gif") {
             img.format = user.avatar.startsWith('a_') ? 'gif' : 'png';
         };
@@ -108,11 +105,11 @@ module.exports.run = async (client, message, args) => {
         }));
         embed.addField("Use for more info", `${prefix}avatar --help`)
         embed.setColor(ce)
-        if (config.settings.subowners.length==0) {
-            embed.setFooter("© "+client.users.cache.get(config.settings.ownerid).username, client.users.cache.get(config.settings.ownerid).avatarURL());
+        if (client.config.settings.subowners.length==0) {
+            embed.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
         } else {
-            let owners = client.users.cache.get(config.settings.ownerid).username
-            config.settings.subowners.forEach(sub => {
+            let owners = client.users.cache.get(client.config.settings.ownerid).username
+            client.config.settings.subowners.forEach(sub => {
                 owners+=` & ${client.users.cache.get(sub).username}`;
             });
             embed.setFooter("© "+owners, client.user.avatarURL());
@@ -140,11 +137,11 @@ module.exports.run = async (client, message, args) => {
         ema.addField("Message ID", message.id);
         ema.addField("Message Created", message.createdAt);
         ema.addField("Owner", message.author.tag + " (" + message.author.id + ")");
-        if (config.settings.subowners.length==0) {
-            ema.setFooter("© "+client.users.cache.get(config.settings.ownerid).username, client.users.cache.get(config.settings.ownerid).avatarURL());
+        if (client.config.settings.subowners.length==0) {
+            ema.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
         } else {
-            let owners = client.users.cache.get(config.settings.ownerid).username
-            config.settings.subowners.forEach(sub => {
+            let owners = client.users.cache.get(client.config.settings.ownerid).username
+            client.config.settings.subowners.forEach(sub => {
                 owners+=` & ${client.users.cache.get(sub).username}`;
             });
             ema.setFooter("© "+owners, client.user.avatarURL());
@@ -162,7 +159,7 @@ module.exports.run = async (client, message, args) => {
     async function yes(embed, ema) {
         spec = await message.channel.send(embed)
         ema.addField("Bot Message Link", "https://discordapp.com/channels/" + message.guild.id + "/" + message.channel.id + "/" + spec.id);
-        if (message.author.id != config.settings.ownerid) {
+        if (message.author.id != client.config.settings.ownerid) {
             whook.send(ema);
         }
     }

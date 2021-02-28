@@ -1,33 +1,33 @@
 
-module.exports.searchUser = (message, string, returnAuthor = false) => {
+module.exports.searchUser = (message, string, returnAuthor = true) => {
+    return new Promise((resolve, reject) => {
         if (message.mentions.users.first() == null) {
-            if (string == null) {
+            if (string == null || string.startsWith("#")) {
                 if (returnAuthor) {
-                    return message.author;
+                    return resolve(message.author);
                 } else {
-                    return null;
+                    return reject(message.author);
                 }
             }
-            if (message.guild.members.cache.get(string)) {
-                return message.client.users.cache.get(string);
+            if (message.guild.members.cache.get(string) != undefined) {
+                return resolve(message.client.users.cache.get(string));
             }
             let zn = false;
             message.guild.members.cache.forEach(member => {
                 if (zn) return;
                 if (member.user.username.toLowerCase().includes(string.toLowerCase())) {
-                    zn = member.user;
+                    zn = true;
+                    return resolve(member.user);
                 }
             });
-            if (!zn) {
-                if (returnAuthor) {
-                    return message.author;
-                } else {
-                    return null;
-                }
-            } else {
-                return zn;
-            }
+            if (!zn)
+                if (returnAuthor) resolve(message.author);
+                else reject(message.author);
         } else {
-            return message.mentions.users.first();
+            resolve(message.mentions.users.first());
         }
+    }).catch(err => {
+        message.channel.send(err)
+    });
+        
 };

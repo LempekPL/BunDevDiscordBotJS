@@ -1,4 +1,4 @@
-module.exports.daten = (date) => {
+module.exports.dateFull = (date) => {
     let d = new Date(date);
 
     let second = 1000;

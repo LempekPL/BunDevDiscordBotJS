@@ -6,8 +6,8 @@ module.exports = (client) => {
     client.on('message', (message) => reqEvent('message')(message, client));
     client.on('error', (err) => reqEvent('error')(err));
     client.on("uisae", (error, message, addinfo) => reqEvent('uisae')(error, message, addinfo, client));
-    client.on('guildCreate', (guild) => reqEvent('guildCreate')(guild));
-    client.on('guildDelete', (guild) => reqEvent('guildDelete')(guild));
+    client.on('guildCreate', (guild) => reqEvent('guildCreate')(client, guild));
+    client.on('guildDelete', (guild) => reqEvent('guildDelete')(client, guild));
     client.on('guildMemberAdd', (member) => reqEvent('guildMemberAdd')(member));
     client.on('guildMemberRemove', (member) => reqEvent('guildMemberRemove')(member));
     client.shoukaku.on('ready', (name) => reqMusicEvent('ready')(client,name));
