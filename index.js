@@ -24,6 +24,8 @@ class BotClient extends Discord.Client {
     queue = {};
     util = {};
     db = {};
+    words = {};
+    wordsCom = {};
     config = config;
     shoukaku = new Shoukaku(this, LavalinkServer, ShoukakuOptions);
 }

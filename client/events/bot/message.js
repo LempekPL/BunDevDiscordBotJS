@@ -3,7 +3,7 @@ let cooldown = new Set();
 let slowmode;
 
 module.exports = async (message, client) => {
-    //filter
+    // filter
     if (message.author.bot) return;
     // checking database
     await client.db.checkGuild(message.guild.id);
@@ -17,7 +17,7 @@ module.exports = async (message, client) => {
     }
     if (!message.content.startsWith(prefix)) return;
 
-    //bot global bans
+    // bot global bans
     let gbans = await client.db.get("bot", client.user.id, "globalBans");
     if (gbans.length > 0) {
         if (gbans.includes(message.author.id)) {
@@ -26,6 +26,17 @@ module.exports = async (message, client) => {
         }
     }
 
+    // load words to client
+    langu = await client.db.get("guilds", message.guild.id, "language");
+    if (langu.force) {
+        lang = await client.db.get("guilds", message.guild.id, "language");
+    } else {
+        lang = await client.db.get("users", message.author.id, "language");
+    }
+    client.words = client.util.langM(lang.lang);
+    client.wordsCom = client.util.langM(lang.commands);
+
+    // get args from message
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
     let command = args.shift().toLowerCase();
     let cmod = message.content.split(" ")[0];

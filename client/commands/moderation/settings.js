@@ -70,6 +70,10 @@ module.exports.run = async (client, message, args) => {
             > --welcome --channel <#channel or channel id>\n> --welcome --message <welcome message>\n> --welcome enable/disable
             **Goodbye** (g)
             > --goodbye --channel <#channel or channel id>\n> --goodbye --message <goodbye message>\n> --goodbye enable/disable
+            ~~**Language**~~
+            > ~~--language en/pl~~
+            ~~**Command Language**~~
+            > ~~--commandlanguage en/pl~~
             \n
             You can add to welcome/goodbye message:
             > #USER# - username\n> #MENTION# - mention\n> #TAG# - user tag, e. g. #1234\n> #GUILD# - guild name\n> #MEMBERCOUNT# - count of all members with counting bots\n> #USERCOUNT# - count of all members without counting bots

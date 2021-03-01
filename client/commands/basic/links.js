@@ -16,17 +16,13 @@ let emo = {
 module.exports.info = {
     name: "links",
     aliases: ["invite", "botinvite", "giveinvite","updates", "trello","roadmap"],
-    example: "`#PREFIX##COMMAND#`",
-    info: "Shows links to add bot, support server and bot website(in maintenance)",
     tags: ["botinvite", "giveinvite", "invite", "support", "server","roadmap","updates","future","links","websites"]
 }
 
 module.exports.run = async (client, message, args) => {
     if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
-    let i = Math.floor(Math.random() * client.config.c.length);
-    let ce = client.config.c[i];
     let embed = new Discord.MessageEmbed();
-    embed.setColor(ce);
+    embed.setColor(client.util.randomColorConfig(client));
     embed.setTitle(`Links:`);
     embed.addField(`Support Server`, `[<:bot:815379078776619070> [DISCORD LINK]](https://discord.gg/e3uQ6aC)`);
     embed.addField(`Invite`, `[<:bunbun_green_ear:815379123643088936> [BOT LINK]](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8)`);

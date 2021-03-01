@@ -7,28 +7,15 @@ let randomhelpinfo = require("../../../data/randomhelpinfo.json");
 module.exports.info = {
     name: "help",
     aliases: ["h", "?", "info"],
-    example: "`#PREFIX##COMMAND#` or `#PREFIX##COMMAND# <command>` or `#PREFIX##COMMAND# <codename>` or `#PREFIX##COMMAND# <number>` (if other than allinone help display is enabled)",
-    info: "Shows all the commands that you can use. With <command> it will display info about command.",
     tags: ["help", "?", "how", "how to", "info", "basic"]
 }
 
 module.exports.run = async (client, message, args) => {
     if (await client.util.blockCheck(client.util.codename(__dirname), message)) return;
-    // this part can be deleted after betatesting
-    no = 0;
-    client.config.settings.subowners.forEach(sub => {
-        if (message.author.id != sub) {
-            no++;
-        }
-    });
-    if (!client.guilds.cache.get(client.config.settings.supportServer).members.cache.get(message.author.id) && !client.guilds.cache.get(client.config.settings.supportServer).members.cache.get(message.author.id).roles.cache.has(client.config.settings.betaroleid) && message.author.id != client.config.settings.ownerid && no == client.config.settings.subowners.length) return client.emit("uisae", "U11", message, "");
-    // ^
-    let i = Math.floor(Math.random() * client.config.c.length);
-    let ce = client.config.c[i];
     let jj = Math.floor(Math.random() * randomhelpinfo.length);
     let helpinfo = randomhelpinfo[jj];
     let embed = new Discord.MessageEmbed();
-    embed.setColor(ce);
+    embed.setColor(client.util.randomColorConfig(client));
     let prefix = await client.db.get("guilds", message.guild.id, "prefix");
     let warnz = await client.db.get("guilds", message.guild.id, "warn");
     let votekikz = await client.db.get("guilds", message.guild.id, "voteVoiceKick");
@@ -147,7 +134,7 @@ module.exports.run = async (client, message, args) => {
                 for (i = 0; i < cat.length; i++) {
                     let embeda = new Discord.MessageEmbed();
                     comalist[i] = embeda;
-                    comalist[i].setColor(ce);
+                    comalist[i].setColor(client.util.randomColorConfig(client));
                     comalist[i].setFooter(`Page ${i+1}/${cat.length}`);
                     comalist[i].setTimestamp();
                 }
@@ -252,7 +239,7 @@ module.exports.run = async (client, message, args) => {
                 for (i = 0; i < cat.length; i++) {
                     let embeda = new Discord.MessageEmbed();
                     comalist[i] = embeda;
-                    comalist[i].setColor(ce);
+                    comalist[i].setColor(client.util.randomColorConfig(client));
                     comalist[i].setFooter(`Page ${i+1}/${cat.length}`);
                     comalist[i].setTimestamp();
                 }
@@ -338,10 +325,10 @@ module.exports.run = async (client, message, args) => {
         if (!c) {
             embed.setTitle(`Command not found`);
         } else {
-            embed.setTitle(`${c.info.name}`);
+            embed.setTitle(`${client.words.command[c.info.name][c.info.name]}`);
             embed.addField("Category", `${naming.category[c.category]}`);
-            embed.addField("Usage", c.info.example.replace(/#PREFIX#/g, prefix).replace(/#COMMAND#/g, c.info.name));
-            embed.addField("Description", c.info.info.replace(/#PREFIX#/g, prefix).replace(/#COMMAND#/g, c.info.name));
+            embed.addField("Usage", client.words.info[c.info.name].exp.replace(/#PREFIX#/g, prefix).replace(/#COMMAND#/g, client.wordsCom.command[c.info.name][c.info.name]));
+            embed.addField("Description", client.words.info[c.info.name].info.replace(/#PREFIX#/g, prefix).replace(/#COMMAND#/g, client.wordsCom.command[c.info.name][c.info.name]));
             embed.addField(`Blocked`, `Server: ${discatgui.includes(naming.codename[c.category])} User: ${discatuse.includes(naming.codename[c.category])}`);
             if (c.info.aliases) embed.addField(`Aliases`, c.info.aliases.join(", "));
             if (c.info.perms) embed.addField(`Permissions`, c.info.perms);

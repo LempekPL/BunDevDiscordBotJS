@@ -1,0 +1,94 @@
+{
+    "all": {
+
+    },
+    "help": {
+
+    },
+    "info": {
+        "avatar": {
+            "exp": "`#PREFIX##COMMAND# <userid/mention/username>` or `#PREFIX##COMMAND# -h` for more options",
+            "info": "Shows your or someone's else avatar"
+        },
+        "botinfo": {
+            "exp": "`#PREFIX##COMMAND#`",
+            "info": "Shows information about this bot"
+        },
+        "help": {
+            "exp": "`#PREFIX##COMMAND#` or `#PREFIX##COMMAND# <command>` or `#PREFIX##COMMAND# <codename>` or `#PREFIX##COMMAND# <number>` (if other than allinone help display is enabled)",
+            "info": "Shows all the commands that you can use. With <command> it will display info about command" 
+        },
+        "links": {
+            "exp": "`#PREFIX##COMMAND#`",
+            "info": "Shows links to add bot, support server and bot website(in maintenance)"
+        },
+        "ping": {
+            "exp": "`#PREFIX##COMMAND#`",
+            "info": "Shows bot ping"
+        },
+        "serverinfo": {
+            "exp": "`#PREFIX##COMMAND#`",
+            "info": "Shows information about server"
+        },
+        "userinfo": {
+            "exp": "`#PREFIX##COMMAND# <userid/mention/username>`",
+            "info": "Shows information about user"
+        },
+        "": {
+            "exp": "",
+            "info": ""
+        },
+        "": {
+            "exp": "",
+            "info": ""
+        },
+        "": {
+            "exp": "",
+            "info": ""
+        },
+        "": {
+            "exp": "",
+            "info": ""
+        },
+        "": {
+            "exp": "",
+            "info": ""
+        },
+        "": {
+            "exp": "",
+            "info": ""
+        },
+        "": {
+            "exp": "",
+            "info": ""
+        }
+    },
+    "command": {
+        "avatar": {
+            "avatar": "avatar",
+            "format": "format",
+            "dynamic": "dynamic",
+            "size": "size",
+            "user": "user",
+            "help": "help"
+        },
+        "botinfo": {
+            "botinfo": "botinfo"
+        },
+        "help": {
+            "help": "help"
+        },
+        "links": {
+            "links": "links"
+        },
+        "ping": {
+            "ping": "ping"
+        },
+        "serverinfo": {
+            "serverinfo": "serverinfo"
+        },
+        "userinfo": {
+            "userinfo": "userinfo"
+        }
+    }
+}

@@ -3,20 +3,15 @@ let allowedformat = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
 let allowedsize = Array.from({
     length: 9
 }, (e, i) => 2 ** (i + 4));
-let spec;
 
 module.exports.info = {
     name: "avatar",
     aliases: ["av"],
-    example: "`#PREFIX##COMMAND# <userid/mention/username>` or `#PREFIX##COMMAND# -h` for more options",
-    info: "Shows your or someone's else avatar",
     tags: ["picture","avatar","display","basic"]
 }
 
 module.exports.run = async (client, message, args) => {
     if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
-    let i = Math.floor(Math.random() * client.config.c.length);
-    let ce = client.config.c[i];
     let whook = new Discord.WebhookClient(client.config.webhooks.image.split("/")[5], client.config.webhooks.image.split("/")[6]);
     let prefix = await client.db.get("guilds",message.guild.id,"prefix");
     let embed = new Discord.MessageEmbed;
@@ -29,34 +24,40 @@ module.exports.run = async (client, message, args) => {
 
     for (let dane = 0; dane < args.length/2; dane++) {
         switch (args[dane]) {
-            case "-f":
-            case "--format":
+            case `-${client.wordsCom.command.avatar.format[0]}`:
+            case `--${client.wordsCom.command.avatar.format}`:
                 if (allowedformat.includes(args[dane+1])) {
                     img.format = args[dane+1];
                 }
                 break;
+
             case "-d":
             case "--dynamic":
+            case `-${client.wordsCom.command.avatar.dynamic[0]}`:
+            case `--${client.wordsCom.command.avatar.dynamic}`:
                 if (args[dane+1] == "false") {
                     img.dynamic = false;
                 } else {
                     img.dynamic = true;
                 }
                 break;
+
             case "-s":
             case "--size":
+            case `-${client.wordsCom.command.avatar.size[0]}`:
+            case `--${client.wordsCom.command.avatar.size}`:
                 if (allowedsize.includes(Number(args[dane+1]))) {
                     img.size = Number(args[dane+1]);
                 }
                 break;
     
-            case "-u":
-            case "--user":
+            case `-${client.wordsCom.command.avatar.user[0]}`:
+            case `--${client.wordsCom.command.avatar.user}`:
                 userselect = args[dane+1];
                 break;
     
-            case "-h":
-            case "--help":
+            case `-${client.wordsCom.command.avatar.help[0]}`:
+            case `--${client.wordsCom.command.avatar.help}`:
                 embed.setTitle("Help avatar");
                 embed.addField("You can use with command", `
                 > -f or --format to define format (only allowed formats png, jpg, jpeg, webp, gif)
@@ -68,7 +69,7 @@ module.exports.run = async (client, message, args) => {
                 > -d or --dynamic if true then it will automaticly change format to gif if possible (only true or false; helpful when you want to use other format than gif)
                 > default: true\n
                 > -h or --help shows this info`)
-                embed.setColor(ce)
+                embed.setColor(client.util.randomColorConfig(client));
                 embed.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
                 embed.setTimestamp();
                 return message.channel.send(embed);
@@ -104,7 +105,7 @@ module.exports.run = async (client, message, args) => {
             size: img.size
         }));
         embed.addField("Use for more info", `${prefix}avatar --help`)
-        embed.setColor(ce)
+        embed.setColor(client.util.randomColorConfig(client));
         if (client.config.settings.subowners.length==0) {
             embed.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
         } else {

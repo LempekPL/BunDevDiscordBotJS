@@ -50,6 +50,11 @@ let guilds = {
     serverEconomy: {
         xp: "0",
         level: "0"
+    },
+    language: {
+        lang: "en",
+        commands: "en",
+        force: false
     }
 };
 
@@ -84,6 +89,10 @@ let users = {
         settings: false,
         options: false
     },
+    language: {
+        lang: "en",
+        commands: "en"
+    }
 }
 
 // this bot database template

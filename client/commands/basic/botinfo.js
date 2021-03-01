@@ -5,18 +5,14 @@ let vers = require("../../../package.json").version;
 module.exports.info = {
     name: "botinfo",
     aliases: ["bi", "bot","binfo","info"],
-    example: "`#PREFIX##COMMAND#`",
-    info: "Shows information about this bot",
     tags: ["bot","info","botinfo","basic"]
 }
 
 module.exports.run = async (client, message, args) => {
     if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
     let msg = await message.channel.send(`Botinfo`);
-    let i = Math.floor(Math.random() * client.config.c.length);
-    let ce = client.config.c[i];
     let embed = new Discord.MessageEmbed();
-    embed.setColor(ce);
+    embed.setColor(client.util.randomColorConfig(client));
     embed.setTitle("Bot Info:");
 
     let sysuptime = client.util.dateFull(os.uptime * 1000);

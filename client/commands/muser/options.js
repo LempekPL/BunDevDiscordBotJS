@@ -55,6 +55,10 @@ module.exports.run = async (client, message, args) => {
             > --randomhelpinfo enable/disable
             **Display** (d)
             > --display --help allinone/pagesone/pagesexp \n> --display --settings allinone/pagesone/pagesexp \n> --display --options allinone/pagesone/pagesexp
+            ~~**Language**~~
+            > ~~--language en/pl~~
+            ~~**Command Language**~~
+            > ~~--commandlanguage en/pl~~
             `);
             break;
 

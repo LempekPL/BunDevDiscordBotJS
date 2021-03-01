@@ -3,15 +3,11 @@ let Discord = require("discord.js");
 module.exports.info = {
     name: "userinfo",
     aliases: ["ui", "user", "uinfo"],
-    example: "`#PREFIX##COMMAND# <userid/mention/username>`",
-    info: "Shows information about user",
     tags: ["user", "info", "userinfo", "basic"]
 }
 
 module.exports.run = async (client, message, args) => {
     if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
-    let i = Math.floor(Math.random() * client.config.c.length);
-    let ce = client.config.c[i];
     let gra = `The user isn't playing anything.`;
     client.util.searchUser(message, args[0]).then(async member => {
         let memberb = await message.guild.member(member);
@@ -78,7 +74,7 @@ module.exports.run = async (client, message, args) => {
         }
 
         let embed = new Discord.MessageEmbed;
-        embed.setColor(ce)
+        embed.setColor(client.util.randomColorConfig(client));
         embed.setAuthor(member.tag, member.avatarURL);
         embed.addField("Username:", member.username, true);
         embed.addField("Tag:", "#" + member.discriminator, true);

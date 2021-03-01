@@ -3,16 +3,11 @@ let Discord = require("discord.js");
 module.exports.info = {
     name: "serverinfo",
     aliases: ["si"],
-    example: "`#PREFIX##COMMAND#`",
-    info: "Shows information about server",
     tags: ["server","serverinfo","info","basic"]
 }
 
 module.exports.run = async (client, message, args) => {
     if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
-    let i = Math.floor(Math.random() * client.config.c.length);
-    let ce = client.config.c[i];
-
     let guild = message.guild;
     let textChannels = guild.channels.cache.filter(c => c.type === 'text');
     let voiceChannels = guild.channels.cache.filter(c => c.type === 'voice');
@@ -24,7 +19,7 @@ module.exports.run = async (client, message, args) => {
     let icon = guild.iconURL();
     
     let embed = new Discord.MessageEmbed()
-    embed.setColor(ce)
+    embed.setColor(client.util.randomColorConfig(client));
     embed.setAuthor(`ServerInfo ${guild.name}`, client.user.avatarURL());
     embed.setThumbnail(icon);
     embed.setDescription("");
