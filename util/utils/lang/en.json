@@ -3,7 +3,7 @@
 
     },
     "help": {
-
+        "help": "To change use `#PREFIX##COMMAND# <value>`"
     },
     "info": {
         "avatar": {
@@ -89,6 +89,67 @@
         },
         "userinfo": {
             "userinfo": "userinfo"
+        }
+    },
+    "dashboard":{
+        "lang":"en",
+        "err": {
+            "notFound": "Not found"
+        },
+        "index": {
+            "login": "Login",
+            "changelog": "Changelog",
+            "edit": "Edit",
+            "deleteData": "Delete data",
+            "kick": "Kick",
+            "inviteBot": "Invite bot",
+            "home": "Main page"
+        },
+        "settings": {
+            "settings": "#TARGET# settings",
+            "saveSettings": "Save changes",
+            "resetChanges": "Reset changes",
+            "deleteSettings": "Delete settings",
+            "deleteData": "Delete data",
+            "commandLanguage": "Command language",
+            "language": "Language"
+        },
+        "navbar": {
+            "avatar": "avatar",
+            "settings": "Settings",
+            "login": "Login",
+            "logout": "Logout",
+            "changelog": "Changelog",
+            "usedCommands": "Used commands"
+        },
+        "others": {
+            "months": [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+            ]
+        },
+        "changelog": {
+            "changelog": "Changelog",
+            "loadall": "Load all",
+            "changes": [{
+                    "ver": "2",
+                    "date": "17 #MAR# 2021",
+                    "list": [
+                        "Bot rewrite",
+                        "Dashboard"
+                    ]
+                }
+            ]
         }
     }
 }

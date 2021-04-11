@@ -22,6 +22,16 @@ module.exports = (client) => {
                     }));
                 } catch (e) {}
             }
+            if (props.info.langs != undefined) {
+                try {
+                    for(let com in props.info.langs) {
+                        client.commands.set(props.info.langs[com], {
+                        category: category,
+                        run: props.run,
+                        info: props.info
+                    })}
+                } catch (e) {}
+            }
         }
     });
 };

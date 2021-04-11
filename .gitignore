@@ -105,3 +105,4 @@ dist
 
 # added manually
 config.json
+.idea

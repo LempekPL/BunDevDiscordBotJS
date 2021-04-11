@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include('./templates/head', { bot, user, path, title: wordsD.settings.settings.replace(/#TARGET#/, guild.name) }) %>
+  <link rel='stylesheet' type="text/css" href='/css/settings.css' />
+  <style>
+  </style>
+</head>
+
+<body>
+  <%- include('./templates/header', { bot, user, path, botData, cookiez}) %>
+  <div class="setbox">
+    <img class="ico" src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png"
+      alt="<%= guild.name %> icon" height="100">
+    <p style="font-size: 50px;"><%= guild.name %></p>
+    <form style="margin-top: 1em;" method="POST">
+      <div class="sbox">
+        <p>Prefix:</p>
+        <input class="s" type="text" name="prefix" value="<%= settings.prefix %>">
+      </div>
+      <div class="sbox">
+        <p>Language:</p>
+        <select class="s" name="language.lang">
+            <option value="en" <%= settings.language.lang == 'en' ? `selected`:``;%>>English</option>
+            <option value="pl" <%= settings.language.lang == 'pl' ? `selected`:``;%>>Polish (Polski)</option>
+        </select><br>
+        <p>Command language</p>
+        <select class="s" name="language.commands">
+          <option value="en" <%= settings.language.commands == 'en' ? `selected`:``;%>>English</option>
+          <option value="pl" <%= settings.language.commands == 'pl' ? `selected`:``;%>>Polish (Polski)</option>
+        </select>
+        <p style="margin-bottom: 5px">Force</p>
+        <label for="forc" class="switch">
+          <input class="s" type="checkbox" name="language.force" id="forc">
+          <span class="slider round"></span>
+        </label>
+        <span id="language.force" class="colp" style="margin-left: 10px">Disabled</span>
+      </div>
+      <div class="sbox">
+        <p>Slowmode:</p>
+        <input class="s" type="number" name="slowmode" value="<%= settings.slowmode %>"><span class="colp">
+          seconds</span>
+      </div>
+      <div class="sbox">
+        <p style="margin-bottom: 5px">Autorole:</p>
+        <label for="autoenable" class="switch">
+          <input class="s" type="checkbox" name="autorole.enabled" id="autoenable">
+          <span class="slider round"></span>
+        </label>
+        <span id="autorole.enabled" class="colp" style="margin-left: 10px">Disabled</span>
+        <br>
+        <select class="s" name="autorole.role">
+        <% if (bot.guilds.cache.get(guild.id).roles.cache.get(settings.autorole.role)) { %>
+          <option value="<%= settings.autorole.role %>" <%= bot.guilds.cache.get(guild.id).roles.cache.get(settings.autorole.role).color != 0 ? `style=color:#${rol.color.toString(16)};` : `class="colp"` %> default selected>
+            <%= bot.guilds.cache.get(guild.id).roles.cache.get(settings.autorole.role).name %>
+          </option>
+          <% } else { %>
+          <option value="" default selected>none</option>
+          <% } %>
+          <% bot.guilds.cache.get(guild.id).roles.cache.forEach(rol => {if (bot.guilds.cache.get(guild.id).members.cache.get(bot.user.id).roles.highest.position < rol.position || rol.name === '@everyone') return;%>
+          <option value="<%= rol.id %>"
+            <%= rol.color != 0 ? `style=color:#${rol.color.toString(16)};` : `class="colp"` %>><%= rol.name %></option>
+          <% }); %>
+        </select>
+      </div>
+      <!-- <div class="sbox">
+        <p>Disabled category:</p>
+        <input class="s" type="text" name="prefix" value="<%= settings.prefix %>">
+      </div> -->
+      <!-- <div class="sbox">
+        <p>Music player:</p>
+        <p style="margin-bottom: 5px">DJ role</p>
+
+        <p style="margin-bottom: 5px">Next song info</p>
+        <label for="nsi" class="switch">
+          <input class="s" type="checkbox" name="player.nextSong" id="nsi">
+          <span class="slider round"></span>
+        </label>
+        <span id="player.nextSong" class="colp" style="margin-left: 10px">Disabled</span>
+        <p style="margin-bottom: 5px">Skip vote</p>
+        <label for="sv" class="switch">
+          <input class="s" type="checkbox" name="player.voteSkip" id="sv">
+          <span class="slider round"></span>
+        </label>
+        <span id="player.voteSkip" class="colp" style="margin-left: 10px">Disabled</span>
+        <p style="margin-bottom: 5px">Skipto vote</p>
+        <label for="stv" class="switch">
+          <input class="s" type="checkbox" name="player.voteSkipTo" id="stv">
+          <span class="slider round"></span>
+        </label>
+        <span id="player.voteSkipTo" class="colp" style="margin-left: 10px">Disabled</span>
+        <p style="margin-bottom: 5px">Prev vote</p>
+        <label for="pv" class="switch">
+          <input class="s" type="checkbox" name="player.votePrev" id="pv">
+          <span class="slider round"></span>
+        </label>
+        <span id="player.votePrev" class="colp" style="margin-left: 10px">Disabled</span>
+      </div> -->
+      <!-- <div class="sbox">
+        <p>Voting:</p>
+        <p>vote voice kick</p>
+        <input class="s" type="text" name="prefix" value="">
+      </div> -->
+      <!-- <div class="sbox">
+        <p>Welcome:</p>
+        <input class="s" type="text" name="prefix" value="<%= settings.prefix %>">
+      </div>
+      <div class="sbox">
+        <p>Goodbye:</p>
+        <input class="s" type="text" name="prefix" value="<%= settings.prefix %>">
+      </div> -->
+      <button type="submit" class="butto">Save Settings</button>
+    </form>
+    <button class="butto" onclick="window.location.reload(true);">Reset</button>
+    <!-- <button class="butto" onclick="window.location.reload(true);">Delete settings</button> -->
+    <a class="butto red" href="/clear/<%= guild.id %>">Delete stored data</a>
+    <a class="butto" href="/">Go back</a>
+  </div>
+  <script>
+    // don't even ask why
+    let sets = <%- JSON.stringify(settings) %>;
+    let chList = [];
+
+    function checkD(el) {
+      let butto = document.getElementsByClassName("butto")[0];
+      console.log(el.value)
+      dataz = el.name.includes(".") ? sets[el.name.split('.')[0]][el.name.split('.')[1]] : sets[el.name];
+      if ((el.value != 'on' && el.value != dataz) || (el.value == 'on' && el.checked !== dataz)) {
+        chList.push(el.name);
+      } else {
+        let index = chList.indexOf(el.name);
+        if (index > -1) {
+          chList.splice(index, 1);
+        }
+      }
+      let uniq = new Set(chList);
+      chList = [...uniq];
+      if (chList.length > 0) {
+        if (butto.classList.contains('blu')) return;
+        butto.classList.toggle('blu')
+      } else {
+        butto.classList.remove('blu')
+      }
+    }
+
+    function autoC(aC) {
+      let txtC = document.getElementById(aC.name);
+      if (aC.checked && txtC != null) {
+        txtC.innerHTML = "Enabled";
+      } else if (txtC != null) {
+        txtC.innerHTML = "Disabled";
+      }
+    }
+
+    document.getElementById('autoenable').checked = sets.autorole.enabled;
+    autoC(document.getElementById('autoenable'));
+
+    let inpu = document.querySelectorAll('.s');
+    inpu.forEach(inp => {
+      inp.addEventListener('keyup', (event) => {
+        checkD(inp);
+      });
+      inp.addEventListener('change', (event) => {
+        checkD(inp);
+        autoC(inp);
+      });
+    });
+  </script>
+</body>
+
+</html>

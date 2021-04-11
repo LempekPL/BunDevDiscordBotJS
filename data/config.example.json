@@ -1,5 +1,5 @@
 {
-	"settings": {
+    "settings": {
         "ownerid": "ownerid",
         "subowners": [],
         "prefix": "(default)bot prefix",
@@ -15,26 +15,33 @@
             "secret":""
         },
         "badosz": "https://obrazium.com/",
-        "lempek": "my api"
+        "lempek": "my api (not done YET)"
 	},
-    "lavalink":{
+    "lavalink": {
         "host": "ip",
         "port": 80,
         "restport": 2333,
         "password": "pass"
-	},
-	"database": {
+    },
+    "database": {
 		"host": "ip",
 		"port": 28015,
 		"db": "database",
 		"username": "username",
 		"password": "pass"
     },
-    "c":[
-        "embed colors",
-        "you can add how many you want",
-        "in hex ofc #d41c1c",
-        "#d4d41c"
+    "dashboard": {
+        "domain": "http://localhost",
+        "port": 8080,
+        "id": "CLIENT_ID",
+        "clientSecret": "CLIENT_SECRET",
+        "secret": "secret (randomstring)"
+    },
+    "c": [
+        "#000000",
+        "#111111",
+        "#aaaaaa",
+        "#ffffff"
     ],
     "webhooks": {
         "image": "webhook link",
@@ -42,17 +49,17 @@
         "guilds": "webhook link",
         "reports": "webhook link"
     },
-    "socialLinks":{
-        "youtube":"https://www.youtube.com/channel/UCL6-HSEiD28U5ddwL5l9fFA",
-        "twitch":"https://www.twitch.tv/lempekpl",
-        "twitter":"https://twitter.com/LEMPEKPL",
-        "reddit":"https://www.reddit.com/user/LempekPL",
+    "socialLinks": {
+        "youtube": "https://www.youtube.com/channel/UCL6-HSEiD28U5ddwL5l9fFA",
+        "twitch": "https://www.twitch.tv/lempekpl",
+        "twitter": "https://twitter.com/LEMPEKPL",
+        "reddit": "https://www.reddit.com/user/LempekPL",
         "github": "https://github.com/LempekPL",
-        "steam":"https://steamcommunity.com/id/LempekPL",
-        "ownwebsite":"https://lempek.tk",
+        "steam": "https://steamcommunity.com/id/LempekPL",
+        "ownwebsite": "https://lempek.tk",
         "spotify": "https://open.spotify.com/user/uzw52te8sueqlr05dfgxxbit9",
         "soundcloud": "https://soundcloud.com/lempekpl",
-        "instagram":"",
-        "facebook":""
+        "instagram": "",
+        "facebook": ""
     }
 }

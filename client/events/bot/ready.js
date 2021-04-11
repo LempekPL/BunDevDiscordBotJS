@@ -1,5 +1,4 @@
 let clc = require("cli-color");
-let Discord = require("discord.js");
 
 module.exports = (client) => {
     client.user.setPresence({
@@ -11,13 +10,11 @@ module.exports = (client) => {
     });
     // | "+prefix+"lang
     module.exports.emojiguild = client.guilds.cache.get(client.config.settings.emojiServer);
-    client.util = new Discord.Collection();
-    let fs = require("fs");
-    fs.readdirSync("./util/utils/").filter(file => file.endsWith('.js')).forEach(file => {
-        console.log(clc.magentaBright(`[utils] `)+ clc.blue(`${file}`));
-        Object.assign(client.util, require("../../../util/utils/"+file));
-    });
+    // load database
     client.db.load();
+    
+    // load dashboard
+    require("../../../app/dashboard")(client);
 
-    console.log(clc.cyan(`${client.user.tag} ready`));
+    console.log(clc.cyan(`Discord Bot: ${client.user.tag} ready!`));
 }

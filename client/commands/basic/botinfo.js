@@ -4,7 +4,10 @@ let vers = require("../../../package.json").version;
 
 module.exports.info = {
     name: "botinfo",
-    aliases: ["bi", "bot","binfo","info"],
+    aliases: ["bi", "bot","binfo","informacjabota"],
+    langs: {
+        pl: ["informacjabota", "informacjaobocie"]
+    },
     tags: ["bot","info","botinfo","basic"]
 }
 

@@ -1,13 +1,10 @@
 let r = require('rethinkdb');
 let config = require("../data/config.json");
-let {
-    database
-} = require('../data/config.json');
+let {database} = require('../data/config.json');
 
-// server database template
 let guilds = {
     prefix: config.settings.prefix,
-    slowmode: config.settings.slowmode,
+    slowmode: 1,
     welcome: {
         enabled: false,
         channel: "",
@@ -34,23 +31,23 @@ let guilds = {
         limit: false,
         users: {}
     },
-    warn: {
-        enabled: false,
-        limit: false,
-        votelimit: false,
-        users: {},
-        voteUsers: {}
-    },
-    economyInfo: {
-        money: false,
-        xp: false,
-        lvl: false
-    },
+    // warn: {
+    //     enabled: false,
+    //     limit: false,
+    //     votelimit: false,
+    //     users: {},
+    //     voteUsers: {}
+    // },
+    // economyInfo: {
+    //     money: false,
+    //     xp: false,
+    //     lvl: false
+    // },
     disabledCategory: [],
-    serverEconomy: {
-        xp: "0",
-        level: "0"
-    },
+    // serverEconomy: {
+    //     xp: "0",
+    //     level: "0"
+    // },
     language: {
         lang: "en",
         commands: "en",
@@ -61,7 +58,6 @@ let guilds = {
 // future thing *ignore*
 //serverType: "private"
 
-// user database template
 let users = {
     money: {
         money: "0",
@@ -95,13 +91,11 @@ let users = {
     }
 }
 
-// this bot database template
 let bot = {
     commands: 0,
     globalBans: []
 }
 
-// creating tables in database
 let connection;
 module.exports.load = async () => {
     try {
@@ -111,14 +105,14 @@ module.exports.load = async () => {
             r.tableCreate("guilds").run(connection),
             r.tableCreate("bot").run(connection),
         ]);
-        console.log('Tabele zostaly stworzone.');
+        console.log('Tables created.');
     } catch (error) {
         if (error.message.includes("already exists")) return;
         console.log(error);
     }
 };
 
-// checking if the guild data is correct to the template
+// these 3 checks below are for syncing database with data templates
 module.exports.checkGuild = async (gid) => {
     try {
         let guild = await r.table('guilds').get(gid).toJSON().run(connection);
@@ -146,7 +140,6 @@ module.exports.checkGuild = async (gid) => {
     return true;
 };
 
-// checking if the user data is correct to the template
 module.exports.checkUser = async (uid) => {
     try {
         let user = await r.table('users').get(uid).toJSON().run(connection);
@@ -174,7 +167,6 @@ module.exports.checkUser = async (uid) => {
     return true;
 };
 
-// checking if the bot data is correct to the template
 module.exports.checkBot = async (bid) => {
     try {
         let bote = await r.table('bot').get(bid).toJSON().run(connection);
@@ -202,8 +194,8 @@ module.exports.checkBot = async (bid) => {
     return true;
 };
 
-// update function to update the data
-/*  obj - table 
+/*  
+    obj - table 
     id - id in the table
     k - data to update
     v - new value
@@ -224,14 +216,32 @@ module.exports.update = async (obj, id, k, v) => {
     }
 };
 
-// get function to get the data
-/*  obj - table
+/*  
+    obj - table
+    id - id in the table
+    v - data values [Array]
+*/
+module.exports.updateFull = async (obj, id, v) => {
+    if (obj && id && v) {
+        try {
+            await r.table(obj).get(id).update(v).run(connection);
+            return true;
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+    } else {
+        return false;
+    }
+};
+
+/*  
+    obj - table
     id - id in the table
     name - data to get
 */
 module.exports.get = async (obj, id, name) => {
     if (id) {
-        if (id == null) return false;
         try {
             let object = await r.table(obj).get(id).toJSON().run(connection);
             if (object == null) return false;
@@ -247,8 +257,29 @@ module.exports.get = async (obj, id, name) => {
     }
 };
 
-// delete function to delete the data
-/*  obj - table
+/*  
+    obj - table
+    id - id in the table
+*/
+module.exports.getFull = async (obj, id) => {
+    if (id) {
+        try {
+            let object = await r.table(obj).get(id).toJSON().run(connection);
+            if (object == null) return false;
+            let data = await JSON.parse(object);
+            if (data == null) return false;
+            return data;
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+    } else {
+        return false;
+    }
+};
+
+/*  
+    obj - table
     id - id in the table
 */
 module.exports.del = async (obj, id) => {

@@ -1,0 +1,8 @@
+# just to flex on those
+# robo bitches
+
+User-agent: bunbun
+Allow: /
+
+User-agent: *
+Disallow: /

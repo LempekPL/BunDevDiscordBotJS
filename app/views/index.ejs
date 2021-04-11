@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./templates/head', { bot, user, path, title: wordsD.index.home }) %>
+    <link rel='stylesheet' type="text/css" href='/css/index.css' />
+    <style>
+    </style>
+</head>
+
+<body>
+    <%- include('./templates/header', { bot, user, path, botData, cookiez}) %>
+
+
+    <div class="indexbox">
+        <% if (user) { 
+        user.guilds.forEach(guild => {
+        let permsOnGuild = new perms(guild.permissions);
+        if(!permsOnGuild.has("MANAGE_GUILD")) return; %>
+        <div class="inbox">
+            <img class="ic" src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png"
+                alt="<%= guild.name %> icon" height="60">
+            <p style="font-size: 20px;"><%= guild.name %></p>
+            <% if (bot.guilds.cache.get(guild.id)) { %>
+            <a class="butto" href="/settings/<%= guild.id %>"><%= wordsD.index.edit %></a>
+            <a class="butto" href="/clear/<%= guild.id %>"><%= wordsD.index.deleteData %></a>
+            <a class="butto red" href="/kick/<%= guild.id %>"><%= wordsD.index.kick %></a>
+            <% } else { %>
+            <a class="butto gre"
+                href="<%= `https://discordapp.com/oauth2/authorize?client_id=${bot.user.id}&scope=bot&guild_id=${guild.id}&response_type=code&redirect_uri=${encodeURIComponent(`${bot.config.dashboard.domain}:${bot.config.dashboard.port}/api/callback`)} ` %>"><%= wordsD.index.inviteBot %></a>
+            <% } %>
+
+        </div>
+        <% });
+        } else { %>
+        <div style="margin: 15px;">
+            <a class="butto blu" href="api/login" style="padding: 10px;"><%= wordsD.index.login %></a>
+            <a class="butto" href="http://lempek.tk" style="padding: 10px;">LempekWebsite</a>
+            <a class="butto" href="changelog" style="padding: 10px;"><%= wordsD.index.changelog %></a>
+        </div>
+
+        <% } %>
+    </div>
+</body>
+
+</html>

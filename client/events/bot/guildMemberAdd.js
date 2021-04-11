@@ -15,6 +15,10 @@ module.exports = async (member) => {
         if(!autorole.enabled || autorole.role == "") return;
         let rola = member.guild.roles.cache.get(autorole.role);
         if(rola == undefined) return;
-        member.roles.add(rola);
+        try {
+            member.roles.add(rola);
+        } catch (error) {
+            console.log(error);
+        }
     });
 }

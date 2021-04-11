@@ -7,6 +7,9 @@ let randomhelpinfo = require("../../../data/randomhelpinfo.json");
 module.exports.info = {
     name: "help",
     aliases: ["h", "?", "info"],
+    langs: {
+        pl: ["pomoc"]
+    },
     tags: ["help", "?", "how", "how to", "info", "basic"]
 }
 
@@ -21,8 +24,9 @@ module.exports.run = async (client, message, args) => {
     let votekikz = await client.db.get("guilds", message.guild.id, "voteVoiceKick");
     let discatgui = await client.db.get("guilds", message.guild.id, "disabledCategory");
     let discatuse = await client.db.get("users", message.author.id, "disabledCategory");
-    let randoin = await client.db.get("users",message.author.id,"randomhelpinfo")
+    let randoin = await client.db.get("users",message.author.id,"randomhelpinfo");
     let dis = await client.db.get("users", message.author.id, "display");
+    let timesused = await client.db.get("bot", client.user.id, "commands");
     let stop = false;
     /*allinone - (default) every command with category
     pages - reduced number of categories to make pages (maybe in the future)
@@ -97,7 +101,7 @@ module.exports.run = async (client, message, args) => {
                 embed.setDescription(`Commands List: [${allcom}]` + ' | Prefix: `' + prefix + '` | Bot version: \`v' + vers + "\`");
                 if (randoin) {
                     embed.addField('\u200b', '\u200b');
-                    embed.addField(`Random info`, `${helpinfo.replace(/#PREFIX#/g,prefix)}`);
+                    embed.addField(`Random info`, `${helpinfo.replace(/#PREFIX#/g,prefix).replace(/#BOT_USED#/g,timesused)}`);
                 }
                 break;
 
@@ -197,7 +201,7 @@ module.exports.run = async (client, message, args) => {
                     });
                     comalist[i].addField('\u200b', `Prefix: \`${prefix}\` | Bot version: \`v${vers}\``);
                     if (randoin) {
-                        comalist[i].addField(`Random info`, `${helpinfo.replace(/#PREFIX#/g,prefix)}`);
+                        comalist[i].addField(`Random info`, `${helpinfo.replace(/#PREFIX#/g,prefix).replace(/#BOT_USED#/g,timesused)}`);
                     }
                 }
 

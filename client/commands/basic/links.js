@@ -15,8 +15,8 @@ let emo = {
 
 module.exports.info = {
     name: "links",
-    aliases: ["invite", "botinvite", "giveinvite","updates", "trello","roadmap"],
-    tags: ["botinvite", "giveinvite", "invite", "support", "server","roadmap","updates","future","links","websites"]
+    aliases: ["invite", "botinvite", "giveinvite","updates", "trello","roadmap","linki", "dashboard"],
+    tags: ["botinvite", "giveinvite", "invite", "support", "server","roadmap","updates","future","links","websites", "dashboard"]
 }
 
 module.exports.run = async (client, message, args) => {
@@ -25,8 +25,8 @@ module.exports.run = async (client, message, args) => {
     embed.setColor(client.util.randomColorConfig(client));
     embed.setTitle(`Links:`);
     embed.addField(`Support Server`, `[<:bot:815379078776619070> [DISCORD LINK]](https://discord.gg/e3uQ6aC)`);
-    embed.addField(`Invite`, `[<:bunbun_green_ear:815379123643088936> [BOT LINK]](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8)`);
-    embed.addField(`Website`, `[<:bunbun_blue:815379165942382622> [WEBSITE LINK]](https://lempek.tk/bunbun) (in maintenance)`);
+    embed.addField(`Invite`, `[<:bunbun_green_ear:815379123643088936> [BOT LINK]](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8&guild_id=${message.guild.id})`);
+    embed.addField(`Website`, `[<:bunbun_blue:815379165942382622> [WEBSITE LINK]](https://bunbun.lempek.tk)`);
     embed.addField(`Roadmap`, `[<:bunbun_yellow:815379201536163851> [TRELLO LINK]](https://trello.com/b/0d15e7X7/bunbun)`);
     embed.addField(`Source`, `[<:bunbun_red:815379923799375893> [GITHUB LINK]](https://github.com/LempekPL/BunBun)`);
 

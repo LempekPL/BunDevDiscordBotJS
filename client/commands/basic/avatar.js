@@ -7,6 +7,9 @@ let allowedsize = Array.from({
 module.exports.info = {
     name: "avatar",
     aliases: ["av"],
+    langs: {
+        pl: ["awatar", "profilowe"]
+    },
     tags: ["picture","avatar","display","basic"]
 }
 
@@ -31,8 +34,6 @@ module.exports.run = async (client, message, args) => {
                 }
                 break;
 
-            case "-d":
-            case "--dynamic":
             case `-${client.wordsCom.command.avatar.dynamic[0]}`:
             case `--${client.wordsCom.command.avatar.dynamic}`:
                 if (args[dane+1] == "false") {
@@ -42,8 +43,6 @@ module.exports.run = async (client, message, args) => {
                 }
                 break;
 
-            case "-s":
-            case "--size":
             case `-${client.wordsCom.command.avatar.size[0]}`:
             case `--${client.wordsCom.command.avatar.size}`:
                 if (allowedsize.includes(Number(args[dane+1]))) {

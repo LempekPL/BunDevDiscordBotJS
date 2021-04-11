@@ -41,15 +41,17 @@ module.exports = async (message, client) => {
     let command = args.shift().toLowerCase();
     let cmod = message.content.split(" ")[0];
     let commandfile = client.commands.get(cmod.slice(prefix.length));
+    slowmode = await client.db.get("guilds", message.guild.id, "slowmode");
 
     runcmd(command, commandfile, args, message, client);
 }
 
 async function runcmd(command, commandfile, args, message, client) {
     if (commandfile) {
-        // cooldown filter
+        //cooldown filter
         if (cooldown.has(message.author.id)) {
             // cooldown reminder
+            console.log(cooldown)
             let second = 1;
             let minute = second * 60;
             let coolmins = Math.floor(slowmode / (minute));
@@ -64,7 +66,6 @@ async function runcmd(command, commandfile, args, message, client) {
         } else {
             // running command
             await commandfile.run(client, message, args);
-
             // used commands counting
             let comCount = await client.db.get("bot", client.user.id, "commands");
             let userCommand = await client.db.get("users", message.author.id, "favCommands");
@@ -76,7 +77,6 @@ async function runcmd(command, commandfile, args, message, client) {
             }
             await client.db.update("bot", client.user.id, "commands", comCount);
             await client.db.update("users", message.author.id, "favCommands", userCommand);
-
 
             // ignoring owners
             if (!(message.author.id == client.config.settings.ownerid || client.config.settings.subowners.includes(message.author.id))) {

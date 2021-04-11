@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./templates/head', { bot, user, path, title: "Error 404" }) %>
+    <link rel='stylesheet' type="text/css" href='/css/index.css' />
+    <style>
+    </style>
+</head>
+
+<body>
+    <%- include('./templates/header', { bot, user, path, botData, cookiez}) %>
+
+
+    <div style="text-align: center; padding-bottom: 50px; margin-top: 30px;">
+        <p style="font-size: 200px;">404</p>
+        <p style="font-size: 100px;"><%= wordsD.err.notFound %></p>
+    </div>
+
+</body>
+
+</html>

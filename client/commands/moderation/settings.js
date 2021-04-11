@@ -50,35 +50,34 @@ module.exports.run = async (client, message, args) => {
         case "--help":
         case "-h":
         case "-e":
-            embed.setDescription(`
-            To change use \`${prefix}settings <value>\`
-            **Prefix** (pr)
-            > --prefix <new prefix>
-            **Slowmode** (s)
-            > --slowmode <new slowmode in seconds>
-            **Autorole** (a)
-            > --autorole <@role or role id>\n> --autorole disable
-            **Category** (c)
-            > --category block/unblock <category codename> \n> (category name /codename/ is in help in brackets **Name (codename) [num of commands]**)
-            **Music Player** (pl)
-            > --player --djrole <@role or role id> (use \`disable\` to disable, allows only people with this role to manage player/songs)\n> --player --nextsong enable/disable\n> --player --skipvote enable/disable\n> --player --skiptovote enable/disable\n> --player --previousvote enable/disable
-            **Vote voice kick** (vvk) /*DON'T WORK*/
-            > --votevoicekick <number of votes to activate>\n> --votevoicekick disable
-            **Warn** (wa) /*DON'T WORK*/
-            > --warn --limit <number of warns to kick>\n> --warn enable/disable\n> --warn --vote <number of votes to give> (optional, use false or 0 to disable)
-            **Welcome** (w)
-            > --welcome --channel <#channel or channel id>\n> --welcome --message <welcome message>\n> --welcome enable/disable
-            **Goodbye** (g)
-            > --goodbye --channel <#channel or channel id>\n> --goodbye --message <goodbye message>\n> --goodbye enable/disable
-            ~~**Language**~~
-            > ~~--language en/pl~~
-            ~~**Command Language**~~
-            > ~~--commandlanguage en/pl~~
-            \n
-            You can add to welcome/goodbye message:
-            > #USER# - username\n> #MENTION# - mention\n> #TAG# - user tag, e. g. #1234\n> #GUILD# - guild name\n> #MEMBERCOUNT# - count of all members with counting bots\n> #USERCOUNT# - count of all members without counting bots
-            If you want to test how the message would look then use \`${prefix}settings --welcome --messagetest\`\nIf you had already set channel then it will send message on that channel if not then on the message channel.
-            `);
+            embed.setDescription(``)
+            // embed.setDescription(`
+            // To change use \`${prefix}settings <value>\`
+            // **Prefix** (pr)
+            // > --prefix <new prefix>
+            // **Slowmode** (s)
+            // > --slowmode <new slowmode in seconds>
+            // **Autorole** (a)
+            // > --autorole <@role or role id>\n> --autorole disable
+            // **Category** (c)
+            // > --category block/unblock <category codename> \n> (category name /codename/ is in help in brackets **Name (codename) [num of commands]**)
+            // **Music Player** (pl)
+            // > --player --djrole <@role or role id> (use \`disable\` to disable, allows only people with this role to manage player/songs)\n> --player --nextsong enable/disable\n> --player --skipvote enable/disable\n> --player --skiptovote enable/disable\n> --player --previousvote enable/disable
+            // **Vote voice kick** (vvk) /*DON'T WORK*/
+            // > --votevoicekick <number of votes to activate>\n> --votevoicekick disable
+            // **Warn** (wa) /*DON'T WORK*/
+            // > --warn --limit <number of warns to kick>\n> --warn enable/disable\n> --warn --vote <number of votes to give> (optional, use false or 0 to disable)
+            // **Welcome** (w)
+            // > --welcome --channel <#channel or channel id>\n> --welcome --message <welcome message>\n> --welcome enable/disable
+            // **Goodbye** (g)
+            // > --goodbye --channel <#channel or channel id>\n> --goodbye --message <goodbye message>\n> --goodbye enable/disable
+            // **Language**
+            // > --language --bot en/pl\n> --language --commands en/pl\n> --language --force true/false
+            // \n
+            // You can add to welcome/goodbye message:
+            // > #USER# - username\n> #MENTION# - mention\n> #TAG# - user tag, e. g. #1234\n> #GUILD# - guild name\n> #MEMBERCOUNT# - count of all members with counting bots\n> #USERCOUNT# - count of all members without counting bots
+            // If you want to test how the message would look then use \`${prefix}settings --welcome --messagetest\`\nIf you had already set channel then it will send message on that channel if not then on the message channel.
+            // `);
             embed.setTitle(`Settings Edit`);
             break;
 
