@@ -1,6 +1,8 @@
 let r = require('rethinkdb');
 let config = require("../data/config.json");
-let {database} = require('../data/config.json');
+let {
+    database
+} = require('../data/config.json');
 
 let guilds = {
     prefix: config.settings.prefix,
@@ -96,6 +98,12 @@ let bot = {
     globalBans: []
 }
 
+let objects = {
+    guilds,
+    users,
+    bot
+}
+
 let connection;
 module.exports.load = async () => {
     try {
@@ -112,86 +120,37 @@ module.exports.load = async () => {
     }
 };
 
-// these 3 checks below are for syncing database with data templates
-module.exports.checkGuild = async (gid) => {
+// this check is for syncing database with data templates
+/*  
+    id - id of the table
+    obj - table 
+*/
+module.exports.check = async (object, id) => {
+    if (!id || !object) return false;
     try {
-        let guild = await r.table('guilds').get(gid).toJSON().run(connection);
-        let baziz = await JSON.parse(guild);
-        if (!baziz) {
+        let dbdata = await r.table(object).get(id).toJSON().run(connection);
+        let parsed = await JSON.parse(dbdata);
+        if (!parsed) {
             let dati = {};
-            dati["id"] = gid;
-            for (let prop in guilds) {
-                dati[prop] = guilds[prop];
+            dati["id"] = id;
+            for (let prop in objects[object]) {
+                dati[prop] = objects[object][prop];
             }
-            await r.table("guilds").insert(dati).run(connection);
+            await r.table(object).insert(dati).run(connection);
             return true;
         }
-        for (let prop in guilds) {
-            if (!baziz[prop]) {
-                await r.table("guilds").get(gid).update({
-                    [prop]: guilds[prop]
+        for (let prop in objects[object]) {
+            if (!parsed[prop]) {
+                await r.table(object).get(id).update({
+                    [prop]: objects[object][prop]
                 }).run(connection);
             }
         }
+        return true;
     } catch (e) {
         console.error(e);
         return false;
     }
-    return true;
-};
-
-module.exports.checkUser = async (uid) => {
-    try {
-        let user = await r.table('users').get(uid).toJSON().run(connection);
-        let baziz = await JSON.parse(user);
-        if (!baziz) {
-            let dati = {};
-            dati["id"] = uid;
-            for (let prop in users) {
-                dati[prop] = users[prop];
-            }
-            await r.table("users").insert(dati).run(connection);
-            return true;
-        }
-        for (let prop in users) {
-            if (!baziz[prop]) {
-                await r.table("users").get(uid).update({
-                    [prop]: users[prop]
-                }).run(connection);
-            }
-        }
-    } catch (e) {
-        console.error(e);
-        return false;
-    }
-    return true;
-};
-
-module.exports.checkBot = async (bid) => {
-    try {
-        let bote = await r.table('bot').get(bid).toJSON().run(connection);
-        let baziz = await JSON.parse(bote);
-        if (!baziz) {
-            let dati = {};
-            dati["id"] = bid;
-            for (let prop in bot) {
-                dati[prop] = bot[prop];
-            }
-            await r.table("bot").insert(dati).run(connection);
-            return true;
-        }
-        for (let prop in bot) {
-            if (!baziz[prop]) {
-                await r.table("bot").get(bid).update({
-                    [prop]: bot[prop]
-                }).run(connection);
-            }
-        }
-    } catch (e) {
-        console.error(e);
-        return false;
-    }
-    return true;
 };
 
 /*  
@@ -201,17 +160,14 @@ module.exports.checkBot = async (bid) => {
     v - new value
 */
 module.exports.update = async (obj, id, k, v) => {
-    if (obj && id && k && v) {
-        try {
-            await r.table(obj).get(id).update({
-                [k]: v
-            }).run(connection);
-            return true;
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-    } else {
+    if (!obj || !id || !k || !v) return false;
+    try {
+        await r.table(obj).get(id).update({
+            [k]: v
+        }).run(connection);
+        return true;
+    } catch (e) {
+        console.error(e);
         return false;
     }
 };
@@ -219,18 +175,15 @@ module.exports.update = async (obj, id, k, v) => {
 /*  
     obj - table
     id - id in the table
-    v - data values [Array]
+    v - data values {Object}
 */
 module.exports.updateFull = async (obj, id, v) => {
-    if (obj && id && v) {
-        try {
-            await r.table(obj).get(id).update(v).run(connection);
-            return true;
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-    } else {
+    if (!obj || !id || !v) return false;
+    try {
+        await r.table(obj).get(id).update(v).run(connection);
+        return true;
+    } catch (e) {
+        console.error(e);
         return false;
     }
 };
@@ -241,18 +194,15 @@ module.exports.updateFull = async (obj, id, v) => {
     name - data to get
 */
 module.exports.get = async (obj, id, name) => {
-    if (id) {
-        try {
-            let object = await r.table(obj).get(id).toJSON().run(connection);
-            if (object == null) return false;
-            let data = await JSON.parse(object)[name];
-            if (data == null) return false;
-            return data;
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-    } else {
+    if (!id) return false;
+    try {
+        let object = await r.table(obj).get(id).toJSON().run(connection);
+        if (!object) return false;
+        let data = await JSON.parse(object)[name];
+        if (!data) return false;
+        return data;
+    } catch (e) {
+        console.error(e);
         return false;
     }
 };
@@ -262,18 +212,15 @@ module.exports.get = async (obj, id, name) => {
     id - id in the table
 */
 module.exports.getFull = async (obj, id) => {
-    if (id) {
-        try {
-            let object = await r.table(obj).get(id).toJSON().run(connection);
-            if (object == null) return false;
-            let data = await JSON.parse(object);
-            if (data == null) return false;
-            return data;
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-    } else {
+    if (!id) return false;
+    try {
+        let object = await r.table(obj).get(id).toJSON().run(connection);
+        if (!object) return false;
+        let data = await JSON.parse(object);
+        if (!data) return false;
+        return data;
+    } catch (e) {
+        console.error(e);
         return false;
     }
 };
@@ -283,16 +230,45 @@ module.exports.getFull = async (obj, id) => {
     id - id in the table
 */
 module.exports.del = async (obj, id) => {
-    if (id) {
-        if (id == null) return false;
-        try {
-            await r.table(obj).get(id).delete().run(connection);
-            return true;
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-    } else {
+    if (!id) return false;
+    try {
+        await r.table(obj).get(id).delete().run(connection);
+        return true;
+    } catch (e) {
+        console.error(e);
         return false;
     }
 };
+
+/*  
+    client - client bot
+    object - table
+    id - id in the table
+*/
+module.exports.syncCache = async (client, object, id) => {
+    try {
+        if (!client || !object || !id) return false;
+        let data = await client.db.getFull(object, id);
+        client.dbCache[object][id] = await data;
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
+
+/*  
+    client - client bot
+    object - table
+    id - id in the table
+*/
+module.exports.syncDB = async (client, object, id) => {
+    try {
+        if (!client || !object || !id) return false;
+        await client.db.updateFull(object, id, client.dbCache[object][id]);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}

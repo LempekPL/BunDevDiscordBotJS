@@ -1,24 +1,27 @@
 let Discord = require('discord.js');
 let cooldown = new Set();
+let syncCooldown = new Set();
+let syncDBCooldown = new Set();
 let slowmode;
 
 module.exports = async (message, client) => {
-    // filter
     if (message.author.bot) return;
-    // checking database
-    await client.db.checkGuild(message.guild.id);
-    await client.db.checkUser(message.author.id);
-    await client.db.checkBot(client.user.id);
 
-    let prefix = await client.db.get("guilds", message.guild.id, "prefix");
-    if (prefix == undefined) prefix = client.config.settings.prefix;
+    await checkCache(client, "guilds", message.guild.id);
+
+    let prefix = client.dbCache.guilds[message.guild.id].prefix;
+    if (!prefix) prefix = client.config.settings.prefix;
     if (message.content == `<@${client.user.id}>` || message.content == `<@!${client.user.id}>`) {
-        message.reply("My prefix is `" + prefix + "`");
+        message.reply("my prefix is `" + prefix + "`");
     }
+
     if (!message.content.startsWith(prefix)) return;
 
+    await checkCache(client, "users", message.author.id);
+    await checkCache(client, "bot", client.user.id);
+
     // bot global bans
-    let gbans = await client.db.get("bot", client.user.id, "globalBans");
+    let gbans = client.dbCache.bot[client.user.id].globalBans;
     if (gbans.length > 0) {
         if (gbans.includes(message.author.id)) {
             await client.util.gban(message, client);
@@ -27,86 +30,91 @@ module.exports = async (message, client) => {
     }
 
     // load words to client
-    langu = await client.db.get("guilds", message.guild.id, "language");
+    langu = client.dbCache.guilds[message.guild.id].language;
     if (langu.force) {
-        lang = await client.db.get("guilds", message.guild.id, "language");
+        lang = client.dbCache.guilds[message.guild.id].language;
     } else {
-        lang = await client.db.get("users", message.author.id, "language");
+        lang = client.dbCache.users[message.author.id].language;
     }
     client.words = client.util.langM(lang.lang);
     client.wordsCom = client.util.langM(lang.commands);
 
     // get args from message
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
-    let command = args.shift().toLowerCase();
     let cmod = message.content.split(" ")[0];
     let commandfile = client.commands.get(cmod.slice(prefix.length));
-    slowmode = await client.db.get("guilds", message.guild.id, "slowmode");
+    if (!commandfile) return;
 
-    runcmd(command, commandfile, args, message, client);
-}
-
-async function runcmd(command, commandfile, args, message, client) {
-    if (commandfile) {
-        //cooldown filter
-        if (cooldown.has(message.author.id)) {
-            // cooldown reminder
-            console.log(cooldown)
-            let second = 1;
-            let minute = second * 60;
-            let coolmins = Math.floor(slowmode / (minute));
-            let coolsecs = Math.floor((slowmode % (minute)) / (second));
-            message.delete();
-            message.reply(`you need to wait \`${coolmins}\`m \`${coolsecs}\`s between commands.`).then(message => {
-                message.delete({
-                    timeout: slowmode * 1000,
-                    reason: 'Autoremove'
-                });
+    slowmode = client.dbCache.guilds[message.guild.id].slowmode;
+    if (cooldown.has(message.author.id)) {
+        message.delete();
+        message.reply(`you need to wait \`${Math.floor(slowmode / 60)}\`m \`${Math.floor(slowmode % 60)}\`s between commands.`).then(message => {
+            message.delete({
+                timeout: slowmode * 1000,
+                reason: 'Autoremove'
             });
-        } else {
-            // running command
-            await commandfile.run(client, message, args);
-            // used commands counting
-            let comCount = await client.db.get("bot", client.user.id, "commands");
-            let userCommand = await client.db.get("users", message.author.id, "favCommands");
-            await comCount++;
-            if (!userCommand[commandfile.info.name]) {
-                userCommand[commandfile.info.name] = 1;
-            } else {
-                userCommand[commandfile.info.name]++;
-            }
-            await client.db.update("bot", client.user.id, "commands", comCount);
-            await client.db.update("users", message.author.id, "favCommands", userCommand);
+        });
+        return;
+    }
+    await commandfile.run(client, message, args);
 
-            // ignoring owners
-            if (!(message.author.id == client.config.settings.ownerid || client.config.settings.subowners.includes(message.author.id))) {
-                // ingnore cooldown for server administrators
-                if (!message.member.hasPermission("ADMINISTRATOR")) {
-                    cooldown.add(message.author.id);
-                }
-                // logging used command
-                let whook = new Discord.WebhookClient(client.config.webhooks.all.split("/")[5], client.config.webhooks.all.split("/")[6]);
-                let loggen = new Discord.MessageEmbed;
-                loggen.setTitle(message.author.tag + " used command: " + command);
-                loggen.setDescription(message.content);
-                loggen.setColor('#ffff00')
-                loggen.setFooter("© Lempek", client.users.cache.get('249253855613812736').avatarURL);
-                loggen.addField("Server ID", message.guild.name + " (" + message.guild.id + ")");
-                loggen.addField("Channel ID", message.channel.name + " (" + message.channel.id + ")");
-                loggen.addField("Message ID", message.id);
-                loggen.addField("Message Created", message.createdAt);
-                loggen.addField("User Message Link", "https://discordapp.com/channels/" + message.guild.id + "/" + message.channel.id + "/" + message.id);
-                loggen.addField("Command", comCount);
-                loggen.addField("Message Owner", message.author.tag + " (" + message.author.id + ")");
-                loggen.setTimestamp();
-                await whook.send(loggen);
-            }
+    let comCount = client.dbCache.bot[client.user.id].commands;
+    let userCommand = client.dbCache.users[message.author.id].favCommands;
+    await comCount++;
+    userCommand[commandfile.info.name] ? userCommand[commandfile.info.name]++ : 1;
 
-            // removing cooldown
-            setTimeout(() => {
-                cooldown.delete(message.author.id)
-            }, slowmode * 1000)
+    // ignoring owners
+    if (!(message.author.id == client.config.settings.ownerid || client.config.settings.subowners.includes(message.author.id))) {
+        // ingnore cooldown for server administrators
+        if (!message.member.hasPermission("ADMINISTRATOR")) {
+            cooldown.add(message.author.id);
         }
+        loggen(client, message, comCount);
     }
 
+    await checkDB(client, "guilds", message.guild.id);
+    await checkDB(client, "users", message.author.id);
+    await checkDB(client, "bot", client.user.id);
+
+    // removing cooldown
+    setTimeout(() => {
+        cooldown.delete(message.author.id)
+    }, slowmode * 1000)
+
+}
+
+async function checkCache(client, object, id) {
+    if (!client.dbCache[object][id] || !syncCooldown.has(id) || client.forceCheck.has(id)) {
+        await client.db.check(object, id);
+        await client.db.syncCache(client, object, id);
+        syncCooldown.add(id);
+        setTimeout(() => {
+            syncCooldown.delete(id)
+        }, 60 * 1000)
+    }
+}
+
+async function checkDB(client, object, id) {
+    if (client.dbCache[object][id]) {
+        await client.db.check(object, id);
+        await client.db.syncDB(client, object, id);
+    }
+}
+
+async function loggen(client, message, comCount) {
+    let whook = new Discord.WebhookClient(client.config.webhooks.all.split("/")[5], client.config.webhooks.all.split("/")[6]);
+    let loggen = new Discord.MessageEmbed;
+    loggen.setTitle(message.author.tag + " used command: " + command);
+    loggen.setDescription(message.content);
+    loggen.setColor('#ffff00')
+    loggen.setFooter("© Lempek", client.users.cache.get('249253855613812736').avatarURL);
+    loggen.addField("Server ID", message.guild.name + " (" + message.guild.id + ")");
+    loggen.addField("Channel ID", message.channel.name + " (" + message.channel.id + ")");
+    loggen.addField("Message ID", message.id);
+    loggen.addField("Message Created", message.createdAt);
+    loggen.addField("User Message Link", "https://discordapp.com/channels/" + message.guild.id + "/" + message.channel.id + "/" + message.id);
+    loggen.addField("Command", comCount);
+    loggen.addField("Message Owner", message.author.tag + " (" + message.author.id + ")");
+    loggen.setTimestamp();
+    await whook.send(loggen);
 }

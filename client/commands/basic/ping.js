@@ -11,15 +11,7 @@ module.exports.run = async (client, message, args) => {
     let p = new Discord.MessageEmbed;
     p.setColor(client.util.randomColorConfig(client));
     p.addField("Pong! <a:dloading:815379977163767810>", `Ping: **${msg.createdTimestamp - message.createdTimestamp}**ms. \nGateway (API): **${Math.round(client.ws.ping)}**ms`);
-    if (client.config.settings.subowners.length==0) {
-        p.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
-    } else {
-        let owners = client.users.cache.get(client.config.settings.ownerid).username
-        client.config.settings.subowners.forEach(sub => {
-            owners+=` & ${client.users.cache.get(sub).username}`;
-        });
-        p.setFooter("© "+owners, client.user.avatarURL());
-    }
+    client.util.setFooterOwner(client, p);
     p.setTimestamp();
     msg.edit(p);
 }

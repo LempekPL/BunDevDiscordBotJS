@@ -29,6 +29,7 @@ class BotClient extends Discord.Client {
         users: {},
         guilds: {}
     };
+    forceCheck = new Set();
     words = {};
     wordsCom = {};
     config = config;
