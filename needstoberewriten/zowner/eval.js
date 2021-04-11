@@ -16,7 +16,7 @@ module.exports.run = async (client, message, args) => {
     try {
         evalv = eval(text);
     } catch (err) {
-        message.channel.send("Don't work " + err);
+        message.channel.send("Don't work\n" + err);
         return;
     }
     let eembed = new Discord.MessageEmbed();

@@ -1,14 +1,27 @@
 {
+    "lang":"pl",
     "all": {
-
+        "avatar": {
+            "hAvatar": "Pomoc awatar",
+            "field1": "Możesz użyć z komendą `#PREFIX##COMMAND# <>`"
+        },
+        "links": {
+            "links": "Linki",
+            "supportServer": "Serwer wsparcia",
+            "invite": "Dodaj bota",
+            "website": "Strona internetowa",
+            "roadmap": "Roadmap",
+            "sourceCode": "Kod źródłowy",
+            "socialLinks": "Linki społecznościowe"
+        }
     },
     "help": {
 
     },
     "info": {
         "avatar": {
-            "exp": "`#PREFIX##COMMAND# <userid/mention/username>` or `#PREFIX##COMMAND# -h` for more options",
-            "info": "Shows your or someone's else avatar"
+            "exp": "`#PREFIX##COMMAND# <userid/mention/username>`",
+            "info": "Pokazuje awatar\n Możesz użyć z komendą `#PREFIX##COMMAND# [opcje]`\n> -f lub --format by użyć wybranego formatu (dozwolone formaty: `png`, `jpg`, `jpeg`, `webp`, `gif`)\n > domyślny: png\n\n> a"
         },
         "botinfo": {
             "exp": "`#PREFIX##COMMAND#`",
@@ -65,30 +78,10 @@
     },
     "command": {
         "avatar": {
-            "avatar": "awatar",
             "format": "format",
             "dynamic": "dynamiczny",
             "size": "wielkość",
-            "user": "użytkownik",
-            "help": "pomoc"
-        },
-        "botinfo": {
-            "botinfo": "botinfo"
-        },
-        "help": {
-            "help": "help"
-        },
-        "links": {
-            "links": "links"
-        },
-        "ping": {
-            "ping": "ping"
-        },
-        "serverinfo": {
-            "serverinfo": "serverinfo"
-        },
-        "userinfo": {
-            "userinfo": "userinfo"
+            "user": "użytkownik"
         }
     },
     "dashboard":{

@@ -4,15 +4,21 @@ let vers = require("../../../package.json").version;
 
 module.exports.info = {
     name: "botinfo",
-    aliases: ["bi", "bot","binfo","informacjabota"],
-    langs: {
-        pl: ["informacjabota", "informacjaobocie"]
+    lang: {
+        en: {
+            main: "botinfo",
+            aliases: ["bi", "bot","binfo"]
+        },
+        pl: {
+            main: "infobot",
+            aliases: ["informacjabota", "informacjaobocie"]
+        }
     },
     tags: ["bot","info","botinfo","basic"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
+    if (await client.util.blockCheck(client, __dirname, message)) return;
     let msg = await message.channel.send(`Botinfo`);
     let embed = new Discord.MessageEmbed();
     embed.setColor(client.util.randomColorConfig(client));

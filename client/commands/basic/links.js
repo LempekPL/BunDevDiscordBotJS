@@ -15,20 +15,29 @@ let emo = {
 
 module.exports.info = {
     name: "links",
-    aliases: ["invite", "botinvite", "giveinvite","updates", "trello","roadmap","linki", "dashboard"],
+    lang: {
+        en: {
+            main: "links",
+            aliases: ["invite", "botinvite", "giveinvite", "updates", "trello", "roadmap", "dashboard", "website"]
+        },
+        pl: {
+            main: "linki",
+            aliases: ["dodaj", "aktualności", "dashboard", "strona"]
+        }
+    },
     tags: ["botinvite", "giveinvite", "invite", "support", "server","roadmap","updates","future","links","websites", "dashboard"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
+    if (await client.util.blockCheck(client, __dirname, message)) return;
     let embed = new Discord.MessageEmbed();
     embed.setColor(client.util.randomColorConfig(client));
-    embed.setTitle(`Links:`);
-    embed.addField(`Support Server`, `[<:bot:815379078776619070> [DISCORD LINK]](https://discord.gg/e3uQ6aC)`);
-    embed.addField(`Invite`, `[<:bunbun_green_ear:815379123643088936> [BOT LINK]](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8&guild_id=${message.guild.id})`);
-    embed.addField(`Website`, `[<:bunbun_blue:815379165942382622> [WEBSITE LINK]](https://bunbun.lempek.tk)`);
-    embed.addField(`Roadmap`, `[<:bunbun_yellow:815379201536163851> [TRELLO LINK]](https://trello.com/b/0d15e7X7/bunbun)`);
-    embed.addField(`Source`, `[<:bunbun_red:815379923799375893> [GITHUB LINK]](https://github.com/LempekPL/BunBun)`);
+    embed.setTitle(`${client.words.all.links.links}:`);
+    embed.addField(`${client.words.all.links.supportServer}`, `[<:bot:815379078776619070> [DISCORD LINK]](https://discord.gg/e3uQ6aC)`);
+    embed.addField(`${client.words.all.links.invite}`, `[<:bunbun_green_ear:815379123643088936> [BOT LINK]](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8&guild_id=${message.guild.id})`);
+    embed.addField(`${client.words.all.links.website}`, `[<:bunbun_blue:815379165942382622> [WEBSITE LINK]](https://bunbun.lempek.tk)`);
+    embed.addField(`${client.words.all.links.roadmap}`, `[<:bunbun_yellow:815379201536163851> [TRELLO LINK]](https://trello.com/b/0d15e7X7/bunbun)`);
+    embed.addField(`${client.words.all.links.sourceCode}`, `[<:bunbun_red:815379923799375893> [GITHUB LINK]](https://github.com/LempekPL/BunBun)`);
 
     let links = "";
     for (let naz in client.config.socialLinks) {
@@ -41,16 +50,8 @@ module.exports.run = async (client, message, args) => {
         }
     }
 
-    embed.addField(`Social links`, `${links}`);
-    if (client.config.settings.subowners.length==0) {
-        embed.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
-    } else {
-        let owners = client.users.cache.get(client.config.settings.ownerid).username
-        client.config.settings.subowners.forEach(sub => {
-            owners+=` & ${client.users.cache.get(sub).username}`;
-        });
-        embed.setFooter("© "+owners, client.user.avatarURL());
-    }
+    embed.addField(`${client.words.all.links.socialLinks}`, `${links}`);
+    client.util.setFooterOwner(client, embed);
     embed.setTimestamp();
     message.channel.send(embed);
 }

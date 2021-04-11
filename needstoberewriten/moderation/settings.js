@@ -16,17 +16,16 @@ module.exports.run = async (client, message, args) => {
     let i = Math.floor(Math.random() * client.config.c.length);
     let ce = client.config.c[i];
     let nie = 0;
-    let prefix = await client.db.get("guilds", message.guild.id, "prefix");
+    let prefix = client.dbCache.guilds[message.guild.id].prefix;
     if (message.member.hasPermission("ADMINISTRATOR") == false) return client.emit("uisae", "U03", message, "");
-    let discatgui = await client.db.get("guilds", message.guild.id, "disabledCategory");
-    let welcome = await client.db.get("guilds", message.guild.id, "welcome");
-    let goodbye = await client.db.get("guilds", message.guild.id, "goodbye");
-    let autorole = await client.db.get("guilds", message.guild.id, "autorole");
-    let slowmode = await client.db.get("guilds", message.guild.id, "slowmode");
-    let player = await client.db.get("guilds", message.guild.id, "player");
-    let warn = await client.db.get("guilds", message.guild.id, "warn");
-    let voteVK = await client.db.get("guilds", message.guild.id, "voteVoiceKick");
-    let dis = await client.db.get("users", message.author.id, "display");
+    let discatgui = client.dbCache.guilds[message.guild.id].disabledCategory;
+    let welcome = client.dbCache.guilds[message.guild.id].welcome;
+    let goodbye = client.dbCache.guilds[message.guild.id].goodbye;
+    let autorole = client.dbCache.guilds[message.guild.id].autorole;
+    let slowmode = client.dbCache.guilds[message.guild.id].slowmode;
+    let player = client.dbCache.guilds[message.guild.id].player;
+    let voteVK = client.dbCache.guilds[message.guild.id].voteVoiceKick;
+    let dis = client.dbCache.users[message.author.id].display;
     let disabledCategory = "";
     discatgui.forEach(cat => {
         disabledCategory = !disabledCategory ? cat : disabledCategory + ", " + cat;
@@ -746,10 +745,8 @@ module.exports.run = async (client, message, args) => {
 
         default:
             d = slowmode
-            second = 1;
-            minute = second * 60;
-            mins = Math.floor(d / (minute));
-            secs = Math.floor((d % (minute)) / (second));
+            mins = Math.floor(d / 60);
+            secs = Math.floor(d % 60);
             leg = 8;
             switch (dis.settings) {
                 case "allinone":

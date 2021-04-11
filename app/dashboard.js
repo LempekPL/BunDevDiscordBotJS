@@ -86,13 +86,13 @@ module.exports = async (client) => {
     });
 
     app.get("/", async (req, res) => {
-        await client.db.checkBot(client.user.id);
+        await client.db.check("bot", client.user.id);
         let botData = await client.db.getFull("bot", client.user.id);
         let wordsD;
         if (req.cookies.lang) {
             wordsD = client.util.langM(req.cookies.lang).dashboard;
         } else if (req.user) {
-            await client.db.checkUser(req.user.id);
+            await client.db.check("users", req.user.id);
             let la = await client.db.get("users", req.user.id, "language");
             wordsD = client.util.langM(la.lang).dashboard;
         }
@@ -143,13 +143,13 @@ module.exports = async (client) => {
         if (!member) return res.redirect("/");
         if (!member.permissions.has("MANAGE_GUILD")) return res.redirect("/");
 
-        await client.db.checkBot(client.user.id);
+        await client.db.check("bot", client.user.id);
         let botData = await client.db.getFull("bot", client.user.id);
 
-        await client.db.checkGuild(guild.id);
+        await client.db.check("guilds", guild.id);
         let settings = await client.db.getFull("guilds", guild.id);
 
-        await client.db.checkUser(req.user.id);
+        await client.db.check("users", req.user.id);
         let la = await client.db.get("users", req.user.id, "language");
         let wordsD = client.util.langM(la.lang).dashboard;
         if (req.cookies.lang) {
@@ -176,10 +176,10 @@ module.exports = async (client) => {
         if (!member) return res.redirect("/");
         if (!member.permissions.has("MANAGE_GUILD")) return res.redirect("/");
 
-        await client.db.checkBot(client.user.id);
+        await client.db.check("bot", client.user.id);
         let botData = await client.db.getFull("bot", client.user.id);
 
-        await client.db.checkGuild(guild.id);
+        await client.db.check("guilds", guild.id);
         let settings = await client.db.getFull("guilds", guild.id);
         settings.prefix = req.body.prefix;
         settings.slowmode = Number(req.body.slowmode);
@@ -191,7 +191,7 @@ module.exports = async (client) => {
         console.log(settings)
         await client.db.updateFull("guilds", guild.id, settings);
 
-        await client.db.checkUser(req.user.id);
+        await client.db.check("users", req.user.id);
         let la = await client.db.get("users", req.user.id, "language");
         let wordsD = client.util.langM(la.lang).dashboard;
         if (req.cookies.lang) {
@@ -212,10 +212,10 @@ module.exports = async (client) => {
     });
 
     app.get("/user", checkAuth, async (req, res) => {
-        await client.db.checkBot(client.user.id);
+        await client.db.check("bot", client.user.id);
         let botData = await client.db.getFull("bot", client.user.id);
 
-        await client.db.checkUser(req.user.id);
+        await client.db.check("users", req.user.id);
         let optionz = await client.db.getFull("users", req.user.id)
         let wordsD = client.util.langM(optionz.language.lang).dashboard;
         if (req.cookies.lang) {
@@ -235,10 +235,10 @@ module.exports = async (client) => {
     });
 
     app.post("/user", checkAuth, async (req, res) => {
-        await client.db.checkBot(client.user.id);
+        await client.db.check("bot", client.user.id);
         let botData = await client.db.getFull("bot", client.user.id);
 
-        await client.db.checkUser(req.user.id);
+        await client.db.check("users", req.user.id);
         let optionz = await client.db.getFull("users", req.user.id);
         optionz.language.lang = req.body['language.lang'];
         optionz.language.commands = req.body['language.commands'];
@@ -265,12 +265,12 @@ module.exports = async (client) => {
     });
 
     app.use(async (req, res) => {
-        await client.db.checkBot(client.user.id);
+        await client.db.check("bot", client.user.id);
         let wordsD;
         if (req.cookies.lang) {
             wordsD = client.util.langM(req.cookies.lang).dashboard;
         } else if (req.user) {
-            await client.db.checkUser(req.user.id);
+            await client.db.check("users", req.user.id);
             let la = await client.db.get("users", req.user.id, "language");
             wordsD = client.util.langM(la.lang).dashboard;
         }

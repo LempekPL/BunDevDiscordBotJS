@@ -1,31 +1,17 @@
 {
     "category": {
-        "basic":"Basic (basic)",
-        "moderation":"Moderation (mod)",
-        "text":"Text (txt)",
-        "zimages":"Image (img)",
-        "zother":"Other (other)",
-        "zowner":"Owner",
-        "lempekAPI":"LempekAPI (lkapi)",
-        "beta": "Beta (beta)",
-        "music": "Music (music)",
-        "textmanipulation": "Text manipulation (txtman)",
-        "zjimagemanipulation": "Image manipulation (imgman)",
-        "muser": "User (user)"
-    },
-    "codename": {
-        "basic":"basic",
-        "beta": "beta",
-        "lempekAPI":"lkapi",
-        "moderation":"mod",
-        "muser": "user",
-        "music": "music",
-        "text":"txt",
-        "textmanipulation": "txtman",
-        "zimages":"img",
-        "zjimagemanipulation": "imgman",
-        "zother":"other",
-        "zowner":"owner"
+        "basic":"Basic",
+        "mod":"Moderation",
+        "txt":"Text",
+        "img":"Image",
+        "other":"Other",
+        "owner":"Owner",
+        "lkapi":"LempekAPI",
+        "beta": "Beta",
+        "music": "Music",
+        "txtman": "Text manipulation",
+        "imgman": "Image manipulation",
+        "user": "User"
     },
     "codes": [
         "basic",

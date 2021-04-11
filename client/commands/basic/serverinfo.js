@@ -2,12 +2,21 @@ let Discord = require("discord.js");
 
 module.exports.info = {
     name: "serverinfo",
-    aliases: ["si"],
+    lang: {
+        en: {
+            main: "serverinfo",
+            aliases: ["si"]
+        },
+        pl: {
+            main: "serwerinfo",
+            aliases: ["informacjaoserwerze"]
+        }
+    },
     tags: ["server","serverinfo","info","basic"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client.util.codename(__dirname),message)) return;
+    if (await client.util.blockCheck(client, __dirname, message)) return;
     let guild = message.guild;
     let textChannels = guild.channels.cache.filter(c => c.type === 'text');
     let voiceChannels = guild.channels.cache.filter(c => c.type === 'voice');
@@ -34,15 +43,7 @@ module.exports.run = async (client, message, args) => {
     let dformat = client.util.dateFormat(message.guild.createdAt);
 
     embed.addField(`Created: `, dformat + `\n (Created: \`${guildcreated.years} ${guildcreated.ty}\` \`${guildcreated.days} ${guildcreated.td}\` \`${guildcreated.hours} ${guildcreated.th}\` \`${guildcreated.mins} ${guildcreated.tm}\` \`${guildcreated.secs} ${guildcreated.ts}\` ago)`);
-    if (client.config.settings.subowners.length==0) {
-        embed.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
-    } else {
-        let owners = client.users.cache.get(client.config.settings.ownerid).username
-        client.config.settings.subowners.forEach(sub => {
-            owners+=` & ${client.users.cache.get(sub).username}`;
-        });
-        embed.setFooter("© "+owners, client.user.avatarURL());
-    }
+    client.util.setFooterOwner(client, embed);
     embed.setTimestamp();
     message.channel.send(embed);
 }

@@ -31,18 +31,15 @@ module.exports = async (message, client) => {
 
     // load words to client
     langu = client.dbCache.guilds[message.guild.id].language;
-    if (langu.force) {
-        lang = client.dbCache.guilds[message.guild.id].language;
-    } else {
-        lang = client.dbCache.users[message.author.id].language;
-    }
+    lang = langu.force ? client.dbCache.guilds[message.guild.id].language : client.dbCache.users[message.author.id].language;
     client.words = client.util.langM(lang.lang);
     client.wordsCom = client.util.langM(lang.commands);
 
     // get args from message
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
+    args.shift().toLowerCase();
     let cmod = message.content.split(" ")[0];
-    let commandfile = client.commands.get(cmod.slice(prefix.length));
+    let commandfile = client.commands.get(client.commandMap.get(`${cmod.slice(prefix.length)}|${client.wordsCom.lang}`)) ? client.commands.get(client.commandMap.get(`${cmod.slice(prefix.length)}|${client.wordsCom.lang}`)) : client.commands.get(cmod.slice(prefix.length));
     if (!commandfile) return;
 
     slowmode = client.dbCache.guilds[message.guild.id].slowmode;
