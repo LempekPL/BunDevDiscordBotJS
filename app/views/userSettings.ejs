@@ -16,19 +16,19 @@
       <div class="sbox">
         <p><%= wordsD.settings.language %>:</p>
         <select class="s" name="language.lang">
-          <option value="en" <%= optionz.language.lang == 'en' ? `selected`:``;%>>English</option>
-          <option value="pl" <%= optionz.language.lang == 'pl' ? `selected`:``;%>>Polski</option>
+          <option value="en" <%= optionz.language.lang === 'en' ? `selected`:``;%>>English</option>
+          <option value="pl" <%= optionz.language.lang === 'pl' ? `selected`:``;%>>Polski</option>
         </select><br>
         <p><%= wordsD.settings.commandLanguage %></p>
         <select class="s" name="language.commands">
-          <option value="en" <%= optionz.language.commands == 'en' ? `selected`:``;%>>English</option>
-          <option value="pl" <%= optionz.language.commands == 'pl' ? `selected`:``;%>>Polski</option>
+          <option value="en" <%= optionz.language.commands === 'en' ? `selected`:``;%>>English</option>
+          <option value="pl" <%= optionz.language.commands === 'pl' ? `selected`:``;%>>Polski</option>
         </select>
       </div>
       <div class="sbox">
         <p><%= wordsD.settings.disableCategory %></p>
         <% codenames.codes.forEach(code => { %>
-          <p style="margin-bottom: 5px"><%= codenames.category[codenames.codename[code]] %></p>
+          <p style="margin-bottom: 5px"><%= codenames.category[code] %></p>
           <label for="<%= code %>" class="switch">
             <input class="s" type="checkbox" name="disabledCategory.<%= code %>" id="<%= code %>">
             <span class="slider round"></span>
@@ -44,14 +44,14 @@
   </div>
   <script>
     // don't even ask why
-    let optz = <%- JSON.stringify(optionz) %>;
+    let optz =<%-JSON.stringify(optionz)%>;
     let chList = [];
-    
+
     function checkD(el) {
       let butto = document.getElementsByClassName("butto")[0];
       console.log(el.value)
       dataz = el.name.includes(".") ? optz[el.name.split('.')[0]][el.name.split('.')[1]] : optz[el.name];
-      if ((el.value != 'on' && el.value != dataz) || (el.value == 'on' && el.checked !== dataz)) {
+      if ((el.value !== 'on' && el.value != dataz) || (el.value === 'on' && el.checked !== dataz)) {
         chList.push(el.name);
       } else {
         let index = chList.indexOf(el.name);

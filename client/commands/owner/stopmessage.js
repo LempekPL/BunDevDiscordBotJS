@@ -2,14 +2,11 @@ let Discord = require("discord.js");
 
 module.exports.info = {
     name: "stopmessage",
-    aliases: ["stms"],
-    example: "`#PREFIX##COMMAND# <link>`",
-    info: "ONLY OWNER",
     tags: ["owner"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (message.author.id != client.config.settings.ownerid  && !client.config.settings.subowners.includes(message.author.id)) return client.emit("uisae", "B99", message, "");
+    if (message.author.id !== client.config.settings.ownerid  && !client.config.settings.subowners.includes(message.author.id)) return client.emit("uisae", "B99", message, "");
     let i = Math.floor(Math.random() * client.config.c.length);
     let ce = client.config.c[i];
     link = args[0].split("/")

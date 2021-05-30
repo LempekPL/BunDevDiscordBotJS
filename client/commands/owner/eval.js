@@ -3,7 +3,6 @@ let Discord = require("discord.js");
 module.exports.info = {
     name: "eval",
     example: "`#PREFIX##COMMAND# <code>`",
-    info: "ONLY OWNER",
     tags: ["owner"]
 }
 

@@ -9,7 +9,7 @@ module.exports.searchUser = (message, string, returnAuthor = true) => {
                     return reject(message.author);
                 }
             }
-            if (message.guild.members.cache.get(string) != undefined) {
+            if (message.guild.members.cache.get(string) !== undefined) {
                 return resolve(message.client.users.cache.get(string));
             }
             let zn = false;
@@ -29,5 +29,4 @@ module.exports.searchUser = (message, string, returnAuthor = true) => {
     }).catch(err => {
         message.channel.send(err)
     });
-        
 };

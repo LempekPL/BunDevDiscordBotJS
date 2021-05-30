@@ -7,9 +7,21 @@ let Discord = require("discord.js");
 let clc = require("cli-color");
 let cookieParser = require('cookie-parser');
 let codenames = require("../data/codenames.json");
+let fs = require("fs");
+let sass = require("node-sass");
 
 let app = express();
 let MemoryStore = require("memorystore")(session);
+
+fs.readdir("./app/public/scss", (err, files) => {
+    files.forEach((file) => {
+        let cssName = file.replace(".scss", ".css");
+        let result = sass.renderSync({
+            file: "./app/public/scss/" + file,
+        });
+        fs.writeFileSync("./app/public/css/" + cssName, result.css);
+    });
+});
 
 module.exports = async (client) => {
     app.use(express.static(path.join(__dirname, 'public')));
@@ -17,7 +29,7 @@ module.exports = async (client) => {
     app.engine('html', require('ejs').renderFile);
     app.set('view engine', 'ejs');
     app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+    app.use(express.urlencoded({extended: true}));
     app.use(cookieParser());
 
     passport.serializeUser((user, done) => done(null, user));
@@ -28,10 +40,10 @@ module.exports = async (client) => {
             clientSecret: client.config.dashboard.clientSecret,
             callbackURL: `${client.config.dashboard.domain}:${client.config.dashboard.port}/api/callback`,
             scope: ["identify", "guilds"]
-        },
-        (accessToken, refreshToken, profile, done) => {
+        }, (accessToken, refreshToken, profile, done) => {
             process.nextTick(() => done(null, profile));
-        }));
+        })
+    );
 
     app.use(session({
         store: new MemoryStore({
@@ -64,7 +76,8 @@ module.exports = async (client) => {
             }
             next();
         },
-        passport.authenticate("discord"));
+        passport.authenticate("discord")
+    );
 
     app.get("/api/callback", passport.authenticate("discord", {
         failureRedirect: "/"
@@ -113,7 +126,7 @@ module.exports = async (client) => {
         let member = guild.members.cache.get(req.user.id);
         if (!member) return res.redirect("/");
         if (!member.permissions.has("ADMINISTRATOR")) return res.redirect("/");
-        
+
         await client.db.del("guilds", guild.id);
         client.guilds.cache.get(guild.id).leave();
 
@@ -126,7 +139,7 @@ module.exports = async (client) => {
         let member = guild.members.cache.get(req.user.id);
         if (!member) return res.redirect("/");
         if (!member.permissions.has("ADMINISTRATOR")) return res.redirect("/");
-        
+
         await client.db.del("guilds", guild.id);
 
         res.redirect("/");
@@ -245,7 +258,7 @@ module.exports = async (client) => {
         console.log(optionz)
         await client.db.updateFull("users", req.user.id, optionz);
 
-        
+
         let la = await client.db.get("users", req.user.id, "language");
         let wordsD = client.util.langM(la.lang).dashboard;
         if (req.cookies.lang) {

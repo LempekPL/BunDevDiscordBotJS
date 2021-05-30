@@ -77,7 +77,10 @@ let users = {
     time: {
         lastRob: "0"
     },
-    disabledCategory: [],
+    category: {
+        disabled: [],
+        force: false
+    },
     equalizers: {},
     playlists: {},
     favCommands: {},

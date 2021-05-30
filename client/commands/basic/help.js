@@ -42,7 +42,7 @@ module.exports.run = async (client, message, args) => {
             comcount = 0;
             coms = [];
             client.commands.forEach(command => {
-                if (catego == command.category) {
+                if (catego === command.category) {
                     coms.push(command.info.lang[client.wordsCom.lang].main);
                 }
                 comcount++;
@@ -50,7 +50,7 @@ module.exports.run = async (client, message, args) => {
             embed.addField(`${naming.category[catego]} [${comcount}]`, `\`${coms.join(", ")}\``);
             allcom += comcount;
         });
-        embed.setDescription(`Commands List: [${allcom}]` + ` | Prefix: \`${prefix}\` | Bot version: \`v${vers}\``);
+        embed.setDescription(`Commands List: [${allcom}] | Prefix: \`${prefix}\` | Bot version: \`v${vers}\``);
         //if (randoin) {
             embed.addField('\u200b', '\u200b');
             embed.addField(`Random info`, `${helpinfo.replace(/#PREFIX#/g,prefix).replace(/#BOT_USED#/g,timesused)}`);

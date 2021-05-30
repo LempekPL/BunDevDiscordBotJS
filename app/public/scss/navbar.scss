@@ -5,41 +5,48 @@
   text-align: center;
   text-decoration: none;
   font-size: 18px;
-  padding: 16px; }
+  padding: 16px;
+}
 
 .navbar {
   background-color: var(--nav-bg-primary);
   position: fixed;
   width: 100%;
   top: 0;
-  z-index: 1; }
+  z-index: 1;
+}
 
 .nav-lempek {
   font-size: 20px;
   padding: 16px;
-  transition: var(--nav-transition-speed); }
+  transition: var(--nav-transition-speed);
+}
 
 .logo {
   height: 45px;
   border-radius: 100%;
   padding: 0px;
-  margin: 5px 10px; }
+  margin: 5px 10px;
+}
 
 .bold {
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 .nav-txt {
   font-size: 20px;
   font-weight: bold;
   padding-right: 10px;
-  transition: var(--nav-transition-speed); }
+  transition: var(--nav-transition-speed);
+}
 
 .nav-icon {
   font-size: 20px;
   font-weight: bold;
   padding-left: 5px;
   padding-right: 5px;
-  transition: var(--nav-transition-speed); }
+  transition: var(--nav-transition-speed);
+}
 
 .navbar a {
   float: left;
@@ -47,16 +54,19 @@
   color: var(--nav-text-primary);
   text-align: center;
   text-decoration: none;
-  transition: var(--nav-transition-speed); }
+  transition: var(--nav-transition-speed);
+}
 
 .navbar a:hover {
   background-color: var(--nav-bg-secondary);
-  color: var(--nav-text-secondary); }
+  color: var(--nav-text-secondary);
+}
 
 .navbar .nav-icona {
   float: right;
   padding: 8px;
-  transition: var(--nav-transition-speed); }
+  transition: var(--nav-transition-speed);
+}
 
 .navbar button {
   border: none;
@@ -65,12 +75,14 @@
   background-color: var(--nav-bg-primary);
   text-align: center;
   text-decoration: none;
-  transition: var(--nav-transition-speed); }
+  transition: var(--nav-transition-speed);
+}
 
 .navbar button:hover,
 .navbar button:focus {
   background-color: var(--nav-bg-secondary);
-  color: var(--nav-text-secondary); }
+  color: var(--nav-text-secondary);
+}
 
 .dropbtn {
   background-color: var(--nav-bg-primary);
@@ -78,7 +90,8 @@
   padding: 16px;
   font-size: 16px;
   border: none;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .dropbtnsma {
   background-color: var(--nav-bg-primary);
@@ -86,12 +99,14 @@
   padding: 8px;
   font-size: 16px;
   border: none;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .dropdown {
   position: relative;
   display: inline;
-  float: right; }
+  float: right;
+}
 
 .dropdown-content {
   display: none;
@@ -100,7 +115,8 @@
   min-width: 160px;
   overflow: auto;
   z-index: 1;
-  right: 0; }
+  right: 0;
+}
 
 .dropdown-content .a {
   color: var(--nav-text-secondary);
@@ -108,14 +124,17 @@
   margin: 0 auto;
   min-width: 140px;
   text-decoration: none;
-  display: block; }
+  display: block;
+}
 
 .dropdown a:hover {
   background-color: var(--nav-bg-primary);
-  color: var(--nav-text-primary); }
+  color: var(--nav-text-primary);
+}
 
 .show {
-  display: block; }
+  display: block;
+}
 
 .ino {
   font-size: 20px;
@@ -124,7 +143,8 @@
   display: block;
   color: var(--nav-text-primary);
   text-align: center;
-  text-decoration: none; }
+  text-decoration: none;
+}
 
 .sel {
   margin-top: 10px;
@@ -132,8 +152,11 @@
   color: var(--but-text);
   background-color: var(--but-bg-primary);
   border-radius: 100px;
-  padding: 10px; }
+  padding: 10px;
+}
 
 @media screen and (max-width: 800px) {
   .ino {
-    display: none; } }
+    display: none;
+  }
+}

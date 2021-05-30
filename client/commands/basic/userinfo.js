@@ -36,11 +36,11 @@ module.exports.run = async (client, message, args) => {
 
         let emo;
         let emoja = member.presence.status;
-        if (emoja == "online") {
+        if (emoja === "online") {
             emo = "<:onlinediscord:620240031553945634>";
-        } else if (emoja == "idle") {
+        } else if (emoja === "idle") {
             emo = "<:idlediscord:620240031486967827>";
-        } else if (emoja == "dnd") {
+        } else if (emoja === "dnd") {
             emo = "<:dnddiscord:620240031067406357>";
         } else {
             emo = "<:invisiblediscord:620240031461802004>";
@@ -54,13 +54,13 @@ module.exports.run = async (client, message, args) => {
             }
             no = 0;
             client.config.settings.subowners.forEach(sub => {
-                if (member.id == sub) {
+                if (member.id === sub) {
                     relation = "Co-owner";
                 }
             });
-            if (client.config.settings.subowners.length > 0 && member.id == client.config.settings.ownerid) {
+            if (client.config.settings.subowners.length > 0 && member.id === client.config.settings.ownerid) {
                 relation = "Co-owner";
-            } else if (member.id == client.config.settings.ownerid) {
+            } else if (member.id === client.config.settings.ownerid) {
                 relation = "Owner";
             }
         } else {
@@ -78,7 +78,7 @@ module.exports.run = async (client, message, args) => {
             }
             total += fav[comm];
         }
-        if (!fav || Object.keys(fav).length == 0) {
+        if (!fav || Object.keys(fav).length === 0) {
             com = 'none';
         }
 
@@ -97,15 +97,7 @@ module.exports.run = async (client, message, args) => {
         embed.addField(`Created at`, dformat + `\n(Created: \`${ucreated.years} ${ucreated.ty}\` \`${ucreated.days} ${ucreated.td}\` \`${ucreated.hours} ${ucreated.th}\` \`${ucreated.mins} ${ucreated.tm}\` \`${ucreated.secs} ${ucreated.ts}\` ago)`);
         embed.addField(`Joined at`, dformat2 + `\n(Joined: \`${ujoined.years} ${ujoined.ty}\` \`${ujoined.days} ${ujoined.td}\` \`${ujoined.hours} ${ujoined.th}\` \`${ujoined.mins} ${ujoined.tm}\` \`${ujoined.secs} ${ujoined.ts}\` ago)`);
         embed.setThumbnail(member.avatarURL);
-        if (client.config.settings.subowners.length==0) {
-            embed.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
-        } else {
-            let owners = client.users.cache.get(client.config.settings.ownerid).username
-            client.config.settings.subowners.forEach(sub => {
-                owners+=` & ${client.users.cache.get(sub).username}`;
-            });
-            embed.setFooter("© "+owners, client.user.avatarURL());
-        }
+        client.util.setFooterOwner(client, embed);
         embed.setTimestamp();
         message.channel.send(embed);
     }).catch((err) => {
