@@ -3,20 +3,16 @@ let Discord = require("discord.js");
 module.exports.info = {
     name: "userinfo",
     lang: {
-        en: {
-            main: "userinfo",
-            aliases: ["ui", "user", "uinfo"]
-        },
-        pl: {
-            main: "użytinfo",
-            aliases: ["użytkownikinfo","informacjaoużytkowniku"]
-        }
+        en: require("../../../lang/en.json").command.userinfo.infoData
     },
+        // pl: {
+        //     main: "użytinfo",
+        //     aliases: ["użytkownikinfo","informacjaoużytkowniku"]
+        // }
     tags: ["user", "info", "userinfo", "basic"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client, __dirname, message)) return;
     let gra = `The user isn't playing anything.`;
     client.util.searchUser(message, args[0]).then(async member => {
         let memberb = await message.guild.member(member);

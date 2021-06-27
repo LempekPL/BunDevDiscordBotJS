@@ -5,11 +5,10 @@ module.exports = async (client) => {
         status: "online",
         clientStatus: "online",
         activity: {
-            name: "to people | " + client.config.settings.prefix + "help",
+            name: "to people | Change language on lmpk.tk/bun",
             type: "LISTENING"
         }
     }).catch(console.error);
-    //TODO | Change language on lmpk.tk/bun
     module.exports.emojiguild = client.guilds.cache.get(client.config.settings.emojiServer);
     // load database
     let conn = await new client.db.Conn().connect();

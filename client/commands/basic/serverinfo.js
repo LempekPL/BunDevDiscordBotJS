@@ -3,20 +3,16 @@ let Discord = require("discord.js");
 module.exports.info = {
     name: "serverinfo",
     lang: {
-        en: {
-            main: "serverinfo",
-            aliases: ["si"]
-        },
-        pl: {
-            main: "serwerinfo",
-            aliases: ["informacjaoserwerze"]
-        }
+        en: require("../../../lang/en.json").command.serverinfo.infoData
     },
+        // pl: {
+        //     main: "serwerinfo",
+        //     aliases: ["informacjaoserwerze"]
+        // }
     tags: ["server","serverinfo","info","basic"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client, __dirname, message)) return;
     let guild = message.guild;
     let textChannels = guild.channels.cache.filter(c => c.type === 'text');
     let voiceChannels = guild.channels.cache.filter(c => c.type === 'voice');

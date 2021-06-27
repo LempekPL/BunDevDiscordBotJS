@@ -1,6 +1,6 @@
-let Discord = require("discord.js");
-let allowedformat = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
-let allowedsize = Array.from({
+const Discord = require("discord.js");
+const allowedformat = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
+const allowedsize = Array.from({
     length: 9
 }, (e, i) => 2 ** (i + 4));
 let img = {
@@ -13,20 +13,14 @@ let userselect = null;
 module.exports.info = {
     name: "avatar",
     lang: {
-        en: {
-            main: "avatar",
-            aliases: ["av"]
-        },
-        pl: {
-            main: "awatar",
-            aliases: ["profilowe"]
-        }
+        en: require("../../../lang/en.json").command.avatar.infoData,
+        pl: require("../../../lang/pl.json").command.avatar.infoData
     },
     tags: ["picture", "avatar", "display", "basic"]
 }
 
+
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client, __dirname, message)) return;
 
     // handled data for user input -u <user_id> -s <size>
     for (let dataNum = 0; dataNum < args.length / 2; dataNum++) {
@@ -54,24 +48,6 @@ module.exports.run = async (client, message, args) => {
             case `--${client.wordsCom.command.avatar.user}`:
                 userselect = args[dataNum + 1];
                 break;
-
-            // case `-${client.wordsCom.command.avatar.help[0]}`:
-            // case `--${client.wordsCom.command.avatar.help}`:
-            //     embed.setTitle(client.words.all.avatar.hAvatar);
-            //     embed.addField("You can use with command ` <>`", `
-            //     > -f or --format to define format (only allowed formats png, jpg, jpeg, webp, gif)
-            //     > default: png\n
-            //     > -s or --size to define size (only allowed sizes 16,32,64,128,256,512,1024,2048,4096)
-            //     > default: 2048\n
-            //     > -u or --user to define user (you can mention or use user id)
-            //     > default: user using the command\n
-            //     > -d or --dynamic if true then it will automaticly change format to gif if possible (only true or false; helpful when you want to use other format than gif)
-            //     > default: true\n
-            //     > -h or --help shows this info`)
-            //     embed.setColor(client.util.randomColorConfig(client));
-            //     client.util.setFooterOwner(client, embed)
-            //     embed.setTimestamp();
-            //     return message.channel.send(embed);
 
             default:
                 userselect = args[dataNum];

@@ -4,23 +4,20 @@ let vers = require("../../../package.json").version;
 let rm = require('discord.js-reaction-menu');
 let randomhelpinfo = require("../../../data/randomhelpinfo.json");
 
+
 module.exports.info = {
     name: "help",
     lang: {
-        en: {
-            main: "help",
-            aliases: ["h", "?", "info"]
-        },
-        pl: {
-            main: "pomoc",
-            aliases: ["p", "?"]
-        }
+        en: require("../../../lang/en.json").command.help.infoData
     },
+        // pl: {
+        //     main: "pomoc",
+        //     aliases: ["p", "?"]
+        // }
     tags: ["help", "?", "how", "how to", "info", "basic"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client, __dirname, message)) return;
     let helpinfo = randomhelpinfo[Math.floor(Math.random() * randomhelpinfo.length)];
     let prefix = client.dbCache.guilds[message.guild.id].prefix;
     // let discatgui = await client.db.get("guilds", message.guild.id, "disabledCategory");
@@ -66,3 +63,22 @@ module.exports.run = async (client, message, args) => {
         message.channel.send(embed);
     }
 }
+
+
+// case `-${client.wordsCom.command.avatar.help[0]}`:
+// case `--${client.wordsCom.command.avatar.help}`:
+//     embed.setTitle(client.words.all.avatar.hAvatar);
+//     embed.addField("You can use with command ` <>`", `
+//     > -f or --format to define format (only allowed formats png, jpg, jpeg, webp, gif)
+//     > default: png\n
+//     > -s or --size to define size (only allowed sizes 16,32,64,128,256,512,1024,2048,4096)
+//     > default: 2048\n
+//     > -u or --user to define user (you can mention or use user id)
+//     > default: user using the command\n
+//     > -d or --dynamic if true then it will automaticly change format to gif if possible (only true or false; helpful when you want to use other format than gif)
+//     > default: true\n
+//     > -h or --help shows this info`)
+//     embed.setColor(client.util.randomColorConfig(client));
+//     client.util.setFooterOwner(client, embed)
+//     embed.setTimestamp();
+//     return message.channel.send(embed);

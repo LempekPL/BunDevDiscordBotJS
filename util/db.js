@@ -338,7 +338,7 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async getKey(table, key, id) {
+    async getKey(table, id, key) {
         if (!table || !key || !id) return false;
         try {
             let cursor = await r.table(table).get(id).toJSON().run(this.connection);

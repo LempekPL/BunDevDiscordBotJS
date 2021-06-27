@@ -22,20 +22,16 @@ const emo = {
 module.exports.info = {
     name: "links",
     lang: {
-        en: {
-            main: "links",
-            aliases: ["invite", "botinvite", "giveinvite", "updates", "trello", "roadmap", "dashboard", "website"]
-        },
-        pl: {
-            main: "linki",
-            aliases: ["dodaj", "aktualności", "dashboard", "strona"]
-        }
+        en: require("../../../lang/en.json").command.links.infoData
     },
+        // pl: {
+        //     main: "linki",
+        //     aliases: ["dodaj", "aktualności", "dashboard", "strona"]
+        // }
     tags: ["botinvite", "giveinvite", "invite", "support", "server","roadmap","updates","future","links","websites", "dashboard"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client, __dirname, message)) return;
     let embed = new Discord.MessageEmbed();
     embed.setColor(client.util.randomColorConfig(client));
     embed.setTitle(`${client.words.all.links.links}:`);

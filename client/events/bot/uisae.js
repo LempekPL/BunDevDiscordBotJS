@@ -4,8 +4,8 @@ let Discord = require('discord.js');
 module.exports = async (error = null, message, addinfo = null, client) => {
     let i = Math.floor(Math.random() * (client.config.c.length - 1) + 1);
     let ce = client.config.c[i];
-    let prefix = await client.db.get("guilds", message.guild.id, "prefix");
-    if (prefix == undefined || prefix == null || !prefix) prefix = client.config.settings.prefix;
+    let conn = await client.db.Conn().connect()
+    let prefix = await conn.getKey("guilds", message.guild.id, "prefix");
     let embed = new Discord.MessageEmbed();
     embed.setColor(ce);
     switch (error) {
@@ -130,7 +130,7 @@ module.exports = async (error = null, message, addinfo = null, client) => {
             embed.addField(`Bot doesn't know what error is it. Additonal info:`, addinfo);
             break;
     }
-    if (client.config.settings.subowners.length == 0) {
+    if (client.config.settings.subowners.length === 0) {
         embed.setFooter("© " + client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
     } else {
         let owners = client.users.cache.get(client.config.settings.ownerid).username
