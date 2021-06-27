@@ -23,16 +23,17 @@
     "cookie-parser": "^1.4.5",
     "discord.js": "^12.5.1",
     "discord.js-reaction-menu": "^1.1.1",
+    "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "fs": "^0.0.1-security",
     "memorystore": "^1.6.5",
     "node-fetch": "^2.6.1",
-    "node-sass": "^6.0.0",
     "passport": "^0.4.1",
     "passport-discord": "^0.1.4",
     "rethinkdb": "^2.4.2",
+    "sass": "^1.35.1",
     "shoukaku": "^1.5.2"
   }
 }

@@ -16,9 +16,9 @@ module.exports = (client) => {
             });
             for (lan in props.info.lang) {
                 for (nam in props.info.lang[lan]) {
-                    if (nam == "main") {
+                    if (nam === "main") {
                         client.commandMap.set(`${props.info.lang[lan].main}|${lan}`, props.info.name);
-                    } else if (nam == "aliases") {
+                    } else if (nam === "aliases") {
                         props.info.lang[lan].aliases.forEach(al => {
                             client.commandMap.set(`${al}|${lan}`, props.info.name);
                         });

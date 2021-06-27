@@ -8,7 +8,7 @@ let clc = require("cli-color");
 let cookieParser = require('cookie-parser');
 let codenames = require("../data/codenames.json");
 let fs = require("fs");
-let sass = require("node-sass");
+let sass = require("sass");
 
 let app = express();
 let MemoryStore = require("memorystore")(session);

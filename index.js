@@ -3,13 +3,14 @@ let config = require("./data/config");
 let {
     Shoukaku
 } = require('shoukaku');
+require('dotenv').config()
 
 // creating lavalink server
 let LavalinkServer = [{
     name: config.settings.botname,
-    host: config.lavalink.host,
-    port: config.lavalink.port,
-    auth: config.lavalink.password
+    host: process.env.LAVALINK_HOST,
+    port: process.env.LAVALINK_PORT,
+    auth: process.env.LAVALINK_PASSWORD
 }];
 let ShoukakuOptions = {
     moveOnDisconnect: true,
@@ -45,4 +46,4 @@ require('./client/utilLoader')(client);
 // loading dashboard is in client/events/bot/ready.js, because website was loading to fast XDD
 
 // connecting bot
-client.login(config.tokens.token);
+client.login(process.env.DEV ? process.env.DEV_TOKEN : process.env.TOKEN);
