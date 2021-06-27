@@ -1,30 +1,31 @@
-let Discord = require('discord.js');
+const Discord = require("discord.js");
+const fs = require("fs");
+const clc = require("cli-color");
+
 module.exports = (client) => {
     client.commands = new Discord.Collection();
     client.commandMap = new Map();
-    let fs = require("fs");
-    let clc = require("cli-color");
     fs.readdirSync("./client/commands/").forEach(category => {
         let commandFile = fs.readdirSync(`./client/commands/${category}`).filter(file => file.endsWith('.js'));
         for (let file of commandFile) {
             let props = require(`./commands/${category}/${file}`);
-            console.log(clc.yellow(`[commands] `) + clc.green(`(${category}) `) + clc.greenBright(`${file}`));
             client.commands.set(props.info.name, {
                 category: category,
                 run: props.run,
                 info: props.info
             });
-            for (lan in props.info.lang) {
-                for (nam in props.info.lang[lan]) {
-                    if (nam === "main") {
-                        client.commandMap.set(`${props.info.lang[lan].main}|${lan}`, props.info.name);
-                    } else if (nam === "aliases") {
-                        props.info.lang[lan].aliases.forEach(al => {
-                            client.commandMap.set(`${al}|${lan}`, props.info.name);
+            for (let lang in props.info.lang) {
+                for (let useCase in props.info.lang[lang]) {
+                    if (useCase === "main") {
+                        client.commandMap.set(`${props.info.lang[lang].main}|${lang}`, props.info.name);
+                    } else if (useCase === "aliases") {
+                        props.info.lang[lang].aliases.forEach(al => {
+                            client.commandMap.set(`${al}|${lang}`, props.info.name);
                         });
                     }
                 }
             }
+            console.log(clc.yellow(`[commands] `) + clc.green(`(${category}) `) + clc.greenBright(`${file}`));
         }
     });
 };

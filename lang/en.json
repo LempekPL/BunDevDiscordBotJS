@@ -1,6 +1,18 @@
 {
     "all": {
-
+        "avatar": {
+            "hAvatar": "Help avatar",
+            "field1": "You can use `#PREFIX##COMMAND# <>`"
+        },
+        "links": {
+            "links": "Links",
+            "supportServer": "Support Server",
+            "invite": "Invite bot",
+            "website": "Website",
+            "roadmap": "Roadmap",
+            "sourceCode": "Source Code",
+            "socialLinks": "Social links"
+        }
     },
     "help": {
         "help": "To change use `#PREFIX##COMMAND# <value>`"

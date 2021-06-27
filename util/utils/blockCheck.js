@@ -1,12 +1,10 @@
-let path = require("path");
-
-module.exports.blockCheck = async (client, dirName, message) => {
+module.exports.blockCheck = async (client, message, category) => {
     let discatgui = client.dbCache.guilds[message.guild.id].disabledCategory;
     let discatuse = client.dbCache.users[message.author.id].disabledCategory;
-    if (discatgui.includes(path.basename(path.resolve(dirName, '')))) {
+    if (discatgui.includes(category)) {
         message.channel.send("Server blocked this category");
         return true;
-    } else if (discatuse.includes(path.basename(path.resolve(dirName, '')))) {
+    } else if (discatuse.includes(category)) {
         message.channel.send("You blocked this category");
         return true;
     } else {

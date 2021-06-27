@@ -1,16 +1,22 @@
-let Discord = require("discord.js");
-let emo = {
-    youtube: "<:yt:815379220137377792>",
-    twitch: "<:twitch:815379239427375115>",
-    twitter: "<:twitter:815379259128283156>",
-    reddit: "<:reddit:815379278308573204>",
-    github: "<:github:815379304766242867>",
-    steam: "<:steam:815379325524115517>",
-    ownwebsite: "<:web:815379350400270336>",
-    spotify: "<:spotify:815379372609241138>",
-    soundcloud: "<:soundcloud:815379393667923999>",
-    instagram: "<:insta:815383957923168268>",
-    facebook: "<:facebook:815383971495673917>"
+const Discord = require("discord.js");
+const emo = {
+    youtube: "Youtube <:yt:815379220137377792>",
+    twitch: "Twitch <:twitch:815379239427375115>",
+    twitter: "Twitter <:twitter:815379259128283156>",
+    reddit: "Reddit <:reddit:815379278308573204>",
+    github: "Github <:github:815379304766242867>",
+    telegram: "Telegram <:telegram:858674664288944148>",
+    steam: "Steam <:steam:815379325524115517>",
+    ownwebsite: "Website <:web:815379350400270336>",
+    spotify: "Spotify <:spotify:815379372609241138>",
+    soundcloud: "Soundcloud <:soundcloud:815379393667923999>",
+    instagram: "Instagram <:insta:815383957923168268>",
+    newgrounds: "Newgrounds <:newgrounds:858671128544149505>",
+    furaffinity: "Furaffinity <:fa:858671128452923425>",
+    furmap: "Furmap <:furmap:858675131084570624>",
+    itch: "Itch <:itchio:858671128452923422>",
+    namemc: "Namemc <:namemc:858671128402460712>",
+    lempek: "Lempek <:lempek:858671085502595082>"
 }
 
 module.exports.info = {
@@ -40,13 +46,19 @@ module.exports.run = async (client, message, args) => {
     embed.addField(`${client.words.all.links.sourceCode}`, `[<:bunbun_red:815379923799375893> [GITHUB LINK]](https://github.com/LempekPL/BunBun)`);
 
     let links = "";
+    let i = 0;
     for (let naz in client.config.socialLinks) {
         if (client.config.socialLinks[naz]) {
             if (!links) {
                 links = `[${emo[naz]}](${client.config.socialLinks[naz]})`
             } else {
-                links += ` | [${emo[naz]}](${client.config.socialLinks[naz]})`
+                if (i % 4 === 0) {
+                    links += `\n[${emo[naz]}](${client.config.socialLinks[naz]})`
+                } else {
+                    links += ` | [${emo[naz]}](${client.config.socialLinks[naz]})`
+                }
             }
+            i++;
         }
     }
 

@@ -66,26 +66,19 @@ let guilds = {
 //serverType: "private"
 
 let users = {
-    money: {
-        money: "0",
-        bank: "0",
-        lastDaily: "0"
-    },
-    xp: {
-        xp: "0",
-        totxp: "0"
-    },
-    lvl: {
-        lvl: "1",
-        nxlvl: "60"
-    },
-    time: {
-        lastRob: "0"
-    },
-    category: {
-        disabled: [],
-        force: false
-    },
+    // money: {
+    //     money: "0",
+    //     bank: "0"
+    // },
+    // xp: {
+    //     xp: "0",
+    //     totxp: "0"
+    // },
+    // lvl: {
+    //     lvl: "1",
+    //     nxlvl: "60"
+    // },
+    disabledCategory: [],
     equalizers: {},
     playlists: {},
     favCommands: {},
@@ -106,11 +99,13 @@ let bot = {
     globalBans: []
 }
 
-let objects = {
+let defaultData = {
     guilds,
     users,
     bot
 }
+
+module.exports.default = defaultData
 
 let connection;
 
@@ -120,6 +115,7 @@ let connection;
     obj - table 
 */
 module.exports.check = async (object, id) => {
+    console.log("deletecheck")
     if (!id || !object) return false;
     try {
         let dbdata = await r.table(object).get(id).toJSON().run(connection);
@@ -154,6 +150,7 @@ module.exports.check = async (object, id) => {
     v - new value
 */
 module.exports.update = async (obj, id, k, v) => {
+    console.log("deleteupdate")
     if (!obj || !id || !k || !v) return false;
     try {
         await r.table(obj).get(id).update({
@@ -172,6 +169,7 @@ module.exports.update = async (obj, id, k, v) => {
     v - data values {Object}
 */
 module.exports.updateFull = async (obj, id, v) => {
+    console.log("deleteupdateFull")
     if (!obj || !id || !v) return false;
     try {
         await r.table(obj).get(id).update(v).run(connection);
@@ -188,6 +186,7 @@ module.exports.updateFull = async (obj, id, v) => {
     name - data to get
 */
 module.exports.get = async (obj, id, name) => {
+    console.log("deleteget")
     if (!id) return false;
     try {
         let object = await r.table(obj).get(id).toJSON().run(connection);
@@ -206,6 +205,7 @@ module.exports.get = async (obj, id, name) => {
     id - id in the table
 */
 module.exports.getFull = async (obj, id) => {
+    console.log("deletegetFull")
     if (!id) return false;
     try {
         let object = await r.table(obj).get(id).toJSON().run(connection);
@@ -224,6 +224,7 @@ module.exports.getFull = async (obj, id) => {
     id - id in the table
 */
 module.exports.del = async (obj, id) => {
+    console.log("deletedel")
     if (!id) return false;
     try {
         await r.table(obj).get(id).delete().run(connection);
@@ -240,6 +241,7 @@ module.exports.del = async (obj, id) => {
     id - id in the table
 */
 module.exports.syncCache = async (client, object, id) => {
+    console.log("deletesyncCache")
     try {
         if (!client || !object || !id) return false;
         let data = await client.db.getFull(object, id);
@@ -257,6 +259,7 @@ module.exports.syncCache = async (client, object, id) => {
     id - id in the table
 */
 module.exports.syncDB = async (client, object, id) => {
+    console.log("deletesyncDB")
     try {
         if (!client || !object || !id) return false;
         await client.db.updateFull(object, id, client.dbCache[object][id]);
@@ -293,11 +296,11 @@ module.exports.Conn = class Conn {
             console.log('Tables created.');
         } catch (error) {
             if (error.message.includes("already exists")) return;
-            console.log(error);
+            console.error(error);
         }
     }
 
-    async update(table, id, key, value) {
+    async updateKeyValue(table, id, key, value) {
         if (!table || !id || !key || !value) return false;
         try {
             await r.table(table).get(id).update({
@@ -310,7 +313,7 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async updateFull(table,id,values) {
+    async update(table,id,values) {
         if (!table || !id || !values) return false;
         try {
             await r.table(table).get(id).update(values).run(this.connection);
@@ -335,13 +338,12 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async get(table, key, id) {
+    async getKey(table, key, id) {
         if (!table || !key || !id) return false;
         try {
             let cursor = await r.table(table).get(id).toJSON().run(this.connection);
-            if (!cursor) return false;
             let data = await JSON.parse(cursor)[key];
-            if (!data) return false;
+            if (!data) return defaultData[table][key];
             return data;
         } catch (e) {
             console.error(e);
@@ -353,7 +355,6 @@ module.exports.Conn = class Conn {
         if (!table) return false;
         try {
             let cursor = await r.table(table).run(this.connection);
-            if (!cursor) return false;
             let data = await cursor.toArray();
             cursor.close();
             if (!data) return false;
@@ -364,13 +365,12 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async getFull(table,id) {
+    async get(table,id) {
         if (!table || !id) return false;
         try {
-            let cursor = await r.table(table).get(id).toJSON().run(this.connection);
-            if (!cursor) return false;
-            let data = await JSON.parse(cursor);
-            if (!data) return false;
+            let resp = await r.table(table).get(id).toJSON().run(this.connection);
+            let data = JSON.parse(resp);
+            if (!data) return defaultData[table];
             return data;
         } catch (e) {
             console.error(e);
@@ -378,13 +378,13 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async getFullBy(table,key,value, amount = 1) {
+    async getBy(table,key, value, amount = 1) {
         if (!table || !key || !value) return false;
         try {
             let cursor = await r.table(table).filter({[key]: value}).run(this.connection);
-            if (!cursor) return false;
             let data = await cursor.toArray();
-            if (!data) return false;
+            cursor.close();
+            if (!data) return null;
             let dataExit;
             if (amount > 0 && amount <= data.length) {
                 dataExit = data.slice(0, amount);
