@@ -1,6 +1,6 @@
 module.exports.blockCheck = async (client, message, category) => {
-    let discatgui = client.dbCache.guilds[message.guild.id].disabledCategory;
-    let discatuse = client.dbCache.users[message.author.id].disabledCategory;
+    let discatgui = client.quickCache.guilds[message.guild.id].disabledCategory;
+    let discatuse = client.quickCache.users[message.author.id].disabledCategory;
     if (discatgui.includes(category)) {
         message.channel.send("Server blocked this category");
         return true;

@@ -1,13 +1,11 @@
-let Discord = require('discord.js');
-let config = require("./data/config");
-let {
-    Shoukaku
-} = require('shoukaku');
-require('dotenv').config()
+const { Client } = require('discord.js');
+const { Shoukaku } = require('shoukaku');
+const Config = require("./data/config");
+require('dotenv').config();
 
 // creating lavalink server
 let LavalinkServer = [{
-    name: config.settings.botname,
+    name: process.env.DEV && Config.settings.devBotName != null ? Config.settings.devBotName : Config.settings.botName,
     host: process.env.LAVALINK_HOST,
     port: process.env.LAVALINK_PORT,
     auth: process.env.LAVALINK_PASSWORD
@@ -21,29 +19,21 @@ let ShoukakuOptions = {
 };
 
 
-class BotClient extends Discord.Client {
-    queue = {};
+class BetterClient extends Client {
     util = {};
     db = require("./util/db.js");
-    dbCache = {
-        bot: {},
-        users: {},
-        guilds: {}
-    };
-    forceCheck = new Set();
-    words = {};
-    wordsCom = {};
-    config = config;
+
+    config = Config;
     shoukaku = new Shoukaku(this, LavalinkServer, ShoukakuOptions);
 }
 
 
 // loading bot
-let client = new BotClient();
+const client = new BetterClient();
 require('./client/events/eventsLoader')(client);
-require('./client/commandLoader')(client);
-require('./client/utilLoader')(client);
-// loading dashboard is in client/events/bot/ready.js, because website was loading to fast XDD
+// require('./client/commandLoader')(client);
+// require('./client/utilLoader')(client);
+// loading dashboard in client/events/bot/ready.js, because website was loading to fast XDD
 
 // connecting bot
-client.login(process.env.DEV ? process.env.DEV_TOKEN : process.env.TOKEN);
+client.login(process.env.DEV && process.env.DEV_TOKEN != null ? process.env.DEV_TOKEN : process.env.TOKEN);

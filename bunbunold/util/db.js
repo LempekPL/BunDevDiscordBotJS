@@ -342,9 +342,13 @@ module.exports.Conn = class Conn {
         if (!table || !key || !id) return false;
         try {
             let cursor = await r.table(table).get(id).toJSON().run(this.connection);
-            let data = await JSON.parse(cursor)[key];
-            if (!data) return defaultData[table][key];
-            return data;
+            if (cursor === "null") {
+                await this.insert(table, id, defaultData[table]);
+                return defaultData[table][key];
+            }
+            let dataReturn = await JSON.parse(cursor)[key];
+            if (!dataReturn) return defaultData[table][key];
+            return dataReturn;
         } catch (e) {
             console.error(e);
             return false;

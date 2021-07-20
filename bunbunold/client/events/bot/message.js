@@ -6,24 +6,21 @@ const cacheDump = 60 * 60 * 1000;
 module.exports = async (message, client) => {
     if (message.author.bot) return;
 
-    let conn;
-    if (!client.dbCache.guilds[message.guild.id] || !client.dbCache.users[message.author.id] || !client.dbCache.bot[client.user.id]) {
-        conn = await new client.db.Conn().connect();
-    }
-    await checkCache(client, conn,"guilds", message.guild.id);
+    let conn = await new client.db.Conn().connect();
+    await setQuickCache(client, conn,"guilds", message.guild.id);
 
-    let prefix = client.dbCache.guilds[message.guild.id].prefix;
+    let prefix = await conn.getKey("guilds", message.guild.id, "prefix");
     if (message.content === `<@${client.user.id}>` || message.content === `<@!${client.user.id}>`) {
         message.reply(`my prefix is \`${prefix}\``);
     }
 
     if (!message.content.startsWith(prefix)) return;
 
-    await checkCache(client, conn,"users", message.author.id);
-    await checkCache(client, conn,"bot", client.user.id);
+    await setQuickCache(client, conn,"users", message.author.id);
+    await setQuickCache(client, conn,"bot", client.user.id);
 
     // return if globally banned
-    let gbans = client.dbCache.bot[client.user.id].globalBans;
+    let gbans = await conn.getKey("bot", client.user.id, "globalBans");
     if (gbans.length > 0) {
         if (gbans.includes(message.author.id)) {
             await client.util.gban(message, client);
@@ -32,8 +29,9 @@ module.exports = async (message, client) => {
     }
 
     // load words to client
-    let lang = client.dbCache.guilds[message.guild.id].language.force ? client.dbCache.guilds[message.guild.id].language : client.dbCache.users[message.author.id].language;
-    lang = lang ?? {lang: "en", commands: "en"};
+    let langBase = await conn.getKey("guilds", message.guild.id, "language");
+    let lang = langBase.force ? langBase : await conn.getKey("users", message.author.id, "language");
+    //lang = lang ?? {lang: "en", commands: "en"};
     client.words = require(`../../../lang/${lang.lang}.json`);
     client.wordsCom = require(`../../../lang/${lang.commands}.json`);
 
@@ -45,7 +43,7 @@ module.exports = async (message, client) => {
     if (!commandFile) return;
 
     // check for cooldown
-    let slowmode = client.dbCache.guilds[message.guild.id].slowmode;
+    let slowmode = client.quickCache.guilds[message.guild.id].slowmode;
     if (cooldown.has(message.author.id)) {
         message.delete();
         message.reply(`you need to wait \`${Math.floor(slowmode / 60)}\`m \`${Math.floor(slowmode % 60)}\`s between commands.`).then(message => {
@@ -63,9 +61,9 @@ module.exports = async (message, client) => {
     if (!blocked) {
         await commandFile.run(client, message, args);
 
-        let comCount = client.dbCache.bot[client.user.id].commands;
-        let userCommand = client.dbCache.users[message.author.id].favCommands;
-        await comCount++;
+        let comCount = await conn.getKey("bot", client.user.id, "commands");
+        let userCommand = await conn.getKey("users", message.author.id, "favCommands");
+        comCount++;
         userCommand[commandFile.info.name] ? userCommand[commandFile.info.name]++ : 1;
 
         // ignoring owners
@@ -88,30 +86,12 @@ module.exports = async (message, client) => {
     }
 }
 
-async function checkCache(client, conn, table, id) {
-    let timeoutFromMap = setClearCache.get(id);
-    if (timeoutFromMap) {
-        setClearCache.delete(id);
-        clearTimeout(timeoutFromMap)
-    }
-    if (client.dbCache[table][id]) {
-        setClearCache.set(id, setTimeout(() => {
-            client.dbCache[table][id] = null;
-            setClearCache.delete(id);
-            console.log("cleared")
-        }, cacheDump));
-        return;
-    }
+async function setQuickCache(client, conn, table, id) {
     let data = await conn.get(table, id);
     if (!data) {
         data = client.db.default.guilds
     }
-    client.dbCache[table][id] = data;
-    setClearCache.set(id, setTimeout(() => {
-        client.dbCache[table][id] = null;
-        setClearCache.delete(id);
-        console.log("cleared")
-    }, cacheDump));
+    client.quickCache[table][id] = data;
 }
 
 async function logCommand(client, message, comCount) {
