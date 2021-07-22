@@ -1,27 +1,24 @@
-let defaultData = require("../data/defaultDatabaseValues.json");
+const DefaultData = require("../data/defaultDatabaseValues.json");
+const R = require('rethinkdb');
+const DatabaseDefault = {
+    host: process.env.RETHINK_HOST,
+    port: process.env.RETHINK_PORT,
+    db: process.env.DEV ? process.env.DEV_RETHINK_DB : process.env.RETHINK_DB,
+    user: process.env.RETHINK_USER,
+    password: process.env.RETHINK_PASSWORD,
+};
 
-module.exports.Conn = class Conn {
-    constructor({host, port, db, user, password} = database) {
-        this.host = host;
-        this.port = port;
-        this.db = db;
-        this.user = user;
-        this.password = password;
-        this.connection = {};
-    }
-
-    async connect() {
-        let database = {host: this.host, port: this.port, db: this.db, user: this.user, password: this.password};
-        this.connection = await r.connect(database);
-        return this;
+module.exports.Connection = class Connection {
+    async constructor(database = DatabaseDefault) {
+        this.connection = await R.connect(database);
     }
 
     async load() {
         try {
             await Promise.all([
-                r.tableCreate("users").run(this.connection),
-                r.tableCreate("guilds").run(this.connection),
-                r.tableCreate("bot").run(this.connection),
+                R.tableCreate("users").run(this.connection),
+                R.tableCreate("guilds").run(this.connection),
+                R.tableCreate("bot").run(this.connection),
             ]);
             console.log('Tables created.');
         } catch (error) {
@@ -33,7 +30,7 @@ module.exports.Conn = class Conn {
     async updateKeyValue(table, id, key, value) {
         if (!table || !id || !key || !value) return false;
         try {
-            await r.table(table).get(id).update({
+            await R.table(table).get(id).update({
                 [key]: value
             }).run(this.connection);
             return true;
@@ -43,10 +40,10 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async update(table,id,values) {
+    async update(table, id, values) {
         if (!table || !id || !values) return false;
         try {
-            await r.table(table).get(id).update(values).run(this.connection);
+            await R.table(table).get(id).update(values).run(this.connection);
             return true;
         } catch (e) {
             console.error(e);
@@ -54,13 +51,13 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async insert(table ,id, values = {}) {
+    async insert(table, id, values = {}) {
         if (!table || !id || !values || values === {}) return false;
         try {
-            await r.table(table).insert({
+            await R.table(table).insert({
                 id
             }).run(this.connection);
-            await r.table(table).get(id).update(values).run(this.connection);
+            await R.table(table).get(id).update(values).run(this.connection);
             return true;
         } catch (e) {
             console.error(e);
@@ -71,13 +68,13 @@ module.exports.Conn = class Conn {
     async getKey(table, id, key) {
         if (!table || !key || !id) return false;
         try {
-            let cursor = await r.table(table).get(id).toJSON().run(this.connection);
+            let cursor = await R.table(table).get(id).toJSON().run(this.connection);
             if (cursor === "null") {
-                await this.insert(table, id, defaultData[table]);
-                return defaultData[table][key];
+                await this.insert(table, id, DefaultData[table]);
+                return DefaultData[table][key];
             }
             let dataReturn = await JSON.parse(cursor)[key];
-            if (!dataReturn) return defaultData[table][key];
+            if (!dataReturn) return DefaultData[table][key];
             return dataReturn;
         } catch (e) {
             console.error(e);
@@ -88,7 +85,7 @@ module.exports.Conn = class Conn {
     async getAll(table) {
         if (!table) return false;
         try {
-            let cursor = await r.table(table).run(this.connection);
+            let cursor = await R.table(table).run(this.connection);
             let data = await cursor.toArray();
             cursor.close();
             if (!data) return false;
@@ -99,12 +96,12 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async get(table,id) {
+    async get(table, id) {
         if (!table || !id) return false;
         try {
-            let resp = await r.table(table).get(id).toJSON().run(this.connection);
+            let resp = await R.table(table).get(id).toJSON().run(this.connection);
             let data = JSON.parse(resp);
-            if (!data) return defaultData[table];
+            if (!data) return DefaultData[table];
             return data;
         } catch (e) {
             console.error(e);
@@ -112,10 +109,10 @@ module.exports.Conn = class Conn {
         }
     }
 
-    async getBy(table,key, value, amount = 1) {
+    async getBy(table, key, value, amount = 1) {
         if (!table || !key || !value) return false;
         try {
-            let cursor = await r.table(table).filter({[key]: value}).run(this.connection);
+            let cursor = await R.table(table).filter({[key]: value}).run(this.connection);
             let data = await cursor.toArray();
             cursor.close();
             if (!data) return null;
@@ -135,7 +132,7 @@ module.exports.Conn = class Conn {
     async deleteRow(table, id, key) {
         if (!table || !id || !key) return false;
         try {
-            await r.table(table).get(id).replace(r.row.without(key)).run(this.connection);
+            await R.table(table).get(id).replace(R.row.without(key)).run(this.connection);
             return true;
         } catch (e) {
             console.error(e);
@@ -146,7 +143,7 @@ module.exports.Conn = class Conn {
     async delete(table, id) {
         if (!table || !id) return false;
         try {
-            await r.table(table).get(id).delete().run(this.connection);
+            await R.table(table).get(id).delete().run(this.connection);
             return true;
         } catch (e) {
             console.error(e);

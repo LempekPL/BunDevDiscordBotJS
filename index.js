@@ -1,7 +1,7 @@
-const { Client } = require('discord.js');
-const { Shoukaku } = require('shoukaku');
+const { Client } = require("discord.js");
+const { Shoukaku } = require("shoukaku");
 const Config = require("./data/config");
-require('dotenv').config();
+require("dotenv").config();
 
 // creating lavalink server
 let LavalinkServer = [{
@@ -19,17 +19,17 @@ let ShoukakuOptions = {
 };
 
 
-class BetterClient extends Client {
-    util = {};
-    db = require("./util/db.js");
-
+class ExtendedClient extends Client {
+    queue = {};
+    lang = {};
+    db = require("./util/database.js");
+    util = require("./util/utilities.js");
     config = Config;
     shoukaku = new Shoukaku(this, LavalinkServer, ShoukakuOptions);
 }
 
-
 // loading bot
-const client = new BetterClient();
+const client = new ExtendedClient();
 require('./client/events/eventsLoader')(client);
 // require('./client/commandLoader')(client);
 // require('./client/utilLoader')(client);
