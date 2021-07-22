@@ -9,8 +9,14 @@ const DatabaseDefault = {
 };
 
 module.exports.Connection = class Connection {
-    async constructor(database = DatabaseDefault) {
-        this.connection = await R.connect(database);
+    constructor(database = DatabaseDefault) {
+        this.database = database;
+        this.connection = {};
+    }
+
+    async connect() {
+        this.connection = await R.connect(this.database);
+        return this;
     }
 
     async load() {

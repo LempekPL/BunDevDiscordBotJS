@@ -1,5 +1,5 @@
-let clc = require("cli-color");
+const CliCol = require("cli-color");
 
 module.exports = (client, name) => {
-    console.log(clc.cyan(`Lavalink Node: ${name} ready!`));
+    console.log(CliCol.cyan(`Lavalink Node: ${name} ready!`));
 };

@@ -30,7 +30,7 @@ class ExtendedClient extends Client {
 
 // loading bot
 const client = new ExtendedClient();
-require('./client/events/eventsLoader')(client);
+require('./client/events/eventLoader')(client);
 // require('./client/commandLoader')(client);
 // require('./client/utilLoader')(client);
 // loading dashboard in client/events/bot/ready.js, because website was loading to fast XDD
