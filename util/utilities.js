@@ -1,5 +1,6 @@
 const Config = require("../data/config.json");
 
+// utilities useful for: embeds
 module.exports.randomColor = () => {
     if (Config.randomColors) {
         let i = Math.floor(Math.random() * Config.randomColors.length);
@@ -22,4 +23,9 @@ module.exports.footerEmbed = (client, embed) => {
         embed.setFooter("© " + owners, client.user.avatarURL());
     }
     embed.setTimestamp();
+}
+
+// other utilities
+module.exports.globalBaned = (client) => {
+
 }

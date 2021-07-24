@@ -1,11 +1,24 @@
 {
   "guilds": {
-
+    "version": "0",
+    "prefix": "b,",
+    "slowmode": 1,
+    "language": {
+      "main": "en",
+      "commands": "en",
+      "force": false
+    }
   },
   "users": {
-
+    "version": "0",
+    "language": {
+      "main": "en",
+      "commands": "en"
+    }
   },
   "bot": {
-    
+    "version": "1",
+    "globalBans": [],
+    "commands": 0
   }
 }

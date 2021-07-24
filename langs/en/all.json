@@ -1,0 +1,20 @@
+{
+  "commandName": {
+    "commandsDefaults": {
+      "test": "Testing"
+    },
+    "info": {
+      "usage": "#PREFIX##COMMAND# <additionalstuff>",
+      "explanation": "string or array handler in help command or something XD"
+    }
+  },
+  "avatar": {
+    "commandsDefaults": {
+      "avatar": "Avatar"
+    },
+    "info": {
+      "usage": "#PREFIX##COMMAND# [@userid] or #PREFIX##COMMAND# <key> <value>",
+      "explanation": "Sends embeded message using Discord.MessageEmbed() method that will contain attachment of your currently selected avatar that you have set some time ago"
+    }
+  }
+}

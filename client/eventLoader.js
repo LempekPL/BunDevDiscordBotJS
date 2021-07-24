@@ -1,10 +1,10 @@
-const EventHandler = (event) => require(`./bot/${event}`);
-const MusicEventHandler = (musicEvent) => require(`./music/${musicEvent}`);
+const EventHandler = (event) => require(`./events/bot/${event}`);
+const MusicEventHandler = (musicEvent) => require(`./events/music/${musicEvent}`);
 
 module.exports = (client) => {
     // classic events
     client.on("ready", () => EventHandler("ready")(client));
-    client.on("message", (message) => EventHandler("message")(message, client));
+    client.on("message", (message) => EventHandler("message")(client, message));
     client.on("error", (error) => EventHandler("error")(client, error));
     //client.on("guildCreate", (guild) => EventHandler("guildCreate")(client, guild));
     //client.on("guildDelete", (guild) => EventHandler("guildDelete")(client, guild));

@@ -4,13 +4,13 @@ const Config = require("./data/config");
 require("dotenv").config();
 
 // creating lavalink server
-let LavalinkServer = [{
+const LavalinkServer = [{
     name: process.env.DEV && Config.settings.devBotName != null ? Config.settings.devBotName : Config.settings.botName,
     host: process.env.LAVALINK_HOST,
     port: process.env.LAVALINK_PORT,
     auth: process.env.LAVALINK_PASSWORD
 }];
-let ShoukakuOptions = {
+const ShoukakuOptions = {
     moveOnDisconnect: true,
     resumable: false,
     resumableTimeout: 30,
@@ -30,9 +30,8 @@ class ExtendedClient extends Client {
 
 // loading bot
 const client = new ExtendedClient();
-require('./client/events/eventLoader')(client);
+require('./client/eventLoader')(client);
 // require('./client/commandLoader')(client);
-// require('./client/utilLoader')(client);
 // loading dashboard in client/events/bot/ready.js, because website was loading to fast XDD
 
 // connecting bot

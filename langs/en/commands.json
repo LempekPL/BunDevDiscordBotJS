@@ -1,0 +1,15 @@
+{
+  "commandName": {
+    "default": "default",
+    "aliases": [
+      "alias1",
+      "alias2"
+    ]
+  },
+  "avatar": {
+    "default": "avatar",
+    "aliases": [
+      "av"
+    ]
+  }
+}

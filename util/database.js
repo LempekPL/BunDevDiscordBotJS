@@ -60,9 +60,7 @@ module.exports.Connection = class Connection {
     async insert(table, id, values = {}) {
         if (!table || !id || !values || values === {}) return false;
         try {
-            await R.table(table).insert({
-                id
-            }).run(this.connection);
+            await R.table(table).insert({id}).run(this.connection);
             await R.table(table).get(id).update(values).run(this.connection);
             return true;
         } catch (e) {
@@ -79,15 +77,18 @@ module.exports.Connection = class Connection {
                 await this.insert(table, id, DefaultData[table]);
                 return DefaultData[table][key];
             }
-            let dataReturn = await JSON.parse(cursor)[key];
-            if (!dataReturn) return DefaultData[table][key];
-            return dataReturn;
+            let data = await JSON.parse(cursor)[key];
+            if (!data.version || data.version !== DefaultData[table].version) {
+                await this.syncDB(table, id, data);
+            }
+            return data;
         } catch (e) {
             console.error(e);
             return false;
         }
     }
 
+    // not protected, to fix if needed
     async getAll(table) {
         if (!table) return false;
         try {
@@ -106,8 +107,14 @@ module.exports.Connection = class Connection {
         if (!table || !id) return false;
         try {
             let resp = await R.table(table).get(id).toJSON().run(this.connection);
+            if (resp === "null") {
+                await this.insert(table, id, DefaultData[table]);
+                return DefaultData[table];
+            }
             let data = JSON.parse(resp);
-            if (!data) return DefaultData[table];
+            if (!data.version || data.version !== DefaultData[table].version) {
+                await this.syncDB(table, id, data);
+            }
             return data;
         } catch (e) {
             console.error(e);
@@ -115,6 +122,7 @@ module.exports.Connection = class Connection {
         }
     }
 
+    // not protected, to fix if needed
     async getBy(table, key, value, amount = 1) {
         if (!table || !key || !value) return false;
         try {
@@ -129,6 +137,56 @@ module.exports.Connection = class Connection {
                 dataExit = data;
             }
             return dataExit;
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+    }
+
+    async syncDB(table, id, currentData) {
+        if (!table || !id) return false;
+        try {
+            let alreadyAdded = [];
+            for (let currentDataKey in currentData) {
+                alreadyAdded.push(currentDataKey);
+                if (currentDataKey === "id" || DefaultData[table][currentDataKey] === undefined) continue;
+                switch (currentData[currentDataKey].constructor) {
+                    case Object:
+                        if (DefaultData[table][currentDataKey].constructor === Array) {
+                            currentData[currentDataKey] = DefaultData[table][currentDataKey]
+                        } else {
+                            for (let defaultDatumKey in DefaultData[table][currentDataKey]) {
+                                if (Object.keys(currentData[currentDataKey]).includes(defaultDatumKey)) continue;
+                                currentData[currentDataKey][defaultDatumKey] = DefaultData[table][currentDataKey][defaultDatumKey];
+                            }
+                        }
+                        break;
+                    case Array:
+                        if (DefaultData[table][currentDataKey].constructor === Object) {
+                            currentData[currentDataKey] = DefaultData[table][currentDataKey]
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (alreadyAdded.length < Object.keys(DefaultData[table]).length + 1) {
+                for (let defaultDataKey in DefaultData[table]) {
+                    if (alreadyAdded.includes(defaultDataKey)) continue;
+                    currentData[defaultDataKey] = DefaultData[table][defaultDataKey];
+                }
+            } else if (alreadyAdded.length > Object.keys(DefaultData[table]).length + 1) {
+                let currentDataDummy = {"id":id};
+                for (let defaultDataKey in DefaultData[table]) {
+                    if (!alreadyAdded.includes(defaultDataKey)) continue;
+                    currentDataDummy[defaultDataKey] = DefaultData[table][defaultDataKey];
+                }
+                currentData = currentDataDummy;
+                await this.delete(table, id);
+            }
+            currentData.version = DefaultData[table].version;
+            await this.insert(table, id, currentData);
+            return true;
         } catch (e) {
             console.error(e);
             return false;
