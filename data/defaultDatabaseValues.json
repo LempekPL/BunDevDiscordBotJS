@@ -1,10 +1,10 @@
 {
   "guilds": {
-    "version": "0",
+    "version": "z",
     "prefix": "b,",
     "slowmode": 1,
     "language": {
-      "main": "en",
+      "main": "pl",
       "commands": "en",
       "force": false
     }

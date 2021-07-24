@@ -5,7 +5,6 @@ module.exports = async (client) => {
 
     // create database connection
     client.dbConn = await new client.db.Connection().connect();
-    console.log()
     await client.dbConn.load();
 
     // set presence and change it once per hour

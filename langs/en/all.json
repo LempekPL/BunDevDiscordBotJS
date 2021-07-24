@@ -10,7 +10,8 @@
   },
   "avatar": {
     "commandsDefaults": {
-      "avatar": "Avatar"
+      "avatar": "Avatar",
+      "mem": "afert"
     },
     "info": {
       "usage": "#PREFIX##COMMAND# [@userid] or #PREFIX##COMMAND# <key> <value>",

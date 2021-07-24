@@ -1,0 +1,11 @@
+{
+  "avatar": {
+    "commandsDefaults": {
+      "avatar": "Awatar"
+    },
+    "info": {
+      "usage": "#PREFIX##COMMAND# [@userid] lub #PREFIX##COMMAND# <klucz> <wartość>",
+      "explanation": "Wysyła embeda z twoim profilowym"
+    }
+  }
+}

@@ -10,12 +10,14 @@ module.exports = async (client, message) => {
 
     if (!message.content.startsWith(guildData.prefix)) return;
 
-    const GlobalBans = await client.dbConn.getKey("bot", client.user.id, "globalBans");
-    if (GlobalBans.length > 0 && GlobalBans.includes(message.author.id)) {
+    let botData = await client.dbConn.get("bot", client.user.id);
+    if (botData.globalBans.length > 0 && botData.globalBans.includes(message.author.id)) {
         client.util.globalBaned(message, client);
         return;
     }
 
+    let userData = await client.dbConn.get("users", message.author.id);
+    if (guildData.language.force) {
 
-    //client.lang =
+    }
 }
