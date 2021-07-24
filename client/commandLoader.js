@@ -32,5 +32,4 @@ module.exports = (client) => {
             console.log(CliCol.yellow(`[commands] `) + CliCol.green(`(${category}) `) + CliCol.greenBright(`${file}`));
         }
     });
-    console.log(client)
 };

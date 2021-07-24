@@ -171,8 +171,12 @@ module.exports.Connection = class Connection {
                 }
             }
             if (alreadyAdded.length < Object.keys(DefaultData[table]).length + 1) {
+                console.log(alreadyAdded)
+                console.log(alreadyAdded.length)
+                console.log(Object.keys(DefaultData[table]).length + 1)
                 for (let defaultDataKey in DefaultData[table]) {
                     if (alreadyAdded.includes(defaultDataKey)) continue;
+                    console.log(defaultDataKey)
                     currentData[defaultDataKey] = DefaultData[table][defaultDataKey];
                 }
             } else if (alreadyAdded.length > Object.keys(DefaultData[table]).length + 1) {
