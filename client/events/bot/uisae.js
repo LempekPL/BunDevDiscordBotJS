@@ -1,13 +1,13 @@
 //universal information system about errors //? client.emit("uisae", "X##", message, "");
 const Discord = require('discord.js');
 
-module.exports = async (client, error = null, message, addinfo = "IDK") => {
+module.exports = async (client, error = null, message, addinfo = "none") => {
     let embed = new Discord.MessageEmbed();
     embed.setColor(client.util.randomColor());
     switch (error) {
         case "B01":
             embed.setTitle(`Error B01`);
-            embed.addField(`Unknown bot error:`, `${addinfo}`);
+            embed.addField(`Unknown bot error. Additional info:`, `${addinfo}`);
             break;
 
         case "B99":
@@ -17,7 +17,12 @@ module.exports = async (client, error = null, message, addinfo = "IDK") => {
 
         case "U01":
             embed.setTitle(`Error U01`);
-            embed.addField(`Unknown user error:`, `${addinfo}`);
+            embed.addField(`Unknown user error. Additional info:`, `${addinfo}`);
+            break;
+
+        case "U04":
+            embed.setTitle(`Error U04`);
+            embed.addField(`Wrong user. Additional info:`, `${addinfo}`);
             break;
 
         case "D02":
@@ -32,7 +37,7 @@ module.exports = async (client, error = null, message, addinfo = "IDK") => {
 
         case "P01":
             embed.setTitle(`Error P01`);
-            embed.addField(`Unknown music error:`, `${addinfo}`);
+            embed.addField(`Unknown music error. Additional info:`, `${addinfo}`);
             break;
 
         default:

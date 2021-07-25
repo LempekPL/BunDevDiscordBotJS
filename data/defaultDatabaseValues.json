@@ -2,7 +2,7 @@
   "guilds": {
     "version": "0.1",
     "prefix": "b,",
-    "slowmode": 1,
+    "slowmode": 5,
     "language": {
       "main": "pl",
       "commands": "en",
@@ -10,11 +10,12 @@
     }
   },
   "users": {
-    "version": "0",
+    "version": "0.1",
     "language": {
       "main": "en",
       "commands": "en"
-    }
+    },
+    "favouriteCommands": {}
   },
   "bot": {
     "version": "1",

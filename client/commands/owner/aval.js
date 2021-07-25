@@ -1,4 +1,7 @@
 const Discord = require("discord.js");
+const useEv = {
+    jsonS: valueToString => JSON.stringify(valueToString)
+}
 
 module.exports.info = {
     name: "aval",
@@ -13,7 +16,7 @@ module.exports.run = async (client, message, args) => {
     try {
         evalv = eval("(async () => {" + text + "})()");
     } catch (err) {
-        message.channel.send("Don't work " + err);
+        message.channel.send("Don't work\n" + err);
         return;
     }
     let eembed = new Discord.MessageEmbed();

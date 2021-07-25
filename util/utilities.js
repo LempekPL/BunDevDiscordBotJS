@@ -1,6 +1,123 @@
 const Config = require("../data/config.json");
 
-// utilities useful for: embeds
+/**
+ * Search for user
+ * @param {Client} client - Discord client
+ * @param {Message} message - Discord message
+ * @param {string} stringToCheck - String to search for user
+ * @param {Object} options - Options
+ * @param {boolean} options.multiServerSearch - If true it will search for user in every server
+ * @param {boolean} options.returnAuthor - If true it will return message author if it won't find any user
+ * @param {boolean} options.ignoreBots - If true it will ignore bots
+ * @returns {Promise<User>} - Discord User
+ */
+module.exports.searchUser = (client, message, stringToCheck = "", {
+    returnAuthor,
+    ignoreBots,
+    multiServerSearch
+} = {
+    returnAuthor: false,
+    ignoreBots: true,
+    multiServerSearch: false
+}) => {
+    // TODO: add addtional check if user is private or restricted
+    if (!client || !message) {
+        throw new Error(`${!client ? `${!message ? `Client and message` : `Client`}` : `Message`} not specified`);
+    }
+    let returning = new Promise(async (resolve, reject) => {
+        // check for mentions
+        if (message.mentions.users.first()) {
+            if (ignoreBots && message.mentions.users.first().bot) {
+                if (returnAuthor) {
+                    return resolve(message.author);
+                }
+                return reject("found user is a bot");
+            }
+            return resolve(message.mentions.users.first())
+        }
+        // check if stringToCheck has data
+        if (!stringToCheck) {
+            if (returnAuthor) {
+                return resolve(message.author);
+            }
+            return reject("user not found");
+        }
+        // check for user in guild using id or if multiServerSearch is true then check everywhere for user using id
+        if (message.guild.members.cache.get(stringToCheck) !== undefined || (multiServerSearch && client.users.cache.get(stringToCheck) !== undefined)) {
+            if (ignoreBots && (client.users.cache.get(stringToCheck).bot || stringToCheck === "662484808416362499")) {
+                if (returnAuthor) {
+                    return resolve(message.author);
+                }
+                return reject("found user is a bot");
+            }
+            return resolve(client.users.cache.get(stringToCheck))
+        }
+        // check for user using username, if multiServerSearch is true then check for them too
+        let users = new Map();
+        let usersWereBots = false;
+        let collection = multiServerSearch ? client.users.cache : message.guild.members.cache;
+        for (const member of collection) {
+            let user = multiServerSearch ? member[1] : member[1].user;
+            if (user.username.toLowerCase().includes(stringToCheck.toLowerCase())) {
+                if (!(ignoreBots && user.bot)) {
+                    users.set(user.tag, user);
+                }
+                if (ignoreBots && user.bot) {
+                    usersWereBots = true;
+                }
+            }
+        }
+        switch (users.size) {
+            case 0:
+                if (returnAuthor) {
+                    return resolve(message.author);
+                }
+                return reject(ignoreBots && usersWereBots ? "found users are bots" : "user not found");
+            case 1:
+                return resolve(users.entries().next().value[1]);
+            default:
+                let userList = []
+                for (const user of users[Symbol.iterator]()) {
+                    userList.push(user[0]);
+                }
+                let mesAsk = await message.channel.send(`Reply with one of these users: \`${userList.join("`, `")}\` or \`cancel\`. You have 20 seconds.`)
+                let collector = await message.channel.createMessageCollector(m => m.author === message.author, {time: 20000});
+                collector.on("collect", async m => {
+                    if (userList.includes(m.content)) {
+                        collector.stop();
+                        if (m.guild.me.hasPermission("MANAGE_MESSAGES")) {
+                            m.delete();
+                        }
+                        return resolve(users.get(m.content));
+                    }
+                    if (m.content === "cancel") {
+                        collector.stop();
+                        if (m.guild.me.hasPermission("MANAGE_MESSAGES")) {
+                            m.delete();
+                        }
+                        return reject("dont")
+                    }
+                });
+                collector.on("end", () => {
+                    mesAsk.delete()
+                    setTimeout(() => {
+                        return reject("dont")
+                    }, 5000)
+                });
+                break;
+        }
+    });
+    return returning.catch((err) => {
+        if (err !== "dont") {
+            client.emit("uisae", "U04", message, err);
+        }
+    });
+}
+
+/**
+ * Returns random color
+ * @returns {(string|Array)} - Array with random values [R, G, B] or random string from config.json
+ */
 module.exports.randomColor = () => {
     if (Config.randomColors) {
         let i = Math.floor(Math.random() * Config.randomColors.length);
@@ -12,6 +129,11 @@ module.exports.randomColor = () => {
     return [R, G, B];
 }
 
+/**
+ * Creates footer for embed, no return
+ * @param client - Discord client
+ * @param embed - Discord embed
+ */
 module.exports.footerEmbed = (client, embed) => {
     if (Config.settings.subowners.length === 0) {
         embed.setFooter("© " + client.users.cache.get(Config.settings.ownerid).username, client.users.cache.get(Config.settings.ownerid).avatarURL());

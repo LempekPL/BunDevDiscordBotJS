@@ -21,7 +21,8 @@ const ShoukakuOptions = {
 
 class ExtendedClient extends Client {
     queue = {};
-    lang = {};
+    languages = {};
+    lang = {}
     db = require("./util/database.js");
     util = require("./util/utilities.js");
     config = Config;
@@ -31,7 +32,7 @@ class ExtendedClient extends Client {
 // loading bot
 const client = new ExtendedClient();
 require('./client/eventLoader')(client);
-require('./client/commandLoader')(client);
+// loading commends in client/events/bot/ready.js, to make sure database loads
 // loading dashboard in client/events/bot/ready.js, because website was loading to fast XDD
 
 // connecting bot

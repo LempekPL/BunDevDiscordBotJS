@@ -1,4 +1,7 @@
 const Discord = require("discord.js");
+const useEv = {
+    jsonS: valueToString => JSON.stringify(valueToString)
+}
 
 module.exports.info = {
     name: "eval",

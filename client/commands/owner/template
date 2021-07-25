@@ -1,0 +1,10 @@
+let Discord = require("discord.js");
+
+module.exports.info = {
+    name: "name",
+    tags: ["test"]
+}
+
+module.exports.run = async (client, message, args) => {
+
+}

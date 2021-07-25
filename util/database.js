@@ -78,7 +78,7 @@ module.exports.Connection = class Connection {
                 return DefaultData[table][key];
             }
             let data = await JSON.parse(cursor)[key];
-            if (!data.version || data.version !== DefaultData[table].version) {
+            if (!JSON.parse(cursor).version || JSON.parse(cursor).version !== DefaultData[table].version) {
                 await this.syncDB(table, id, data);
             }
             return data;
@@ -171,12 +171,8 @@ module.exports.Connection = class Connection {
                 }
             }
             if (alreadyAdded.length < Object.keys(DefaultData[table]).length + 1) {
-                console.log(alreadyAdded)
-                console.log(alreadyAdded.length)
-                console.log(Object.keys(DefaultData[table]).length + 1)
                 for (let defaultDataKey in DefaultData[table]) {
                     if (alreadyAdded.includes(defaultDataKey)) continue;
-                    console.log(defaultDataKey)
                     currentData[defaultDataKey] = DefaultData[table][defaultDataKey];
                 }
             } else if (alreadyAdded.length > Object.keys(DefaultData[table]).length + 1) {
