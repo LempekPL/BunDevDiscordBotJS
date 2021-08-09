@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
-const useEv = {
-    jsonS: valueToString => JSON.stringify(valueToString)
+const Use = {
+    Str: valueToString => JSON.stringify(valueToString)
 }
 
 module.exports.info = {
@@ -19,13 +19,19 @@ module.exports.run = async (client, message, args) => {
         message.channel.send("Don't work\n" + err);
         return;
     }
-    let eembed = new Discord.MessageEmbed();
-    eembed.setColor(client.util.randomColor());
-    eembed.setAuthor("AVAL - JS");
-    eembed.setTitle("INPUT:");
-    eembed.setDescription("```js\n" + text + "\n```");
-    eembed.addField("OUTPUT:", "```js\n" + evalv + "\n```");
-    if (!String(evalv).includes(process.env.TOKEN)) {
-        message.channel.send(eembed);
+
+    try {
+        let eembed = new Discord.MessageEmbed();
+        eembed.setColor(client.util.randomColor());
+        eembed.setAuthor("AVAL - JS");
+        eembed.setTitle("INPUT:");
+        eembed.setDescription("```js\n" + text + "\n```");
+        eembed.addField("OUTPUT:", "```js\n" + evalv + "\n```");
+        if (!String(evalv).includes(process.env.TOKEN)) {
+            message.channel.send({embeds:[eembed]});
+        }
+    } catch (e) {
+        console.log(e);
+        client.emit("uisae", "ERROR", message, e);
     }
 }

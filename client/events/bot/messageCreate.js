@@ -20,7 +20,7 @@ module.exports = async (client, message) => {
     // check if user has cooldown
     let cooldownUser = cooldown.get(message.author.id)
     if (cooldownUser) {
-        if (message.guild.me.hasPermission("MANAGE_MESSAGES")) {
+        if (message.guild.me.permissions.has("MANAGE_MESSAGES")) {
             message.delete();
         }
         let gap = cooldownUser.getTime() - Date.now();
@@ -35,15 +35,19 @@ module.exports = async (client, message) => {
 
     // set language
     let defaultLang = require(`../../../langs/en/all.json`);
-    let setLang, comLang;
+    let defaultLangCom = require(`../../../langs/en/commandExclusive.json`);
+    let setLang, comLang, setLangCom;
     if (guildData.language.force) {
         setLang = require(`../../../langs/${guildData.language.main}/all.json`);
+        setLangCom = require(`../../../langs/${guildData.language.main}/commandExclusive.json`);
         comLang = guildData.language.main;
     } else {
         setLang = require(`../../../langs/${userData.language.main}/all.json`);
+        setLangCom = require(`../../../langs/${userData.language.main}/commandExclusive.json`);
         comLang = userData.language.main;
     }
     client.lang = {...defaultLang, ...setLang};
+    client.langCom = {...defaultLangCom, ...setLangCom};
 
     // filter arguments and search for command in client
     let args = message.content.slice(guildData.prefix.length).trim().split(/ +/g);
@@ -59,9 +63,9 @@ module.exports = async (client, message) => {
     await updateData(client, message);
 
     // ignoring cooldown and logging command for bot owners
-    if (!(message.author.id === client.config.settings.ownerid || client.config.settings.subowners.includes(message.author.id))) {
+    if (!(message.author.id === client.config.settings.ownerId || client.config.settings.subOwnersIds.includes(message.author.id))) {
         // ingnore cooldown for server administrators
-        if (!message.member.hasPermission("ADMINISTRATOR")) {
+        if (!message.member.permissions.has("ADMINISTRATOR")) {
             let cooldownDate = new Date(Date.now() + guildData.slowmode * 1000);
             cooldown.set(message.author.id, cooldownDate);
         }

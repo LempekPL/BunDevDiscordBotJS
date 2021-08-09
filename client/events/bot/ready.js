@@ -75,11 +75,9 @@ async function setPresence(client) {
     }
     client.user.setPresence({
         status: "online",
-        activity: {
+        activities: [{
             name: presenceName,
             type: presenceType
-        }
-    }).catch(err => {
-        console.log(err)
+        }]
     });
 }

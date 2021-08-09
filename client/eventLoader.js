@@ -4,7 +4,7 @@ const MusicEventHandler = (musicEvent) => require(`./events/music/${musicEvent}`
 module.exports = (client) => {
     // classic events
     client.on("ready", () => EventHandler("ready")(client));
-    client.on("message", (message) => EventHandler("message")(client, message));
+    client.on("messageCreate", (message) => EventHandler("messageCreate")(client, message));
     client.on("error", (error) => EventHandler("error")(client, error));
     //client.on("guildCreate", (guild) => EventHandler("guildCreate")(client, guild));
     //client.on("guildDelete", (guild) => EventHandler("guildDelete")(client, guild));

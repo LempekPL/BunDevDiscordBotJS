@@ -6,11 +6,12 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    let msg = await message.channel.send(`Ping? <a:discordloading:815380005320130670>`);
-    let p = new Discord.MessageEmbed;
-    p.setColor(client.util.randomColor(client));
-    p.addField(`Pong! <a:dloading:815379977163767810>`, `Ping: **${msg.createdTimestamp - message.createdTimestamp}**ms. \nGateway (API): **${Math.round(client.ws.ping)}**ms`);
+    let pingMessage = await message.channel.send({ content: `Ping? <a:discordloading:815380005320130670>`, reply: { messageReference: message.id }});
+    let p = new Discord.MessageEmbed();
+    p.setColor(client.util.randomColor());
+    p.setAuthor(client.user.tag, client.user.avatarURL())
+    p.setDescription(`Ping: **${pingMessage.createdTimestamp - message.createdTimestamp}**ms. \nGateway (API): **${Math.round(client.ws.ping)}**ms`);
     client.util.footerEmbed(client, p);
     p.setTimestamp();
-    msg.edit(p);
+    await pingMessage.edit({content: "Pong! <a:dloading:815379977163767810>", embeds: [p]});
 }

@@ -1,12 +1,12 @@
 {
   "settings": {
-    "ownerid": "249253855613812736",
-    "subowners": [],
+    "ownerId": "249253855613812736",
+    "subOwnersIds": [],
     "botName": "BunBun",
     "devBotName": "BunBunDev",
-    "betaRoleID": "671428142480490496",
-    "supportServerID": "533714236581478421",
-    "emojiServerID": "815378648608538634"
+    "betaRoleId": "671428142480490496",
+    "supportServerId": "533714236581478421",
+    "emojiServerId": "815378648608538634"
   },
   "socialLinks": {
     "youtube": "https://www.youtube.com/channel/UCL6-HSEiD28U5ddwL5l9fFA",

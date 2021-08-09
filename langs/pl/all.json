@@ -1,11 +1,9 @@
 {
-  "avatar": {
-    "commandsDefaults": {
-      "avatar": "Awatar"
-    },
-    "info": {
-      "usage": "#PREFIX##COMMAND# [@userid] lub #PREFIX##COMMAND# <klucz> <wartość>",
-      "explanation": "Wysyła embeda z twoim profilowym"
-    }
-  }
+  "basic": "Basic",
+  "beta": "Beta Testers",
+  "moderation": "Moderation",
+  "other": "Other",
+  "owner": "Owner",
+  "avatar": "Awatar",
+  "useForMoreInfo": "Więcej informacji"
 }

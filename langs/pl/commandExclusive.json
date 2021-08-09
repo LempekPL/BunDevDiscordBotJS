@@ -1,0 +1,13 @@
+{
+  "avatar": {
+    "default": "awatar",
+    "aliases": [
+      "profilowe"
+    ],
+    "args": {
+      "user": "użytkownik",
+      "size": "wielkość",
+      "format": "rozszerzenie"
+    }
+  }
+}

@@ -2,23 +2,29 @@ const Config = require("../data/config.json");
 
 /**
  * Search for user
- * @param {Client} client - Discord client
- * @param {Message} message - Discord message
- * @param {string} stringToCheck - String to search for user
+ * @param client - Discord client
+ * @param message - Discord message
+ * @param {string} [stringToCheck] - String to search for user
  * @param {Object} options - Options
- * @param {boolean} options.multiServerSearch - If true it will search for user in every server
- * @param {boolean} options.returnAuthor - If true it will return message author if it won't find any user
- * @param {boolean} options.ignoreBots - If true it will ignore bots
+ * @param {boolean} [options.returnAuthor=false] - If true it will return message author if it won't find any user.
+ * @param {boolean} [options.ignoreBots=true] - If true it will ignore bots.
+ * @param {boolean} [options.allowChoose=false] - If true it will allow you to choose users.
+ * @param {boolean} [options.multiServerSearch=false] - If true it will search for user in every server.
+ * @param {boolean} [options.multiServerChoose=false] - If true it will allow you to choose users from every server.
  * @returns {Promise<User>} - Discord User
  */
 module.exports.searchUser = (client, message, stringToCheck = "", {
     returnAuthor,
     ignoreBots,
-    multiServerSearch
+    allowChoose,
+    multiServerSearch,
+    multiServerChoose
 } = {
     returnAuthor: false,
     ignoreBots: true,
-    multiServerSearch: false
+    allowChoose: false,
+    multiServerSearch: false,
+    multiServerChoose: false
 }) => {
     // TODO: add addtional check if user is private or restricted
     if (!client || !message) {
@@ -55,9 +61,9 @@ module.exports.searchUser = (client, message, stringToCheck = "", {
         // check for user using username, if multiServerSearch is true then check for them too
         let users = new Map();
         let usersWereBots = false;
-        let collection = multiServerSearch ? client.users.cache : message.guild.members.cache;
+        let collection = multiServerSearch && multiServerChoose ? client.users.cache : message.guild.members.cache;
         for (const member of collection) {
-            let user = multiServerSearch ? member[1] : member[1].user;
+            let user = multiServerSearch && multiServerChoose ? member[1] : member[1].user;
             if (user.username.toLowerCase().includes(stringToCheck.toLowerCase())) {
                 if (!(ignoreBots && user.bot)) {
                     users.set(user.tag, user);
@@ -76,23 +82,27 @@ module.exports.searchUser = (client, message, stringToCheck = "", {
             case 1:
                 return resolve(users.entries().next().value[1]);
             default:
+                if (!allowChoose) {
+                    resolve(users.entries().next().value[1])
+                    break;
+                }
                 let userList = []
                 for (const user of users[Symbol.iterator]()) {
                     userList.push(user[0]);
                 }
                 let mesAsk = await message.channel.send(`Reply with one of these users: \`${userList.join("`, `")}\` or \`cancel\`. You have 20 seconds.`)
-                let collector = await message.channel.createMessageCollector(m => m.author === message.author, {time: 20000});
+                let collector = await message.channel.createMessageCollector({filter: m => m.author === message.author, time: 20000});
                 collector.on("collect", async m => {
                     if (userList.includes(m.content)) {
                         collector.stop();
-                        if (m.guild.me.hasPermission("MANAGE_MESSAGES")) {
+                        if (m.guild.me.permissions.has("MANAGE_MESSAGES")) {
                             m.delete();
                         }
                         return resolve(users.get(m.content));
                     }
                     if (m.content === "cancel") {
                         collector.stop();
-                        if (m.guild.me.hasPermission("MANAGE_MESSAGES")) {
+                        if (m.guild.me.permissions.has("MANAGE_MESSAGES")) {
                             m.delete();
                         }
                         return reject("dont")
@@ -116,7 +126,7 @@ module.exports.searchUser = (client, message, stringToCheck = "", {
 
 /**
  * Returns random color
- * @returns {(string|Array)} - Array with random values [R, G, B] or random string from config.json
+ * @returns {(string|Array<number>)} - Array with random values [R, G, B] or random string from config.json
  */
 module.exports.randomColor = () => {
     if (Config.randomColors) {
@@ -135,19 +145,37 @@ module.exports.randomColor = () => {
  * @param embed - Discord embed
  */
 module.exports.footerEmbed = (client, embed) => {
-    if (Config.settings.subowners.length === 0) {
-        embed.setFooter("© " + client.users.cache.get(Config.settings.ownerid).username, client.users.cache.get(Config.settings.ownerid).avatarURL());
-    } else {
-        let owners = client.users.cache.get(Config.settings.ownerid).username
-        Config.settings.subowners.forEach(sub => {
+    if (!client || !embed) {
+        throw new Error(`${!client ? `${!embed ? `Client and embed` : `Client`}` : `Embed`} not specified`);
+    }
+    if (Config.settings.subOwnersIds.length === 0) {
+        embed.setFooter("© " + client.users.cache.get(Config.settings.ownerId).username, client.users.cache.get(Config.settings.ownerId).avatarURL());
+    } else if (Config.settings.subOwnersIds.length <= 2) {
+        let owners = client.users.cache.get(Config.settings.ownerId).username
+        Config.settings.subOwnersIds.forEach(sub => {
             owners += ` & ${client.users.cache.get(sub).username}`;
         });
         embed.setFooter("© " + owners, client.user.avatarURL());
+    } else {
+        embed.setFooter(client.bot.tag, client.user.avatarURL());
     }
     embed.setTimestamp();
+}
+
+
+/**
+ * Sends a logging webhook message
+ * @param client - Discord client
+ * @param message - Discord embed
+ * @param webhook - Discord webhook link
+ * @param {String} data - Data to send
+ */
+module.exports.logger = (client, message, webhook, data) => {
+
 }
 
 // other utilities
 module.exports.globalBaned = (client) => {
 
 }
+

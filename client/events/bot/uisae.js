@@ -25,6 +25,41 @@ module.exports = async (client, error = null, message, addinfo = "none") => {
             embed.addField(`Wrong user. Additional info:`, `${addinfo}`);
             break;
 
+        case "U14":
+            embed.setTitle(`Error U14`);
+            embed.addField(`Wrong guild. Additional info:`, `${addinfo}`);
+            break;
+
+        case "U24":
+            embed.setTitle(`Error U24`);
+            embed.addField(`Wrong channel. Additional info:`, `${addinfo}`);
+            break;
+
+        case "U34":
+            embed.setTitle(`Error U34`);
+            embed.addField(`Wrong message. Additional info:`, `${addinfo}`);
+            break;
+
+        case "U44":
+            embed.setTitle(`Error U44`);
+            embed.addField(`Wrong emoji. Additional info:`, `${addinfo}`);
+            break;
+
+        case "U54":
+            embed.setTitle(`Error U54`);
+            embed.addField(`Wrong thread. Additional info:`, `${addinfo}`);
+            break;
+
+        case "U94":
+            embed.setTitle(`Error U94`);
+            embed.addField(`Wrong link. Additional info:`, `${addinfo}`);
+            break;
+
+        case "U23":
+            embed.setTitle(`Error U23`);
+            embed.addField(`User error. Please look at \`${client.dbData.guilds.prefix}help <command>\` before using this command. Additional info:`, `${addinfo}`);
+            break;
+
         case "D02":
             embed.setTitle(`Error D02`);
             embed.setDescription(`Too old. Discord API don't allow to delete messages that are over 14 days old.`);
@@ -43,9 +78,9 @@ module.exports = async (client, error = null, message, addinfo = "none") => {
         default:
             embed.setAuthor(`ERROR`);
             embed.setTitle(`<a:error1:662820530617057312> Error!!!!`);
-            embed.addField(`Bot doesn't know what error is it. Additonal info:`, addinfo);
+            embed.addField(`Bot doesn't know what error it is. Additonal info:`, addinfo);
             break;
     }
     client.util.footerEmbed(client, embed);
-    message.channel.send(embed);
+    message.channel.send({embeds:[embed]});
 };
