@@ -1,9 +1,9 @@
 {
-  "basic": "Basic",
-  "beta": "Beta Testers",
-  "moderation": "Moderation",
-  "other": "Other",
-  "owner": "Owner",
+  "basic": "Zwykłe",
+  "beta": "Beta Testerzy",
+  "moderation": "Moderacja",
+  "other": "Inne",
+  "owner": "Twórca",
   "avatar": "Awatar",
   "useForMoreInfo": "Więcej informacji"
 }

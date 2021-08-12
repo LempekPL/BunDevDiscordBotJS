@@ -1,8 +1,8 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const CliCol = require("cli-color");
-const LangPath = "./langs"
-let langs = fs.readdirSync(LangPath).filter(file => fs.statSync(`${LangPath}/${file}`).isDirectory());
+const LangPath = "./langs";
+const Langs = fs.readdirSync(LangPath).filter(file => fs.statSync(`${LangPath}/${file}`).isDirectory());
 
 module.exports = (client) => {
     client.commands = new Discord.Collection();
@@ -16,8 +16,8 @@ module.exports = (client) => {
                 run: exportedModules.run,
                 info: exportedModules.info
             });
-            for (let lang of langs) {
-                let exportedLanguage = require(`.${LangPath}/${lang}/commands.json`);
+            for (let lang of Langs) {
+                let exportedLanguage = require(`.${LangPath}/${lang}/commandExclusive.json`);
                 if (!exportedLanguage[exportedModules.info.name]) continue;
                 for (let useCase in exportedLanguage[exportedModules.info.name]) {
                     if (useCase === "default") {

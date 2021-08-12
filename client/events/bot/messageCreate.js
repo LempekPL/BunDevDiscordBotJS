@@ -18,7 +18,7 @@ module.exports = async (client, message) => {
     }
 
     // check if user has cooldown
-    let cooldownUser = cooldown.get(message.author.id)
+    let cooldownUser = cooldown.get(message.author.id);
     if (cooldownUser) {
         if (message.guild.me.permissions.has("MANAGE_MESSAGES")) {
             message.delete();

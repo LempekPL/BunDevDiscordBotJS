@@ -1,0 +1,14 @@
+{
+  "1": {
+    "question": "Why some people have more commands than I do?",
+    "answer": "Probably these people are beta testers or owners of this bot and have more commands available\n Or just owner of the server or you blocked the command category"
+  },
+  "2": {
+    "question": "Why I can still use english command even if I changed my command language?",
+    "answer": "The default command name will always work so if something bad happens with language stuff you can still use default command name"
+  },
+  "3": {
+    "question": "Why some parts are english even if I have changed my language",
+    "answer": "Translations aren't always made ahead so not everything get translates, so it just defaults to english"
+  }
+}

@@ -12,15 +12,13 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    const CommandStrings = client.dbData.guilds.language.force ? require(`../../../langs/${client.dbData.guilds.language.commands}/commands.json`) : require(`../../../langs/${client.dbData.users.language.commands}/commands.json`);
-
     if (args.length === 1) {
         userSelect = args[0];
     } else if (args.length > 1) {
         for (let i = 0; i <= 4 && args[i]?.includes("-"); i += 2) {
             let dataType = args[i].split("-");
             switch (dataType[1]) {
-                case CommandStrings.avatar.args.user:
+                case client.langCom.avatar.args.user:
                     if (i === 4 && args.length > 5) {
                         userSelect = [...args]
                         userSelect.splice(0, 5)
@@ -29,12 +27,12 @@ module.exports.run = async (client, message, args) => {
                     }
                     userSelect = args[i + 1];
                     break;
-                case CommandStrings.avatar.args.format:
+                case client.langCom.avatar.args.format:
                     if (Allowed.format.includes(args[i + 1])) {
                         imageOptions.format = args[i + 1];
                     }
                     break;
-                case CommandStrings.avatar.args.size:
+                case client.langCom.avatar.args.size:
                     if (Allowed.size.includes(Number(args[i + 1]))) {
                         imageOptions.size = Number(args[i + 1]);
                     }
@@ -91,14 +89,13 @@ module.exports.run = async (client, message, args) => {
 async function sendEmbed(client, message, user, imageOptions) {
     let embed = new Discord.MessageEmbed;
     let avatarUrl = user.avatarURL(imageOptions) ?? user.defaultAvatarURL;
-    embed.setTitle(`${user.tag} ${client.lang.avatar.commandsDefaults.avatar}`);
+    embed.setTitle(`${user.tag} ${client.lang.avatar}`);
     embed.setDescription(`[[LINK]](${avatarUrl})`);
     embed.setImage(avatarUrl);
-    embed.addField(client.lang.avatar.commandsDefaults.useForMoreInfo, `${client.dbData.guilds.prefix}help avatar`);
+    embed.addField(client.lang.useForMoreInfo, `${client.dbData.guilds.prefix}help avatar`);
     embed.setColor(client.util.randomColor());
     client.util.footerEmbed(client, embed);
-    let messageData = await message.channel.send({embeds: [embed]});
-    return messageData;
+    return await message.channel.send({embeds: [embed]});
 }
 
 

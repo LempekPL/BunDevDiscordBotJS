@@ -7,7 +7,6 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    const CommandStrings = client.dbData.guilds.language.force ? require(`../../../langs/${client.dbData.guilds.language.commands}/commands.json`) : require(`../../../langs/pl/commands.json`);
     let embed = new Discord.MessageEmbed();
     embed.setColor(client.util.randomColor());
     embed.setAuthor(`${client.user.username} commands`, client.user.avatarURL());
@@ -18,19 +17,20 @@ module.exports.run = async (client, message, args) => {
         totalCommands++;
         if (categoryMap.has(command.category)) {
             let tempCom = categoryMap.get(command.category);
-            categoryMap.set(command.category, `${tempCom}, \`${CommandStrings[command.info.name].default}\``);
+            categoryMap.set(command.category, `${tempCom}, \`${client.langCom[command.info.name]?.default ?? command.info.name}\``);
         } else {
             categoryMap.set(command.category, `\`${command.info.name}\``);
         }
     });
-    for (const categoryMapElement of categoryMap) {
-        embed.addField(categoryMapElement[0], categoryMapElement[1])
+    for (const element of require("../../../data/helpCategoriesOrder.json")) if (categoryMap.has(element)) {
+        embed.addField(element, categoryMap.get(element))
     }
 
     embed.setDescription(`Shown command amount: \`${totalCommands}\` | Prefix: \`${client.dbData.guilds.prefix}\` | Bot version: \`v${BotVersion}\``);
     embed.addField('\u200b', '\u200b');
     let randomHelpInfo = client.config.randomHelpInfo[Math.floor(Math.random() * client.config.randomHelpInfo.length)];
     embed.addField(`Random info`, `${randomHelpInfo.replace(/#PREFIX#/g,client.dbData.guilds.prefix).replace(/#BOT_USED#/g,client.dbData.bot.commands).replace(/#OWNERS#/g,ownerString(client))}`);
+    client.util.footerEmbed(client, embed);
     message.channel.send({embeds:[embed]})
 }
 
