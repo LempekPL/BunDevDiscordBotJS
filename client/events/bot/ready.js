@@ -4,7 +4,7 @@ module.exports = async (client) => {
     module.exports.emojiguild = client.guilds.cache.get(client.config.settings.emojiServerID);
 
     // create database connection
-    client.dbConn = await new client.db.Connection();
+    client.dbConn = await new client.db.Connection().connect();
     await client.dbConn.load();
 
     // set presence and change it once per hour
@@ -17,7 +17,7 @@ module.exports = async (client) => {
     // because caching stuff still needs to be updated so eh
     setInterval(async () => {
         await client.dbConn.close();
-        client.dbConn = await new client.db.Connection();
+        client.dbConn = await new client.db.Connection().connect();
     }, 24 * 60 * 60 * 1000);
 
     // load commands

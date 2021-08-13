@@ -3,7 +3,6 @@ const {Shoukaku, Libraries} = require('shoukaku');
 const Config = require("./data/config");
 require("dotenv").config();
 
-// declaring lavalinks servers info
 const LavalinkServer = [{
     name: process.env.DEV && Config.settings.devBotName != null ? Config.settings.devBotName : Config.settings.botName,
     url: process.env.LAVALINK_URL,
@@ -17,8 +16,8 @@ const ShoukakuOptions = {
     restTimeout: 10000
 };
 
-// intents so discord wouldn't shout at me, I only have good intentions :)
-let intentsSoDiscordWouldShutUp = [
+// I only have good intentions :)
+let discordIntentions = [
     Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_BANS,
     Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
@@ -30,9 +29,9 @@ let intentsSoDiscordWouldShutUp = [
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     Intents.FLAGS.GUILD_MESSAGE_TYPING,
-    Intents.FLAGS.DIRECT_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-    Intents.FLAGS.DIRECT_MESSAGE_TYPING
+    // Intents.FLAGS.DIRECT_MESSAGES,
+    // Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+    // Intents.FLAGS.DIRECT_MESSAGE_TYPING
 ]
 
 class ExtendedClient extends Client {
@@ -46,7 +45,7 @@ class ExtendedClient extends Client {
 }
 
 // loading bot
-const client = new ExtendedClient({intents: intentsSoDiscordWouldShutUp});
+const client = new ExtendedClient({intents: discordIntentions});
 require('./client/eventLoader')(client);
 // loading commends in client/events/bot/ready.js, to make sure database loads
 // loading dashboard in client/events/bot/ready.js, because website was loading to fast XDD

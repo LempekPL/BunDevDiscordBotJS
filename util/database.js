@@ -10,10 +10,13 @@ const DatabaseDefault = {
 
 module.exports.Connection = class Connection {
     constructor(database = DatabaseDefault) {
+        this.database = database;
         this.connection = {};
-        (async () => {
-            this.connection = await R.connect(database);
-        })()
+    }
+
+    async connect() {
+        this.connection = await R.connect(this.database);
+        return this;
     }
 
     async load() {
