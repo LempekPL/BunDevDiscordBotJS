@@ -5,5 +5,13 @@
   "other": "Other",
   "owner": "Owner",
   "avatar": "Avatar",
-  "useForMoreInfo": "Use for more info"
+  "useForMoreInfo": "Use for more info",
+  "links": "links",
+  "supportServer": "Support Server",
+  "inviteFull": "Invite bot with all permissions",
+  "inviteNeed": "Invite bot with necessary permissions",
+  "website": "Website",
+  "roadmap": "Roadmap",
+  "sourceCode": "Source Code",
+  "socialLinks": "Social links"
 }

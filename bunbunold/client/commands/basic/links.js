@@ -21,13 +21,6 @@ const emo = {
 
 module.exports.info = {
     name: "links",
-    lang: {
-        en: require("../../../lang/en.json").command.links.infoData
-    },
-        // pl: {
-        //     main: "linki",
-        //     aliases: ["dodaj", "aktualności", "dashboard", "strona"]
-        // }
     tags: ["botinvite", "giveinvite", "invite", "support", "server","roadmap","updates","future","links","websites", "dashboard"]
 }
 

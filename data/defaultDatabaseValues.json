@@ -4,7 +4,7 @@
     "prefix": "b,",
     "slowmode": 5,
     "language": {
-      "main": "pl",
+      "main": "en",
       "commands": "en",
       "force": false
     }

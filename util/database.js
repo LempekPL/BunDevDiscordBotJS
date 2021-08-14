@@ -3,7 +3,7 @@ const R = require('rethinkdb');
 const DatabaseDefault = {
     host: process.env.RETHINK_HOST,
     port: process.env.RETHINK_PORT,
-    db: process.env.DEV ? process.env.DEV_RETHINK_DB : process.env.RETHINK_DB,
+    db: process.env.DEV === "true" && process.env.DEV_RETHINK_DB != null ? process.env.DEV_RETHINK_DB : process.env.RETHINK_DB,
     user: process.env.RETHINK_USER,
     password: process.env.RETHINK_PASSWORD,
 };

@@ -4,7 +4,7 @@ const Config = require("./data/config");
 require("dotenv").config();
 
 const LavalinkServer = [{
-    name: process.env.DEV && Config.settings.devBotName != null ? Config.settings.devBotName : Config.settings.botName,
+    name: process.env.DEV === "true" && Config.settings.devBotName != null ? Config.settings.devBotName : Config.settings.botName,
     url: process.env.LAVALINK_URL,
     auth: process.env.LAVALINK_PASSWORD
 }];
@@ -51,4 +51,4 @@ require('./client/eventLoader')(client);
 // loading dashboard in client/events/bot/ready.js, because website was loading to fast XDD
 
 // connecting bot
-client.login(process.env.DEV && process.env.DEV_TOKEN != null ? process.env.DEV_TOKEN : process.env.TOKEN);
+client.login(process.env.DEV === "true" && process.env.DEV_TOKEN != null ? process.env.DEV_TOKEN : process.env.TOKEN);
