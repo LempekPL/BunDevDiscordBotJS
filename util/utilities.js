@@ -14,17 +14,11 @@ const Config = require("../data/config.json");
  * @returns {Promise<User>} - Discord User
  */
 module.exports.searchUser = (client, message, stringToCheck = "", {
-    returnAuthor,
-    ignoreBots,
-    allowChoose,
-    multiServerSearch,
-    multiServerChoose
-} = {
-    returnAuthor: false,
-    ignoreBots: true,
-    allowChoose: false,
-    multiServerSearch: false,
-    multiServerChoose: false
+    returnAuthor = false,
+    ignoreBots = true,
+    allowChoose = false,
+    multiServerSearch = false,
+    multiServerChoose = false
 }) => {
     // TODO: add addtional check if user is private or restricted
     if (!client || !message) {
@@ -90,8 +84,11 @@ module.exports.searchUser = (client, message, stringToCheck = "", {
                 for (const user of users[Symbol.iterator]()) {
                     userList.push(user[0]);
                 }
-                let mesAsk = await message.channel.send(`Reply with one of these users: \`${userList.join("`, `")}\` or \`cancel\`. You have 20 seconds.`)
-                let collector = await message.channel.createMessageCollector({filter: m => m.author === message.author, time: 20000});
+                let mesAsk = await message.channel.send(`${client.lang.replyWith}: \`${userList.join("`, `")}\` ${client.lang.or} \`cancel\`. You have 20 seconds.`)
+                let collector = await message.channel.createMessageCollector({
+                    filter: m => m.author === message.author,
+                    time: 20000
+                });
                 collector.on("collect", async m => {
                     if (userList.includes(m.content)) {
                         collector.stop();
@@ -129,7 +126,7 @@ module.exports.searchUser = (client, message, stringToCheck = "", {
  * @returns {(string|Array<number>)} - Array with random values [R, G, B] or random string from config.json
  */
 module.exports.randomColor = () => {
-    if (Config.randomColors) {
+    if (Config.randomColors.length !== 0) {
         let i = Math.floor(Math.random() * Config.randomColors.length);
         return Config.randomColors[i];
     }
@@ -162,6 +159,29 @@ module.exports.footerEmbed = (client, embed) => {
     embed.setTimestamp();
 }
 
+/**
+ * Returns owners of this bot
+ * @param client - Discord client
+ * @param {string} type - Available types: tag - "Lempek#7376", username - "Lempek", discriminator - "7376"
+ * @param {number} limit - Amount of max returned owners, if there are more owners than limit then it will return "many people"
+ * @returns {string} - String with owners
+ */
+module.exports.ownerString = (client, type = "tag", limit = 4) => {
+    if ((type !== "tag" && type !== "username" && type !== "discriminator") || limit <= 0) {
+        return "many people"
+    }
+    if (client.config.settings.subOwnersIds.length === 0) {
+        return `\`${client.users.cache.get(client.config.settings.ownerId)[type]}\``;
+    } else if (client.config.settings.subOwnersIds.length <= limit) {
+        let owners = `\`${client.users.cache.get(client.config.settings.ownerId)[type]}\``
+        client.config.settings.subOwnersIds.forEach(sub => {
+            owners += `, \`${client.users.cache.get(sub)[type]}\``;
+        });
+        return owners;
+    } else {
+        return client.lang.manyPeople;
+    }
+}
 
 /**
  * Sends a logging webhook message

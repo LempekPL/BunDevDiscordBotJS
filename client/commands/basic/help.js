@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const BotVersion = require("../../../package.json").version;
 
 module.exports.info = {
     name: "help",
@@ -34,12 +33,28 @@ function helpMenuFull(client, message) {
         embed.addField(element, categoryMap.get(element))
     }
 
-    embed.setDescription(`Shown command amount: \`${totalCommands}\` | Prefix: \`${client.dbData.guilds.prefix}\` | Bot version: \`v${BotVersion}\``);
+    embed.setDescription(`Shown command amount: \`${totalCommands}\` | Prefix: \`${client.dbData.guilds.prefix}\` | Bot version: \`v${require("../../../package.json").version}\``);
     embed.addField('\u200b', '\u200b');
-    let randomHelpInfo = client.config.randomHelpInfo[Math.floor(Math.random() * client.config.randomHelpInfo.length)];
-    embed.addField(`Random info`, `${randomHelpInfo.replace(/#PREFIX#/g,client.dbData.guilds.prefix).replace(/#BOT_USED#/g,client.dbData.bot.commands).replace(/#OWNERS#/g,ownerString(client))}`);
+
+    const HelpInfos = require(`../../../langs/${client.dbData.guilds.language.force ? client.dbData.guilds.language.main : client.dbData.users.language.main}/helpInfo.json`);
+    if (HelpInfos.length > 0) {
+        let randomHelpInfo = HelpInfos[Math.floor(Math.random() * HelpInfos.length)];
+        embed.addField(`Random info`, `${randomHelpInfo
+            .replaceAll(/#PREFIX#/g, client.dbData.guilds.prefix)
+            .replaceAll(/#BOT_USED#/g, client.dbData.bot.commands)
+            .replaceAll(/#OWNERS#/g, client.util.ownerString(client))
+            .replaceAll(/#TRANSLATON_CREATORS#/g,
+                (() => {
+                    let translationCreatorsList = "";
+                    client.lang.translationCreators.forEach(user => {
+                        translationCreatorsList += (translationCreatorsList === "" ? client.users.cache.get(user).tag : `, ${client.users.cache.get(user).tag}`);
+                    })
+                    return translationCreatorsList;
+                })()
+            )}`);
+    }
     client.util.footerEmbed(client, embed);
-    message.channel.send({embeds:[embed]})
+    message.channel.send({embeds: [embed]})
 }
 
 function helpInfo(client, message, args) {
@@ -53,8 +68,10 @@ function helpInfo(client, message, args) {
     embed.setAuthor(`${client.user.username} [${commandFile.info.name}] command`, client.user.avatarURL());
     embed.addField("Category", commandFile.category, true);
     embed.addField("Blocked status", `Server: \`unlocked\`\nUser: \`unlocked\``, true);
-    embed.addField("Used", `\`${client.dbData.users.favouriteCommands[commandFile.info.name] ?? 0}\` times`, true);
+    embed.addField("Used by you", `\`${client.dbData.users.favouriteCommands[commandFile.info.name] ?? 0}\` times`, true);
     embed.addField("Examples", commandInfo?.example?.replaceAll(/#PREFIX#/g, client.dbData.guilds.prefix).replaceAll(/#COMMAND#/g, commandFile.info.name) ?? `${client.dbData.guilds.prefix}${commandFile.info.name}`);
+    const aliases = (client.langCom[commandFile.info.name]?.default != null ? client.langCom[commandFile.info.name].default : commandFile.info.name) + (client.langCom[commandFile.info.name]?.aliases?.length > 0 ? `, ${client.langCom[commandFile.info.name].aliases.join(", ")}` : "")
+    embed.addField("Aliases", aliases);
     embed.addField("Info", commandInfo.explanation ?? "Test and see.");
     embed.addField("User permissions", `${commandInfo?.userPerms ? commandInfo.userPerms + ", " : ""} SEND_MESSAGES`, true);
     embed.addField("Bot permissions", `${commandInfo?.botPerms ? commandInfo.botPerms + ", " : ""} SEND_MESSAGES`, true);
@@ -62,19 +79,5 @@ function helpInfo(client, message, args) {
         embed.setDescription("Following data is not 100% verified. Report this to owners of this bot.")
     }
     client.util.footerEmbed(client, embed);
-    message.channel.send({embeds:[embed]})
-}
-
-function ownerString(client) {
-    if (client.config.settings.subOwnersIds.length === 0) {
-        return `\`${client.users.cache.get(client.config.settings.ownerId).tag}\``;
-    } else if (client.config.settings.subOwnersIds.length <= 4) {
-        let owners = `\`${client.users.cache.get(client.config.settings.ownerId).tag}\``
-        client.config.settings.subOwnersIds.forEach(sub => {
-            owners += `, \`${client.users.cache.get(sub).tag}\``;
-        });
-        return owners;
-    } else {
-        return "many people";
-    }
+    message.channel.send({embeds: [embed]})
 }

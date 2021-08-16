@@ -1,7 +1,9 @@
 {
   "commandName": {
     "example": "#PREFIX##COMMAND# <additionalstuff>",
-    "explanation": "string or array handler in help command or something XD"
+    "explanation": "string handler in help command or something XD",
+    "userPerms": "leave empty or don't include if bot doesn't need more than SEND_MESSAGES",
+    "botPerms": "leave empty or don't include if bot doesn't need more than SEND_MESSAGES"
   },
   "avatar": {
     "example": "`#PREFIX##COMMAND# [@userid]` \n`#PREFIX##COMMAND# <key> <value>`",

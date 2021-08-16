@@ -10,7 +10,7 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    if (message.author.id !== client.config.settings.ownerid  && !client.config.settings.subowners.includes(message.author.id)) return client.emit("uisae", "B99", message, "");
+    if (message.author.id !== client.config.settings.ownerId  && !client.config.settings.subOwnersIds.includes(message.author.id)) return client.emit("uisae", "B99", message, "");
     let evalv = null;
     let text = args.slice(0).join(" ");
     try {
