@@ -217,7 +217,6 @@ module.exports.obraziumHandler = async (client, message, endpoint, responseType 
     if (!client || !message || !endpoint) {
         throw new Error(`Client, message or endpoint not specified`);
     }
-
     let embed = new Discord.MessageEmbed();
     embed.setTitle(endpoint.charAt(0).toUpperCase() + endpoint.slice(1));
     embed.setColor(client.util.randomColor());
@@ -256,7 +255,7 @@ module.exports.obraziumHandler = async (client, message, endpoint, responseType 
     }
     let data = await requester(`https://obrazium.com/v1/${endpoint}${urlArgs}`, {Authorization: process.env.OBRAZIUM}, responseType);
     if (responseType === "json") {
-        embed.setDescription(`${data.text}`)
+        embed.setDescription(`\`\`\`${data.text}\`\`\``)
         await message.channel.send({embeds: [embed]});
     } else if (responseType === "buffer") {
         await fs.writeFileSync(`${endpoint}.gif`, data);
