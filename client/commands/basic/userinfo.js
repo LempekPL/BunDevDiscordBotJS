@@ -19,8 +19,11 @@ module.exports.run = async (client, message, args) => {
     const JoinedAt = (new Date(member.joinedTimestamp).getTime() / 1000).toFixed(0);
     const RelationWithBot = getRelation(client, user);
     const Status = getStatus(client, member);
-    const userData = await client.dbConn.get("users", user.id)
-    const [FavouriteCommand, CommandsSent] = getCommandDatas(client, userData.favouriteCommands);
+    let userData;
+    if (!user.bot) {
+         userData = await client.dbConn.get("users", user.id);
+    }
+    const [FavouriteCommand, CommandsSent] = getCommandDatas(client, userData?.favouriteCommands);
 
     let embed = new Discord.MessageEmbed();
     embed.setColor(client.util.randomColor());

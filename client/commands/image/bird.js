@@ -6,5 +6,5 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    await client.util.obraziumImage(client, message, module.exports.info.name);
+    await client.util.obraziumHandler(client, message, module.exports.info.name);
 }

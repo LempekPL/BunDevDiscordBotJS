@@ -88,14 +88,5 @@ module.exports.run = async (client, message, args) => {
             }]
         });
         await fs.unlinkSync("tempFile.json");
-        // await fs.writeFileSync(`tempFile.json`, JSON.stringify(rawData, null, '\t'));
-        // discordFileName = rawData?.id ?? "file";
-        // await message.channel.send({
-        //     files: [{
-        //         attachment: `./tempFile.json`,
-        //         name: `${discordFileName}.json`
-        //     }]
-        // });
-        // await fs.unlinkSync(`tempFile.json`);
     }
 }

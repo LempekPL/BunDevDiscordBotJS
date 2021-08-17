@@ -2,6 +2,9 @@
   "basic",
   "moderation",
   "image",
+  "imageManipulation",
+  "text",
+  "textManipulation",
   "beta",
   "other",
   "owner"

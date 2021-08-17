@@ -203,42 +203,85 @@ module.exports.logger = (client, message, webhook, data) => {
 
 }
 
+// TODO: response.headers.get('x-ratelimit-remaining')
 /**
  * obrazium.com api handler for images
  * @param client - Discord client
  * @param message - Discord message
- * @param {string} image - image endpoint
- * @param args - user id
+ * @param {string} endpoint - api endpoint
+ * @param {string} responseType - api response type: `buffer`, `json`
+ * @param {string} inputTypes - input needed for api: `urlAvatar`, `urlImage`, `hex`, `text`, `urlAvatar+hex`, `urlImage+hex`, `decorational`
+ * @param args - arguments
  */
-module.exports.obraziumImage = async (client, message, image, args) => {
-    try {
-        let response = await fetch(`http://obrazium.com/v1/${image}`, {
-            method: "GET",
-            headers: {
-                Authorization: process.env.OBRAZIUM
-            }
-        });
-        let data = await response.buffer();
-        if (response.headers.get('x-ratelimit-remaining') === 0) {
-            message.channel.send("Well gg! You really wanted to just ruin my life")
-        }
-        let embed = new Discord.MessageEmbed();
-        embed.setTitle(image.charAt(0).toUpperCase() + image.slice(1));
-        if (args) {
-            let user = await client.util.searchUser(client, message, args, {ignoreBots: false});
+module.exports.obraziumHandler = async (client, message, endpoint, responseType = "buffer", inputTypes, args) => {
+    if (!client || !message || !endpoint) {
+        throw new Error(`Client, message or endpoint not specified`);
+    }
+
+    let embed = new Discord.MessageEmbed();
+    embed.setTitle(endpoint.charAt(0).toUpperCase() + endpoint.slice(1));
+    embed.setColor(client.util.randomColor());
+    embed.setFooter("obrazium.com");
+    let urlArgs = "";
+    let user;
+    switch (inputTypes) {
+        case "urlAvatar":
+            user = await client.util.searchUser(client, message, args, {returnAuthor: true, ignoreBots: false, allowChoose: true});
             if (!user) return;
-            embed.setDescription(`${message.author} ${client.lang[image]} ${user}`);
-        }
-        embed.setColor(client.util.randomColor());
-        embed.setFooter("obrazium.com");
-        await fs.writeFileSync(`${image}.gif`, data);
-        embed.setImage(`attachment://${image}.gif`);
+            urlArgs = `?url=${user.avatarURL({format: "png", size: 1024})}`;
+            // client.util.logger(client, message, )
+            break;
+        case "urlImage":
+            urlArgs = `?url=${args}`;
+            break;
+        case "hex":
+            urlArgs = `?hex=${args}`;
+            break;
+        case "text":
+            urlArgs = `?text=${encodeURIComponent(args)}`;
+            break;
+        case "urlAvatar+hex":
+            user = await client.util.searchUser(client, message, args[1], {returnAuthor: true, ignoreBots: false, allowChoose: true});
+            if (!user) return;
+            urlArgs = `?hex=${args[0]}&url=${user.avatarURL({format: "png", size: 1024})}`;
+            break;
+        case "urlImage+hex":
+            urlArgs = `?hex=${args[0]}&url=${args[1]}`;
+            break;
+        case "decorational":
+            user = await client.util.searchUser(client, message, args, {ignoreBots: false});
+            if (!user) return;
+            embed.setDescription(`${message.author} ${client.lang[endpoint]} ${user}`);
+            break;
+    }
+    let data = await requester(`https://obrazium.com/v1/${endpoint}${urlArgs}`, {Authorization: process.env.OBRAZIUM}, responseType);
+    if (responseType === "json") {
+        embed.setDescription(`${data.text}`)
+        await message.channel.send({embeds: [embed]});
+    } else if (responseType === "buffer") {
+        await fs.writeFileSync(`${endpoint}.gif`, data);
+        embed.setImage(`attachment://${endpoint}.gif`);
         await message.channel.send({
-            embeds: [embed], files: [`./${image}.gif`]
+            embeds: [embed], files: [`./${endpoint}.gif`]
         });
-        await fs.unlinkSync(`${image}.gif`);
-    } catch (error) {
-        console.log(error)
+        await fs.unlinkSync(`${endpoint}.gif`);
+    }
+}
+
+async function requester(requestUrl, headers, responseType = "buffer") {
+    try {
+        let response = await fetch(requestUrl, {
+            method: "GET",
+            headers
+        });
+        switch (responseType) {
+            case "json":
+                return await response.json();
+            case "buffer":
+                return await response.buffer();
+        }
+    } catch (e) {
+        console.log(e)
     }
 }
 
