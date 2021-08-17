@@ -11,6 +11,9 @@
     "3": {
       "question": "Why some parts are english even if I have changed my language",
       "answer": "Translations aren't always made ahead so not everything get translates, so it just defaults to english"
+    },
+    "4": {
+      "question": "Why there are double the names in"
     }
   },
   "commands": {

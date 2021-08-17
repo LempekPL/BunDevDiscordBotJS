@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const Order = require("../../../data/helpCategoriesOrder.json");
 
 module.exports.info = {
     name: "help",
@@ -29,8 +30,8 @@ function helpMenuFull(client, message) {
             categoryMap.set(command.category, `\`${command.info.name}\``);
         }
     });
-    for (const element of require("../../../data/helpCategoriesOrder.json")) if (categoryMap.has(element)) {
-        embed.addField(client.lang[element], categoryMap.get(element))
+    for (const element of Order) if (categoryMap.has(element)) {
+        embed.addField(`[${categoryMap.get(element).split("`, `").length}] ${client.lang[element]} (${element})`, categoryMap.get(element))
     }
 
     embed.setDescription(`Shown command amount: \`${totalCommands}\` | Prefix: \`${client.dbData.guilds.prefix}\` | Bot version: \`v${require("../../../package.json").version}\``);

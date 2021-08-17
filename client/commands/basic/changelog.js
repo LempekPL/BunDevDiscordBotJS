@@ -19,9 +19,9 @@ module.exports.run = async (client, message, args) => {
         let j = 0;
         for (const change of SetChanges.slice(k * 10)) {
             if (change.changes) {
-                embed.addField(`v${change.version} - ${change.date ? change.date : DefChanges[i].date}`, ` - ` + change.changes.join("\n - "));
+                embed.addField(`v${change.version} - <t:${DefChanges[i].dateTimestamp}>`, ` - ` + change.changes.join("\n - "));
             } else {
-                embed.addField(`v${DefChanges[i].version} - ${DefChanges[i].date}`, ` - ` + DefChanges[i].changes.join("\n - "));
+                embed.addField(`v${DefChanges[i].version} - <t:${DefChanges[i].dateTimestamp}>`, ` - ` + DefChanges[i].changes.join("\n - "));
             }
             j++;
             i++;
