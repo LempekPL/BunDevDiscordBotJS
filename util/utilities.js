@@ -1,4 +1,7 @@
 const Config = require("../data/config.json");
+const fetch = require("node-fetch");
+const Discord = require("discord.js");
+const fs = require("fs");
 
 /**
  * Search for user
@@ -19,6 +22,12 @@ module.exports.searchUser = (client, message, stringToCheck = "", {
     allowChoose = false,
     multiServerSearch = false,
     multiServerChoose = false
+} = {
+    returnAuthor: false,
+    ignoreBots: true,
+    allowChoose: false,
+    multiServerSearch: false,
+    multiServerChoose: false
 }) => {
     // TODO: add addtional check if user is private or restricted
     if (!client || !message) {
@@ -194,7 +203,45 @@ module.exports.logger = (client, message, webhook, data) => {
 
 }
 
-// other utilities
+/**
+ * obrazium.com api handler for images
+ * @param client - Discord client
+ * @param message - Discord message
+ * @param {string} image - image endpoint
+ * @param args - user id
+ */
+module.exports.obraziumImage = async (client, message, image, args) => {
+    try {
+        let response = await fetch(`http://obrazium.com/v1/${image}`, {
+            method: "GET",
+            headers: {
+                Authorization: process.env.OBRAZIUM
+            }
+        });
+        let data = await response.buffer();
+        if (response.headers.get('x-ratelimit-remaining') === 0) {
+            message.channel.send("Well gg! You really wanted to just ruin my life")
+        }
+        let embed = new Discord.MessageEmbed();
+        embed.setTitle(image.charAt(0).toUpperCase() + image.slice(1));
+        if (args) {
+            let user = await client.util.searchUser(client, message, args, {ignoreBots: false});
+            if (!user) return;
+            embed.setDescription(`${message.author} ${client.lang[image]} ${user}`);
+        }
+        embed.setColor(client.util.randomColor());
+        embed.setFooter("obrazium.com");
+        await fs.writeFileSync(`${image}.gif`, data);
+        embed.setImage(`attachment://${image}.gif`);
+        await message.channel.send({
+            embeds: [embed], files: [`./${image}.gif`]
+        });
+        await fs.unlinkSync(`${image}.gif`);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports.globalBaned = (client) => {
 
 }

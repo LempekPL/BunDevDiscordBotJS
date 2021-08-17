@@ -1,6 +1,7 @@
 [
   "basic",
   "moderation",
+  "image",
   "beta",
   "other",
   "owner"

@@ -5,6 +5,10 @@
   "basic": "Basic",
   "beta": "Beta Testers",
   "moderation": "Moderation",
+  "text": "Text",
+  "textManipulation": "Text Manipulation",
+  "image": "Image",
+  "imageManipulation": "Image Manipulation",
   "other": "Other",
   "owner": "Owner",
   "avatar": "Avatar",
@@ -41,5 +45,12 @@
   "since": "since",
   "faq": "Frequently asked Questions",
   "bot": "Bot",
-  "commands": "Commands"
+  "commands": "Commands",
+  "cuddle": "cuddles with",
+  "feed": "feeds",
+  "hug": "hugs",
+  "kiss": "kisses",
+  "pat": "pats",
+  "poke": "pokes",
+  "tickle": "tickles"
 }

@@ -30,7 +30,7 @@ function helpMenuFull(client, message) {
         }
     });
     for (const element of require("../../../data/helpCategoriesOrder.json")) if (categoryMap.has(element)) {
-        embed.addField(element, categoryMap.get(element))
+        embed.addField(client.lang[element], categoryMap.get(element))
     }
 
     embed.setDescription(`Shown command amount: \`${totalCommands}\` | Prefix: \`${client.dbData.guilds.prefix}\` | Bot version: \`v${require("../../../package.json").version}\``);

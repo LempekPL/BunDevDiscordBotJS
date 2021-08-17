@@ -10,12 +10,13 @@
     }
   },
   "users": {
-    "version": "0.1",
+    "version": "0.2",
     "language": {
       "main": "en",
       "commands": "en"
     },
-    "favouriteCommands": {}
+    "favouriteCommands": {},
+    "achievements": []
   },
   "bot": {
     "version": "1",

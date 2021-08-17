@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const fs = require('fs');
+const fs = require("fs");
 
 module.exports.info = {
     name: "raw",
@@ -79,7 +79,7 @@ module.exports.run = async (client, message, args) => {
         client.util.footerEmbed(client, embed);
         message.channel.send({embeds: [embed]});
     } else {
-        await fs.writeFileSync(`tempFile.json`, JSON.stringify(rawData, null, '\t'));
+        await fs.writeFileSync("tempFile.json", JSON.stringify(rawData, null, '\t'));
         discordFileName = rawData?.id ?? "file";
         await message.channel.send({
             files: [{
@@ -87,6 +87,15 @@ module.exports.run = async (client, message, args) => {
                 name: `${discordFileName}.json`
             }]
         });
-        await fs.unlinkSync(`tempFile.json`);
+        await fs.unlinkSync("tempFile.json");
+        // await fs.writeFileSync(`tempFile.json`, JSON.stringify(rawData, null, '\t'));
+        // discordFileName = rawData?.id ?? "file";
+        // await message.channel.send({
+        //     files: [{
+        //         attachment: `./tempFile.json`,
+        //         name: `${discordFileName}.json`
+        //     }]
+        // });
+        // await fs.unlinkSync(`tempFile.json`);
     }
 }
