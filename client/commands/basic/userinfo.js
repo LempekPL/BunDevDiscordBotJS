@@ -19,6 +19,10 @@ module.exports.run = async (client, message, args) => {
     const JoinedAt = (new Date(member.joinedTimestamp).getTime() / 1000).toFixed(0);
     const RelationWithBot = getRelation(client, user);
     const Status = getStatus(client, member);
+    let Available = "nowhere";
+    if (member.presence && member.presence?.status !== "offline") {
+        Available = Object.keys(member.presence?.clientStatus).join(", ").replace("web", client.lang.web).replace("desktop", client.lang.desktop).replace("mobile", client.lang.mobile)
+    }
     let userData;
     if (!user.bot) {
          userData = await client.dbConn.get("users", user.id);
@@ -37,20 +41,20 @@ module.exports.run = async (client, message, args) => {
     }
     embed.addField("User Id", `${member.id}`, true);
     embed.addField("Is a bot?", `${user.bot ? client.lang.yes : client.lang.no}`, true);
-    embed.addField("\u200b", "\u200b", true);
+    embed.addField("Relation", RelationWithBot, true);
     if (FavouriteCommand) {
         embed.addField("Favourite command", FavouriteCommand, true);
         embed.addField("Commands sent", `${CommandsSent}`, true);
         embed.addField("\u200b", "\u200b", true);
     }
-    embed.addField("Status", Status, true);
-    embed.addField("Relation", RelationWithBot, true);
+    embed.addField("Status", Status,true)
+    embed.addField("Available in", Available,true);
     if (member.presence?.status) {
         let activities = "";
         member.presence?.activities?.forEach(activity => {
             const TimestampFixed = (new Date(activity.createdTimestamp).getTime() / 1000).toFixed(0);
             const ActivityName = activity.type === "CUSTOM" ? activity.state : activity.name;
-            activities += activities === "" ? `${client.lang[activity.type]} **${ActivityName}** ${client.lang.since} <t:${TimestampFixed}>` : `\n${client.lang[activity.type]} **${ActivityName}** ${client.lang.since} <t:${TimestampFixed}>`
+            activities += activities === "" ? `${client.lang[activity.type]} **${ActivityName}** ${client.lang.since} <t:${TimestampFixed}:d><t:${TimestampFixed}:T>` : `\n${client.lang[activity.type]} **${ActivityName}** ${client.lang.since} <t:${TimestampFixed}:d><t:${TimestampFixed}:T>`
         });
         if (activities) {
             embed.addField("Activities", activities);
@@ -60,7 +64,6 @@ module.exports.run = async (client, message, args) => {
     embed.addField(`Created at`, `<t:${CreatedAt}> (<t:${CreatedAt}:R>)`);
     embed.setThumbnail(user.avatarURL());
     client.util.footerEmbed(client, embed);
-    embed.setTimestamp();
     message.channel.send({embeds: [embed]});
 }
 

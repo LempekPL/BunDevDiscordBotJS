@@ -39,6 +39,7 @@ module.exports.run = async (client, message, args) => {
     const OwnerUser = await message.guild.fetchOwner();
     embed.addField(`Owner`, `\`${OwnerUser.user.tag}\``, true);
     embed.addField("\u200b", "\u200b", true);
+    embed.addField(`Number of boosts`, `${message.guild.premiumSubscriptionCount}`, true);
     if (message.guild.features.length > 0) {
         embed.addField(`Enabled features`, `\`${message.guild.features.join("`, `")}\``);
     }

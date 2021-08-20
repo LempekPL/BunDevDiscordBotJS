@@ -52,5 +52,8 @@
   "kiss": "kisses",
   "pat": "pats",
   "poke": "pokes",
-  "tickle": "tickles"
+  "tickle": "tickles",
+  "web": "website",
+  "desktop": "desktop",
+  "mobile": "mobile"
 }

@@ -59,7 +59,12 @@ module.exports = async (client, message) => {
     userData.favouriteCommands[commandFile.info.name] = isNaN(userData.favouriteCommands[commandFile.info.name]) ? 1 : userData.favouriteCommands[commandFile.info.name] + 1;
 
     client.dbData = {"guilds": guildData, "users": userData, "bot": botData}
-    await commandFile.run(client, message, args);
+    try {
+        await commandFile.run(client, message, args);
+    } catch (error) {
+        console.error(error)
+        client.emit("uisae", "B01", message, `Report this to bot owners!!!\n${error}`)
+    }
     await updateData(client, message);
 
     // ignoring cooldown and logging command for bot owners

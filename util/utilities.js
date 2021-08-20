@@ -226,7 +226,11 @@ module.exports.obraziumHandler = async (client, message, endpoint, responseType 
     let user;
     switch (inputTypes) {
         case "urlAvatar":
-            user = await client.util.searchUser(client, message, args, {returnAuthor: true, ignoreBots: false, allowChoose: true});
+            user = await client.util.searchUser(client, message, args, {
+                returnAuthor: true,
+                ignoreBots: false,
+                allowChoose: true
+            });
             if (!user) return;
             urlArgs = `?url=${user.avatarURL({format: "png", size: 1024})}`;
             // client.util.logger(client, message, )
@@ -241,7 +245,11 @@ module.exports.obraziumHandler = async (client, message, endpoint, responseType 
             urlArgs = `?text=${encodeURIComponent(args)}`;
             break;
         case "urlAvatar+hex":
-            user = await client.util.searchUser(client, message, args[1], {returnAuthor: true, ignoreBots: false, allowChoose: true});
+            user = await client.util.searchUser(client, message, args[1], {
+                returnAuthor: true,
+                ignoreBots: false,
+                allowChoose: true
+            });
             if (!user) return;
             urlArgs = `?hex=${args[0]}&url=${user.avatarURL({format: "png", size: 1024})}`;
             break;
@@ -291,6 +299,36 @@ module.exports.globalBaned = (client, message) => {
     embed.setDescription("You can't use this bot\n Contact one of the owners to get unbanned");
     embed.setColor("RED");
     client.util.footerEmbed(client, embed);
-    message.channel.send({embeds:[embed]})
+    message.channel.send({embeds: [embed]})
+}
+
+/**
+ * Additional confirmation
+ * @param client - Discord client
+ * @param message - Discord message
+ * @param {string} customMessage - Custom message to ask
+ * @param {number} collectorTime - How long it collects messages
+ * @param {Object.<string,function>} values - values to collect and then use function
+ */
+module.exports.additionalConfirmation = async (client, message, customMessage = "Are you sure you want to do it? Type `yes` to confirm, `cancel` to cancel. You have 30 seconds to decide", collectorTime = 30000, values) => {
+    let askMessage = await message.channel.send(customMessage);
+    let collector = message.channel.createMessageCollector({
+        filter: m => m.author = message.author,
+        time: collectorTime
+    });
+    collector.on("collect", async m => {
+        if (m.content.toLowerCase().startsWith("cancel")) {
+            collector.stop();
+            return message.channel.send("Canceled ✅");
+        }
+
+        if (Object.keys(values).includes(m.content)) {
+            values[m.content]();
+            collector.stop();
+        }
+    });
+    collector.on("end", () => {
+        askMessage.delete();
+    });
 }
 
