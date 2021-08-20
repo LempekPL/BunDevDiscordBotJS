@@ -13,7 +13,7 @@ module.exports = async (client, message) => {
 
     // check if user is globally banned
     if (botData.globalBans.length > 0 && botData.globalBans.includes(message.author.id)) {
-        client.util.globalBaned(message, client);
+        client.util.globalBaned(client, message);
         return;
     }
 

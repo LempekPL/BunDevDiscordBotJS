@@ -5,12 +5,11 @@ const Use = {
 
 module.exports.info = {
     name: "aval",
-    example: "`#PREFIX##COMMAND# <code>`",
     tags: ["owner"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (message.author.id !== client.config.settings.ownerId  && !client.config.settings.subOwnersIds.includes(message.author.id)) return client.emit("uisae", "B99", message, "");
+    if (message.author.id !== client.config.settings.ownerId && !client.config.settings.subOwnersIds.includes(message.author.id)) return client.emit("uisae", "B99", message, "");
     let evalv = null;
     let text = args.slice(0).join(" ");
     try {

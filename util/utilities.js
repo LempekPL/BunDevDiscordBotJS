@@ -14,6 +14,7 @@ const fs = require("fs");
  * @param {boolean} [options.allowChoose=false] - If true it will allow you to choose users.
  * @param {boolean} [options.multiServerSearch=false] - If true it will search for user in every server.
  * @param {boolean} [options.multiServerChoose=false] - If true it will allow you to choose users from every server.
+ * @param {boolean} [errorMessage=false] - If true it will send errorMessage if it finds one else it will just ignore error.
  * @returns {Promise<User>} - Discord User
  */
 module.exports.searchUser = (client, message, stringToCheck = "", {
@@ -28,7 +29,7 @@ module.exports.searchUser = (client, message, stringToCheck = "", {
     allowChoose: false,
     multiServerSearch: false,
     multiServerChoose: false
-}) => {
+}, errorMessage = true) => {
     // TODO: add addtional check if user is private or restricted
     if (!client || !message) {
         throw new Error(`${!client ? `${!message ? `Client and message` : `Client`}` : `Message`} not specified`);
@@ -124,7 +125,7 @@ module.exports.searchUser = (client, message, stringToCheck = "", {
         }
     });
     return returning.catch((err) => {
-        if (err !== "dont") {
+        if (err !== "dont" && errorMessage) {
             client.emit("uisae", "U04", message, err);
         }
     });
@@ -284,7 +285,12 @@ async function requester(requestUrl, headers, responseType = "buffer") {
     }
 }
 
-module.exports.globalBaned = (client) => {
-
+module.exports.globalBaned = (client, message) => {
+    let embed = new Discord.MessageEmbed();
+    embed.setTitle("Globalban");
+    embed.setDescription("You can't use this bot\n Contact one of the owners to get unbanned");
+    embed.setColor("RED");
+    client.util.footerEmbed(client, embed);
+    message.channel.send({embeds:[embed]})
 }
 

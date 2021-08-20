@@ -12,7 +12,7 @@ module.exports = async (client, error = null, message, addinfo = "none") => {
 
         case "B99":
             embed.setTitle(`Error B99`);
-            embed.setDescription(`Command reserved only for owner${client.config.settings.subowners.length>0?`s`:``}`);
+            embed.setDescription(`Command reserved only for bot owners`);
             break;
 
         case "U01":
