@@ -13,10 +13,10 @@ module.exports = (client) => {
     //client.on("voiceStateUpdate", (oldState, newState) => EventHandler("voiceStateUpdate")(client, oldState, newState));
     client.on("uisae", (error, message, addinfo) => EventHandler('uisae')(client, error, message, addinfo));
     // music events
-    client.shoukaku.on("ready", (name) => MusicEventHandler("ready")(client,name));
-    client.shoukaku.on("error", (name, error) => MusicEventHandler("error")(client,name,error));
-    client.shoukaku.on("close", (name, code, reason) => MusicEventHandler("close")(client,name,code,reason));
-    client.shoukaku.on("disconnected", (name, reason) => MusicEventHandler("disconnected")(client,name,reason));
+    client.shoukaku.on("ready", (name) => MusicEventHandler("ready")(client, name));
+    client.shoukaku.on("error", (name, error) => MusicEventHandler("error")(client, name, error));
+    client.shoukaku.on("close", (name, code, reason) => MusicEventHandler("close")(client, name, code, reason));
+    client.shoukaku.on("disconnected", (name, reason) => MusicEventHandler("disconnected")(client, name, reason));
     // other events needed for full logger
     // TODO: implement full logger events
 }

@@ -10,7 +10,7 @@ module.exports.run = async (client, message, args) => {
     let link = args[0].split("/")
     let messageToDelete = await client.guilds.cache.get(link[4]).channels.cache.get(link[5]).messages.cache.get(link[6]);
     try {
-        messageToDelete.delete({ timeout: 0, reason: "Don't" });
+        messageToDelete.delete({timeout: 0, reason: "Don't"});
     } catch (e) {
         message.channel.send("Couldn't delete");
         console.log(e);

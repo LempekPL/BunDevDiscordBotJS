@@ -41,6 +41,6 @@ module.exports = (client) => {
         }
     });
     if (broken.length > 0) {
-        console.log("Check if these commands are properly made:",broken)
+        console.log("Check if these commands are properly made:", broken)
     }
 };

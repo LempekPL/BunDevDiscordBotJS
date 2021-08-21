@@ -2,11 +2,14 @@ const Discord = require("discord.js");
 
 module.exports.info = {
     name: "ping",
-    tags: ["speed","ping","internet","basic"]
+    tags: ["speed", "ping", "internet", "basic"]
 }
 
 module.exports.run = async (client, message, args) => {
-    let pingMessage = await message.channel.send({ content: `Ping? <a:discordloading:815380005320130670>`, reply: { messageReference: message.id }});
+    let pingMessage = await message.channel.send({
+        content: `Ping? <a:discordloading:815380005320130670>`,
+        reply: {messageReference: message.id}
+    });
     let p = new Discord.MessageEmbed();
     p.setColor(client.util.randomColor());
     p.setAuthor(client.user.tag, client.user.avatarURL())

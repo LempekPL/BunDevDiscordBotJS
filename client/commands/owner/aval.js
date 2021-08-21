@@ -27,7 +27,7 @@ module.exports.run = async (client, message, args) => {
         eembed.setDescription("```js\n" + text + "\n```");
         eembed.addField("OUTPUT:", "```js\n" + evalv + "\n```");
         if (!String(evalv).includes(process.env.TOKEN)) {
-            message.channel.send({embeds:[eembed]});
+            message.channel.send({embeds: [eembed]});
         }
     } catch (e) {
         console.log(e);

@@ -25,7 +25,7 @@ module.exports.run = async (client, message, args) => {
     }
     let userData;
     if (!user.bot) {
-         userData = await client.dbConn.get("users", user.id);
+        userData = await client.dbConn.get("users", user.id);
     }
     const [FavouriteCommand, CommandsSent] = getCommandDatas(client, userData?.favouriteCommands);
 
@@ -47,8 +47,8 @@ module.exports.run = async (client, message, args) => {
         embed.addField("Commands sent", `${CommandsSent}`, true);
         embed.addField("\u200b", "\u200b", true);
     }
-    embed.addField("Status", Status,true)
-    embed.addField("Available in", Available,true);
+    embed.addField("Status", Status, true)
+    embed.addField("Available in", Available, true);
     if (member.presence?.status) {
         let activities = "";
         member.presence?.activities?.forEach(activity => {

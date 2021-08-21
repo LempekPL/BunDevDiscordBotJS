@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 
 module.exports.info = {
     name: "hex",
-    tags: ["api","badosz","text","fun"]
+    tags: ["api", "badosz", "text", "fun"]
 }
 
 module.exports.run = async (client, message, args) => {

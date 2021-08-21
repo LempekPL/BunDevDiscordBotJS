@@ -60,6 +60,11 @@ module.exports = async (client, error = null, message, addinfo = "none") => {
             embed.addField(`User error. Please look at \`${client.dbData.guilds.prefix}help <command>\` before using this command. Additional info:`, `${addinfo}`);
             break;
 
+        case "U03":
+            embed.setTitle(`Error U03`);
+            embed.addField(`User doesn't have enough permissions. Additional info:`, `${addinfo}`);
+            break;
+
         case "D02":
             embed.setTitle(`Error D02`);
             embed.setDescription(`Too old. Discord API don't allow to delete messages that are over 14 days old.`);
@@ -82,5 +87,5 @@ module.exports = async (client, error = null, message, addinfo = "none") => {
             break;
     }
     client.util.footerEmbed(client, embed);
-    message.channel.send({embeds:[embed]});
+    message.channel.send({embeds: [embed]});
 };

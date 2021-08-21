@@ -176,7 +176,7 @@ module.exports.Connection = class Connection {
                     currentData[defaultDataKey] = DefaultData[table][defaultDataKey];
                 }
             } else if (alreadyAdded.length > Object.keys(DefaultData[table]).length + 1) {
-                let currentDataDummy = {"id":id};
+                let currentDataDummy = {"id": id};
                 for (let defaultDataKey in DefaultData[table]) {
                     if (!alreadyAdded.includes(defaultDataKey)) continue;
                     currentDataDummy[defaultDataKey] = DefaultData[table][defaultDataKey];

@@ -4,7 +4,7 @@
   "description": "Multi purpose discord bot",
   "scripts": {
     "init": "npm i",
-    "run": "node client.js"
+    "run": "node index.js"
   },
   "repository": {
     "type": "git",

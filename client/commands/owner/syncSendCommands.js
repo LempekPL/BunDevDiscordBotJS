@@ -18,5 +18,5 @@ module.exports.run = async (client, message, args) => {
         }
     });
     client.dbData.bot.commands = total;
-    message.channel.send("Bot send commands synced with users send commands. New total: "+total);
+    message.channel.send("Bot send commands synced with users send commands. New total: " + total);
 }

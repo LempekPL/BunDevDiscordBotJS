@@ -22,7 +22,7 @@ const necessaryPermsId = 8;
 
 module.exports.info = {
     name: "links",
-    tags: ["botinvite", "giveinvite", "invite", "support", "server","roadmap","updates","future","links","websites", "dashboard"]
+    tags: ["botinvite", "giveinvite", "invite", "support", "server", "roadmap", "updates", "future", "links", "websites", "dashboard"]
 }
 
 module.exports.run = async (client, message, args) => {
@@ -38,14 +38,14 @@ module.exports.run = async (client, message, args) => {
     let embed = new Discord.MessageEmbed();
     embed.setColor(client.util.randomColor());
     embed.setAuthor(`${client.user.tag} ${client.lang.links}`, client.user.avatarURL());
-    embed.addField(`<:bot:815379078776619070> ${client.lang.supportServer}`, `[[DISCORD LINK]](https://discord.gg/e3uQ6aC)`,true);
-    embed.addField(`<:bunBlue:815379165942382622> ${client.lang.website}`, `[[WEBSITE LINK]](https://bunbun.lempek.tk)`,true);
+    embed.addField(`<:bot:815379078776619070> ${client.lang.supportServer}`, `[[DISCORD LINK]](https://discord.gg/e3uQ6aC)`, true);
+    embed.addField(`<:bunBlue:815379165942382622> ${client.lang.website}`, `[[WEBSITE LINK]](https://bunbun.lempek.tk)`, true);
     embed.addField("\u200b", "\u200b", true);
     embed.addField(`<:bunGreenEar:815379123643088936> ${client.lang.invite}`, `[[${client.lang.inviteFull}]](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=8&guild_id=${message.guild.id}) or [[${client.lang.inviteNeed}]](https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=${necessaryPermsId}&guild_id=${message.guild.id})`);
-    embed.addField(`<:bunRed:815379923799375893> ${client.lang.roadmap}`, `[[TRELLO LINK]](https://trello.com/b/0d15e7X7/bunbun)`,true);
-    embed.addField(`<:bunYellow:815379201536163851> ${client.lang.sourceCode}`, `[[GITHUB LINK]](https://github.com/LempekPL/BunBun)`,true);
+    embed.addField(`<:bunRed:815379923799375893> ${client.lang.roadmap}`, `[[TRELLO LINK]](https://trello.com/b/0d15e7X7/bunbun)`, true);
+    embed.addField(`<:bunYellow:815379201536163851> ${client.lang.sourceCode}`, `[[GITHUB LINK]](https://github.com/LempekPL/BunBun)`, true);
     embed.addField("\u200b", "\u200b", true);
     embed.addField(`${client.lang.socialLinks}`, `${links}`);
     client.util.footerEmbed(client, embed);
-    message.channel.send({embeds:[embed]});
+    message.channel.send({embeds: [embed]});
 }

@@ -17,11 +17,11 @@ module.exports.run = async (client, message, args) => {
     embed.setTitle("Do you want to destroy client?");
     embed.setDescription("There are " + z + " active music players");
     embed.addField('\u200b', `Reply with yes. You have 30 seconds. Type \`cancel\` to cancel`);
-    let msearch = await message.channel.send({embeds:[embed]});
+    let msearch = await message.channel.send({embeds: [embed]});
 
     let collector = message.channel.createMessageCollector({filter: m => m.author = message.author, time: 30000});
     collector.on("collect", async m => {
-        if(m.content.toLowerCase().startsWith("cancel")) {
+        if (m.content.toLowerCase().startsWith("cancel")) {
             collector.stop();
             return message.channel.send("Canceled ✅");
         }

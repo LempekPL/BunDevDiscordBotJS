@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 
 module.exports.info = {
     name: "blurple",
-    tags: ["api","badosz","picture","fun"]
+    tags: ["api", "badosz", "picture", "fun"]
 }
 // TODO: better image check
 module.exports.run = async (client, message, args) => {

@@ -10,7 +10,10 @@ module.exports.run = async (client, message, args) => {
     if (!args[0]) {
         var list = "";
         for (let i = 0; i < client.dbData.bot.globalBans.length; i++) {
-            let banned = await client.util.searchUser(client, message, client.dbData.bot.globalBans[i], {returnAuthor: false, multiServerSearch: true}, false);
+            let banned = await client.util.searchUser(client, message, client.dbData.bot.globalBans[i], {
+                returnAuthor: false,
+                multiServerSearch: true
+            }, false);
             if (!banned) {
                 list += `\`username not found\` [${client.dbData.bot.globalBans[i]}]\n`;
             } else {

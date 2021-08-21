@@ -43,10 +43,10 @@ async function setPresence(client) {
     if (ListOfSecondThings[secondThing].includes("#COMMANDSCOUNT#")) {
         commandCount = await client.dbConn.getKey("bot", client.user.id, "commands");
         let commandCountLength = String(Math.abs(commandCount)).length;
-        let commandCountFlored = Math.floor((commandCountLength-0.1)/3);
+        let commandCountFlored = Math.floor((commandCountLength - 0.1) / 3);
         let commandCountMultiplier = commandCountLength % 3 !== 0 ? 10 : 1;
-        commandCount = Math.floor((commandCount/(1000**commandCountFlored))*commandCountMultiplier)/commandCountMultiplier;
-        commandCountLetter = commandCountFlored===0 ? "" : commandCountFlored===1 ? "k" : commandCountFlored===2?"M":commandCountFlored===3?"B":"T";
+        commandCount = Math.floor((commandCount / (1000 ** commandCountFlored)) * commandCountMultiplier) / commandCountMultiplier;
+        commandCountLetter = commandCountFlored === 0 ? "" : commandCountFlored === 1 ? "k" : commandCountFlored === 2 ? "M" : commandCountFlored === 3 ? "B" : "T";
     }
     finalThing = ListOfSecondThings[secondThing].replace(/#COMMANDSCOUNT#/g, `+${commandCount}${commandCountLetter}`).replace(/#GUILDSCOUNT#/g, client.guilds.cache.size).replace(/#PEOPLESCOUNT#/g, client.users.cache.size);
     switch (type) {

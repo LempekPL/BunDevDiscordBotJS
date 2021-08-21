@@ -1,12 +1,12 @@
 let Discord = require("discord.js");
 
 module.exports.info = {
-    name: "clearuserdatabase",
+    name: "clearserverdatabase",
     tags: ["clear", "database", "security"],
 }
 
 module.exports.run = async (client, message, args) => {
-    if (message.author.id !== message.guild.ownerId) return;
+    if (message.author.id !== message.guild.ownerId) return client.emit("uisae", "U03", message, "You need to be creator of this server to delete it from bot database");
     let values = {
         "yes": async () => {
             let deleted = await client.dbConn.delete("guilds", message.guild.id);

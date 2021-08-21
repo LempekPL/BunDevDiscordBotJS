@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args) => {
     let i = 0;
     for (let k = 0; k < SetChanges.length / 10; k++) {
         let embed = new Discord.MessageEmbed();
-        embed.setTitle(`Changelog - page ${k + 1}/${Math.floor(SetChanges.length / 10)+1}`)
+        embed.setTitle(`Changelog - page ${k + 1}/${Math.floor(SetChanges.length / 10) + 1}`)
         embed.setColor(client.util.randomColor());
         client.util.footerEmbed(client, embed);
         let j = 0;
