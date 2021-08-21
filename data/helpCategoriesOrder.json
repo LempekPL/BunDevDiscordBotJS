@@ -1,6 +1,7 @@
 [
   "basic",
   "moderation",
+  "user",
   "image",
   "imageManipulation",
   "text",

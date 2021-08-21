@@ -195,13 +195,59 @@ module.exports.ownerString = (client, type = "tag", limit = 4) => {
 
 /**
  * Sends a logging webhook message
- * @param client - Discord client
- * @param message - Discord embed
- * @param webhook - Discord webhook link
- * @param {String} data - Data to send
+ * @param {string} type - Available types: `customString`, `customEmbed`, `guild`, `command`
+ * @param {string} webhookUrl - Discord webhook link
+ * @param data - Discord embed or string or data for command embed {user, message, sendMessageData, description} or data for command embed {guild, type = (`joined`/`left`)}
  */
-module.exports.logger = (client, message, webhook, data) => {
+module.exports.logger = async (type, webhookUrl, data) => {
+    const webhook = new Discord.WebhookClient({url: webhookUrl});
+    switch (type) {
+        case "customString":
+            await webhook.send({content: `${data}`})
+            break;
+        case "customEmbed":
+            await webhook.send({embeds: [data]});
+            break;
+        case "guild":
+            await webhook.send({embeds: [guildEmbedLog(data)]});
+            break;
+        case "command":
+            await webhook.send({embeds: [commandEmbedLog(data)]});
+            break;
+    }
+}
 
+async function guildEmbedLog(guild, type) {
+    let embed = new Discord.MessageEmbed();
+    if (type === "joined") {
+        embed.setColor("#00cc00");
+        embed.setTitle(`Joined to server: ${guild.name} (${guild.id})`);
+    } else if (type === "left") {
+        embed.setColor("#cc0000");
+        embed.setTitle(`Left the server: ${guild.name} (${guild.id})`);
+    }
+    const OwnerUser = await guild.fetchOwner();
+    embed.setDescription(`Owner: ${OwnerUser.user.tag} (${OwnerUser.user.id}) \nALL Members: ${guild.memberCount} \nBots: ${guild.members.cache.filter(m => m.user.bot).size} \n\n\`${guild.iconURL()}\``);
+    embed.setThumbnail(guild.iconURL());
+    return embed;
+}
+
+function commandEmbedLog({client, message, messageData, title, description, thumbnail}) {
+    let embed = new Discord.MessageEmbed();
+    if (title) embed.setTitle(`${title}`);
+    if (description) embed.setDescription(`${description}`);
+    if (thumbnail) embed.setThumbnail(thumbnail);
+    embed.setColor('#ff0000');
+    embed.addField("Server", `${message.guild} (${message.guild.id})`);
+    embed.addField("Channel", `${message.channel} (${message.channel.id})`);
+    embed.addField("Message", message.id);
+    embed.addField("Message created", `<t:${(message.createdTimestamp / 1000).toFixed(0)}:F>`);
+    embed.addField("Message owner", `${message.author.tag} (${message.author.id})`);
+    embed.addField("User message link", `https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`);
+    if (messageData) embed.addField("Bot message link", `https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${messageData.id}`);
+    if (client) embed.addField("Command", `${client.dbData.bot.commands}`);
+    embed.setTimestamp();
+    return embed;
 }
 
 // TODO: response.headers.get('x-ratelimit-remaining')
@@ -224,6 +270,7 @@ module.exports.obraziumHandler = async (client, message, endpoint, responseType 
     embed.setFooter("obrazium.com");
     let urlArgs = "";
     let user;
+    let urlToWebhookLog;
     switch (inputTypes) {
         case "urlAvatar":
             user = await client.util.searchUser(client, message, args, {
@@ -233,7 +280,7 @@ module.exports.obraziumHandler = async (client, message, endpoint, responseType 
             });
             if (!user) return;
             urlArgs = `?url=${user.avatarURL({format: "png", size: 1024})}`;
-            // client.util.logger(client, message, )
+            urlToWebhookLog = user.avatarURL({format: "png", size: 1024});
             break;
         case "urlImage":
             urlArgs = `?url=${args}`;
@@ -252,9 +299,11 @@ module.exports.obraziumHandler = async (client, message, endpoint, responseType 
             });
             if (!user) return;
             urlArgs = `?hex=${args[0]}&url=${user.avatarURL({format: "png", size: 1024})}`;
+            urlToWebhookLog = user.avatarURL({format: "png", size: 1024});
             break;
         case "urlImage+hex":
             urlArgs = `?hex=${args[0]}&url=${args[1]}`;
+            urlToWebhookLog = args[1];
             break;
         case "decorational":
             user = await client.util.searchUser(client, message, args, {ignoreBots: false});
@@ -263,16 +312,28 @@ module.exports.obraziumHandler = async (client, message, endpoint, responseType 
             break;
     }
     let data = await requester(`https://obrazium.com/v1/${endpoint}${urlArgs}`, {Authorization: process.env.OBRAZIUM}, responseType);
+    let messageData;
     if (responseType === "json") {
         embed.setDescription(`\`\`\`${data.text}\`\`\``)
-        await message.channel.send({embeds: [embed]});
+        messageData = await message.channel.send({embeds: [embed]});
     } else if (responseType === "buffer") {
         await fs.writeFileSync(`${endpoint}.gif`, data);
         embed.setImage(`attachment://${endpoint}.gif`);
-        await message.channel.send({
+        messageData = await message.channel.send({
             embeds: [embed], files: [`./${endpoint}.gif`]
         });
         await fs.unlinkSync(`${endpoint}.gif`);
+    }
+    if (responseType === "buffer" && urlToWebhookLog) {
+        await client.util.logger("command", process.env.WEBHOOK_IMAGE_COMMANDS, {
+            client,
+            user,
+            message,
+            messageData,
+            title: `${user.tag} used \`${endpoint}\` endpoint`,
+            description: `\`${urlToWebhookLog}\``,
+            thumbnail: urlToWebhookLog
+        });
     }
 }
 
@@ -291,15 +352,6 @@ async function requester(requestUrl, headers, responseType = "buffer") {
     } catch (e) {
         console.log(e)
     }
-}
-
-module.exports.globalBaned = (client, message) => {
-    let embed = new Discord.MessageEmbed();
-    embed.setTitle("Globalban");
-    embed.setDescription("You can't use this bot\n Contact one of the owners to get unbanned");
-    embed.setColor("RED");
-    client.util.footerEmbed(client, embed);
-    message.channel.send({embeds: [embed]})
 }
 
 /**
@@ -332,3 +384,11 @@ module.exports.additionalConfirmation = async (client, message, customMessage = 
     });
 }
 
+module.exports.globalBaned = (client, message) => {
+    let embed = new Discord.MessageEmbed();
+    embed.setTitle("Globalban");
+    embed.setDescription("You can't use this bot\n Contact one of the owners to get unbanned");
+    embed.setColor("RED");
+    client.util.footerEmbed(client, embed);
+    message.channel.send({embeds: [embed]})
+}

@@ -64,7 +64,16 @@ module.exports.run = async (client, message, args) => {
     embed.addField(`Created at`, `<t:${CreatedAt}> (<t:${CreatedAt}:R>)`);
     embed.setThumbnail(user.avatarURL());
     client.util.footerEmbed(client, embed);
-    message.channel.send({embeds: [embed]});
+    let messageData = message.channel.send({embeds: [embed]});
+    await client.util.logger("command", process.env.WEBHOOK_IMAGE_COMMANDS, {
+        client,
+        user,
+        message,
+        messageData,
+        title: `${user.tag} used \`${module.exports.info.name}\` command`,
+        description: `\`${user.avatarURL()}\``,
+        thumbnail: user.avatarURL()
+    });
 }
 
 function getRelation(client, user) {

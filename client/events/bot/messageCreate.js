@@ -67,19 +67,28 @@ module.exports = async (client, message) => {
     }
     await updateData(client, message);
 
-    // ignoring cooldown and logging command for bot owners
-    if (!(message.author.id === client.config.settings.ownerId || client.config.settings.subOwnersIds.includes(message.author.id))) {
-        // ingnore cooldown for server administrators
-        if (!message.member.permissions.has("ADMINISTRATOR")) {
-            let cooldownDate = new Date(Date.now() + guildData.slowmode * 1000);
-            cooldown.set(message.author.id, cooldownDate);
-        }
-        // logCommand(client, message, comCount);
+    // ignore cooldown for server administrators and for bot owners
+    if (!message.member.permissions.has("ADMINISTRATOR") && message.author.id !== client.config.settings.ownerId && !client.config.settings.subOwnersIds.includes(message.author.id)) {
+        let cooldownDate = new Date(Date.now() + guildData.slowmode * 1000);
+        cooldown.set(message.author.id, cooldownDate);
     }
 
+    // delete cooldown
     setTimeout(() => {
         cooldown.delete(message.author.id)
-    }, guildData.slowmode * 1000)
+    }, guildData.slowmode * 1000);
+
+    //logging command
+    await logCommand(client, message);
+}
+
+const logCommand = async (client, message) => {
+    await client.util.logger("command", process.env.WEBHOOK_ALL_COMMANDS, {
+        client,
+        message,
+        title: `${message.author.tag} sent \`${message.content.slice(client.dbData.guilds.prefix.length).trim().split(/ +/g)[0]}\` command`,
+        description: `**Message content:**\n\`${message.content}\``
+    });
 }
 
 const getData = async (client, message) => {

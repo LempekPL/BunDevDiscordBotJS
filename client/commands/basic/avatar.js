@@ -3,8 +3,6 @@ const Allowed = {
     format: ["webp", "png", "jpg", "jpeg", "gif"],
     size: [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 }
-let imageOptions = {size: 2048}
-let userSelect = null;
 
 module.exports.info = {
     name: "avatar",
@@ -12,6 +10,8 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
+    let imageOptions = {size: 2048}
+    let userSelect = null;
     if (args.length === 1) {
         userSelect = args[0];
     } else if (args.length > 1) {
@@ -56,7 +56,6 @@ module.exports.run = async (client, message, args) => {
         });
         if (!user) return;
     } else if (userSelect != null) {
-        console.log(userSelect)
         for (const userSelectElement of userSelect) {
             let tempUser = await client.util.searchUser(client, message, userSelectElement, {
                 returnAuthor: false,
@@ -73,22 +72,40 @@ module.exports.run = async (client, message, args) => {
         if (imageOptions.format === "gif" && !user.avatar.startsWith("a_")) {
             imageOptions.format = "png";
         }
-        let messageData = sendEmbed(client, message, user, imageOptions);
+        let avatarUrl = user.avatarURL(imageOptions) ?? user.defaultAvatarURL;
+        let messageData = await sendEmbed(client, message, user, avatarUrl);
+        await client.util.logger("command", process.env.WEBHOOK_IMAGE_COMMANDS, {
+            client,
+            user,
+            message,
+            messageData,
+            title: `${user.tag} used \`${module.exports.info.name}\` command`,
+            description: `\`${avatarUrl}\``,
+            thumbnail: avatarUrl
+        });
     } else {
-        users.forEach(user => {
+        for (const user1 of users) {
             let userOption = {...imageOptions};
-            if (userOption.format === "gif" && !user.avatar.startsWith("a_")) {
+            if (userOption.format === "gif" && !user1.avatar.startsWith("a_")) {
                 userOption.format = "png";
             }
-            let messageData = sendEmbed(client, message, user, userOption);
-            //client.util.
-        });
+            let avatarUrl = user1.avatarURL(userOption) ?? user1.defaultAvatarURL;
+            let messageData = await sendEmbed(client, message, user1, avatarUrl);
+            await client.util.logger("command", process.env.WEBHOOK_IMAGE_COMMANDS, {
+                client,
+                user: user1,
+                message,
+                messageData,
+                title: `${user1.tag} used \`${module.exports.info.name}\` command`,
+                description: `\`${avatarUrl}\``,
+                thumbnail: avatarUrl
+            });
+        }
     }
 }
 
-async function sendEmbed(client, message, user, imageOptions) {
+async function sendEmbed(client, message, user, avatarUrl) {
     let embed = new Discord.MessageEmbed;
-    let avatarUrl = user.avatarURL(imageOptions) ?? user.defaultAvatarURL;
     embed.setTitle(`${user.tag} ${client.lang.avatar}`);
     embed.setDescription(`[[LINK]](${avatarUrl})`);
     embed.setImage(avatarUrl);
@@ -97,28 +114,3 @@ async function sendEmbed(client, message, user, imageOptions) {
     client.util.footerEmbed(client, embed);
     return await message.channel.send({embeds: [embed]});
 }
-
-
-// if (message.author.id === client.config.settings.ownerid) {
-//     let reportEmbed = new Discord.MessageEmbed;
-// reportEmbed.setTitle(user.tag + " avatar");
-// reportEmbed.setDescription(`\`${user.avatarURL({format: img.format, dynamic: img.dynamic, size: img.size})}\``);
-// reportEmbed.setThumbnail(user.avatarURL(user.avatarURL({
-//     format: img.format,
-//     dynamic: img.dynamic,
-//     size: img.size
-// })));
-// reportEmbed.setColor('#ff0000');
-// reportEmbed.addField("Server ID", message.guild + " (" + message.guild.id + ")");
-// reportEmbed.addField("Channel ID", message.channel + " (" + message.channel.id + ")");
-// reportEmbed.addField("Message ID", message.id);
-// reportEmbed.addField("Message Created", message.createdAt);
-// reportEmbed.addField("Message Owner", message.author.tag + " (" + message.author.id + ")");
-// reportEmbed.setTimestamp();
-
-// let whook = new Discord.WebhookClient(client.config.webhooks.image.split("/")[5], client.config.webhooks.image.split("/")[6]);
-// let messageData = await message.channel.send(embed)
-// reportEmbed.addField("Bot Message Link", "https://discordapp.com/channels/" + message.guild.id + "/" + message.channel.id + "/" + messageData.id);
-//
-// whook.send(reportEmbed)
-// } else {

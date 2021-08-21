@@ -6,8 +6,8 @@ module.exports = (client) => {
     client.on("ready", () => EventHandler("ready")(client));
     client.on("messageCreate", (message) => EventHandler("messageCreate")(client, message));
     client.on("error", (error) => EventHandler("error")(client, error));
-    //client.on("guildCreate", (guild) => EventHandler("guildCreate")(client, guild));
-    //client.on("guildDelete", (guild) => EventHandler("guildDelete")(client, guild));
+    client.on("guildCreate", (guild) => EventHandler("guildCreate")(client, guild));
+    client.on("guildDelete", (guild) => EventHandler("guildDelete")(client, guild));
     //client.on("guildMemberAdd", (member) => EventHandler("guildMemberAdd")(client, member));
     //client.on("guildMemberRemove", (member) => EventHandler("guildMemberRemove")(client, member));
     //client.on("voiceStateUpdate", (oldState, newState) => EventHandler("voiceStateUpdate")(client, oldState, newState));
