@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const ReactionMenu = require('discord.js-reaction-menu');
-const DefQuestions = require(`../../../langs/en/faq.json`);
+const DefQuestions = require(`../../../web/public/lang/en/faq.json`);
 
 module.exports.info = {
     name: "faq",
@@ -8,7 +8,7 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    const SetQuestions = client.dbData.guilds.language.force ? require(`../../../langs/${client.dbData.guilds.language.commands}/faq.json`) : require(`../../../langs/${client.dbData.users.language.commands}/faq.json`);
+    const SetQuestions = client.dbData.guilds.language.force ? require(`../../../web/public/lang/${client.dbData.guilds.language.commands}/faq.json`) : require(`../../../web/public/lang/${client.dbData.users.language.commands}/faq.json`);
     let pages = [];
     for (const faqKey in DefQuestions) {
         const Questions = {...DefQuestions[faqKey], ...SetQuestions[faqKey]};
@@ -16,6 +16,7 @@ module.exports.run = async (client, message, args) => {
         embed.setColor(client.util.randomColor());
         embed.setAuthor(`${client.lang.faq} - ${client.lang[faqKey]}`, client.user.avatarURL());
         for (const questionKey in Questions) {
+            console.log(`${questionKey}. ${Questions[questionKey].question}`, Questions[questionKey].answer)
             embed.addField(`${questionKey}. ${Questions[questionKey].question}`, Questions[questionKey].answer);
         }
         client.util.footerEmbed(client, embed);
@@ -25,6 +26,5 @@ module.exports.run = async (client, message, args) => {
         channel: message.channel,
         userID: message.author.id,
         pages
-    })
-    // message.channel.send({embeds: [embed]})
+    });
 }

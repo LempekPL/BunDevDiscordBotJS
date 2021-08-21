@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const DefChanges = require("../../../langs/en/changelog.json");
+const DefChanges = require("../../../web/public/lang/en/changelog.json");
 const ReactionMenu = require("discord.js-reaction-menu");
 
 module.exports.info = {
@@ -8,7 +8,7 @@ module.exports.info = {
 }
 
 module.exports.run = async (client, message, args) => {
-    const SetChanges = client.dbData.guilds.language.force ? require(`../../../langs/${client.dbData.guilds.language.commands}/changelog.json`) : require(`../../../langs/${client.dbData.users.language.commands}/changelog.json`);
+    const SetChanges = client.dbData.guilds.language.force ? require(`../../../web/public/lang/${client.dbData.guilds.language.commands}/changelog.json`) : require(`../../../web/public/lang/${client.dbData.users.language.commands}/changelog.json`);
     let pages = [];
     let i = 0;
     for (let k = 0; k < SetChanges.length / 10; k++) {

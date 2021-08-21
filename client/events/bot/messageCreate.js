@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const cooldown = new Map();
+const coolDown = new Map();
 
 module.exports = async (client, message) => {
     if (message.author.bot) return;
@@ -17,8 +17,8 @@ module.exports = async (client, message) => {
         return;
     }
 
-    // check if user has cooldown
-    let cooldownUser = cooldown.get(message.author.id);
+    // check if user has coolDown
+    let cooldownUser = coolDown.get(message.author.id);
     if (cooldownUser) {
         if (message.guild.me.permissions.has("MANAGE_MESSAGES")) {
             message.delete();
@@ -34,16 +34,16 @@ module.exports = async (client, message) => {
     }
 
     // set language
-    let defaultLang = require(`../../../langs/en/all.json`);
-    let defaultLangCom = require(`../../../langs/en/commandExclusive.json`);
+    let defaultLang = require(`../../../web/public/lang/en/all.json`);
+    let defaultLangCom = require(`../../../web/public/lang/en/commandExclusive.json`);
     let setLang, comLang, setLangCom;
     if (guildData.language.force) {
-        setLang = require(`../../../langs/${guildData.language.main}/all.json`);
-        setLangCom = require(`../../../langs/${guildData.language.main}/commandExclusive.json`);
+        setLang = require(`../../../web/public/lang/${guildData.language.main}/all.json`);
+        setLangCom = require(`../../../web/public/lang/${guildData.language.main}/commandExclusive.json`);
         comLang = guildData.language.main;
     } else {
-        setLang = require(`../../../langs/${userData.language.main}/all.json`);
-        setLangCom = require(`../../../langs/${userData.language.main}/commandExclusive.json`);
+        setLang = require(`../../../web/public/lang/${userData.language.main}/all.json`);
+        setLangCom = require(`../../../web/public/lang/${userData.language.main}/commandExclusive.json`);
         comLang = userData.language.main;
     }
     client.lang = {...defaultLang, ...setLang};
@@ -67,15 +67,15 @@ module.exports = async (client, message) => {
     }
     await updateData(client, message);
 
-    // ignore cooldown for server administrators and for bot owners
+    // ignore coolDown for server administrators and for bot owners
     if (!message.member.permissions.has("ADMINISTRATOR") && message.author.id !== client.config.settings.ownerId && !client.config.settings.subOwnersIds.includes(message.author.id)) {
         let cooldownDate = new Date(Date.now() + guildData.slowmode * 1000);
-        cooldown.set(message.author.id, cooldownDate);
+        coolDown.set(message.author.id, cooldownDate);
     }
 
-    // delete cooldown
+    // delete coolDown
     setTimeout(() => {
-        cooldown.delete(message.author.id)
+        coolDown.delete(message.author.id)
     }, guildData.slowmode * 1000);
 
     //logging command

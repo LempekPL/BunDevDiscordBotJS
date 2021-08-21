@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const CliCol = require("cli-color");
-const LangPath = "./langs";
+const LangPath = "./web/public/lang";
 const Langs = fs.readdirSync(LangPath).filter(file => fs.statSync(`${LangPath}/${file}`).isDirectory());
 
 module.exports = (client) => {

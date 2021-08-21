@@ -37,7 +37,7 @@ function helpMenuFull(client, message) {
     embed.setDescription(`Shown command amount: \`${totalCommands}\` | Prefix: \`${client.dbData.guilds.prefix}\` | Bot version: \`v${require("../../../package.json").version}\``);
     embed.addField('\u200b', '\u200b');
 
-    const HelpInfos = require(`../../../langs/${client.dbData.guilds.language.force ? client.dbData.guilds.language.main : client.dbData.users.language.main}/helpInfo.json`);
+    const HelpInfos = require(`../../../web/public/lang/${client.dbData.guilds.language.force ? client.dbData.guilds.language.main : client.dbData.users.language.main}/helpInfo.json`);
     if (HelpInfos.length > 0) {
         let randomHelpInfo = HelpInfos[Math.floor(Math.random() * HelpInfos.length)];
         embed.addField(`Random info`, `${randomHelpInfo
@@ -61,8 +61,8 @@ function helpMenuFull(client, message) {
 function helpInfo(client, message, args) {
     const commandFile = client.commands.get(client.commandMap.get(`${args[0]}|${client.dbData.guilds.language.force ? client.dbData.guilds.language.commands : client.dbData.users.language.commands}`)) ?? client.commands.get(args[0]);
     if (!commandFile) return;
-    const DefCommandInfo = require(`../../../langs/en/commandInfo.json`)[commandFile.info.name];
-    const SetCommandInfo = require(`../../../langs/${client.dbData.guilds.language.force ? client.dbData.guilds.language.main : client.dbData.users.language.main}/commandInfo.json`)[commandFile.info.name];
+    const DefCommandInfo = require(`../../../web/public/lang/en/commandInfo.json`)[commandFile.info.name];
+    const SetCommandInfo = require(`../../../web/public/lang/${client.dbData.guilds.language.force ? client.dbData.guilds.language.main : client.dbData.users.language.main}/commandInfo.json`)[commandFile.info.name];
     const commandInfo = {...DefCommandInfo, ...SetCommandInfo};
     let embed = new Discord.MessageEmbed();
     embed.setColor(client.util.randomColor());
