@@ -13,9 +13,9 @@ module.exports.run = async (client, message, args) => {
     embed.setColor(client.util.randomColor());
     embed.setTitle(`${client.user.tag}`);
 
-    const systemUptime = (new Date((Date.now() - os.uptime*1000)).getTime()/1000).toFixed(0);
-    const botUptime = (new Date((Date.now() - client.uptime)).getTime()/1000).toFixed(0);
-    const botCreated = (new Date(client.user.createdAt).getTime()/1000).toFixed(0);
+    const systemUptime = ((Date.now() - os.uptime*1000)/1000).toFixed(0);
+    const botUptime = ((Date.now() - client.uptime)/1000).toFixed(0);
+    const botCreated = (client.user.createdAt/1000).toFixed(0);
 
     embed.setThumbnail(client.user.avatarURL());
     embed.addField(`Users`, `${client.users.cache.size}`, true);

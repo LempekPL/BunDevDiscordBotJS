@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 
 module.exports.info = {
     name: "serverinfo",
-    tags: ["server","serverinfo","info","basic"]
+    tags: ["server", "serverinfo", "info", "basic"]
 }
 
 module.exports.run = async (client, message, args) => {
@@ -20,7 +20,7 @@ module.exports.run = async (client, message, args) => {
     const Idle = NonBots.filter(m => m.presence?.status === "idle").size;
     const Offline = NonBots.size - (Online + Dnd + Idle);
     const Bots = message.guild.members.cache.filter(m => m.user.bot).size;
-    const GuildCreated = (new Date(message.guild.createdAt).getTime()/1000).toFixed(0);
+    const GuildCreated = (message.guild.createdAt / 1000).toFixed(0);
 
     let embed = new Discord.MessageEmbed()
     embed.setColor(client.util.randomColor());
@@ -43,8 +43,8 @@ module.exports.run = async (client, message, args) => {
     if (message.guild.features.length > 0) {
         embed.addField(`Enabled features`, `\`${message.guild.features.join("`, `")}\``);
     }
-    embed.addField(`Created `,`<t:${GuildCreated}> (<t:${GuildCreated}:R>)`);
+    embed.addField(`Created `, `<t:${GuildCreated}> (<t:${GuildCreated}:R>)`);
 
     client.util.footerEmbed(client, embed);
-    message.channel.send({embeds:[embed]});
+    message.channel.send({embeds: [embed]});
 }

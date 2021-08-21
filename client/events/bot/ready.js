@@ -1,8 +1,6 @@
 const CliCol = require("cli-color");
 
 module.exports = async (client) => {
-    // module.exports.emojiguild = client.guilds.cache.get(client.config.settings.emojiServerID);
-
     // create database connection
     client.dbConn = await new client.db.Connection().connect();
     await client.dbConn.load();

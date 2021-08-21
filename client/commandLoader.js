@@ -11,6 +11,7 @@ module.exports = (client) => {
     fs.readdirSync("./client/commands/").forEach(category => {
         let commandFiles = fs.readdirSync(`./client/commands/${category}`).filter(file => file.endsWith(".js"));
         for (let file of commandFiles) {
+            delete require.cache[require.resolve(`./commands/${category}/${file}`)];
             let exportedModules = require(`./commands/${category}/${file}`);
             try {
                 client.commands.set(exportedModules.info.name, {
@@ -19,6 +20,7 @@ module.exports = (client) => {
                     info: exportedModules.info
                 });
                 for (let lang of Langs) {
+                    delete require.cache[require.resolve(`.${LangPath}/${lang}/commandExclusive.json`)];
                     let exportedLanguage = require(`.${LangPath}/${lang}/commandExclusive.json`);
                     if (!exportedLanguage[exportedModules.info.name]) continue;
                     for (let useCase in exportedLanguage[exportedModules.info.name]) {

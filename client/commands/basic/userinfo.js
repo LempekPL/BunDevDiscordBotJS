@@ -15,8 +15,8 @@ module.exports.run = async (client, message, args) => {
     let member = await message.guild.members.cache.get(user.id);
     if (member.deleted) return;
 
-    const CreatedAt = (new Date(user.createdTimestamp).getTime() / 1000).toFixed(0);
-    const JoinedAt = (new Date(member.joinedTimestamp).getTime() / 1000).toFixed(0);
+    const CreatedAt = (user.createdTimestamp / 1000).toFixed(0);
+    const JoinedAt = (member.joinedTimestamp / 1000).toFixed(0);
     const RelationWithBot = getRelation(client, user);
     const Status = getStatus(client, member);
     let Available = "nowhere";
@@ -52,7 +52,7 @@ module.exports.run = async (client, message, args) => {
     if (member.presence?.status) {
         let activities = "";
         member.presence?.activities?.forEach(activity => {
-            const TimestampFixed = (new Date(activity.createdTimestamp).getTime() / 1000).toFixed(0);
+            const TimestampFixed = (activity.createdTimestamp / 1000).toFixed(0);
             const ActivityName = activity.type === "CUSTOM" ? activity.state : activity.name;
             activities += activities === "" ? `${client.lang[activity.type]} **${ActivityName}** ${client.lang.since} <t:${TimestampFixed}:d><t:${TimestampFixed}:T>` : `\n${client.lang[activity.type]} **${ActivityName}** ${client.lang.since} <t:${TimestampFixed}:d><t:${TimestampFixed}:T>`
         });

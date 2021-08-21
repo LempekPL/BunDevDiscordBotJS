@@ -19,5 +19,11 @@
       "size": "size",
       "format": "format"
     }
+  },
+  "botinfo": {
+    "default": "botinfo"
+  },
+  "userinfo": {
+    "default": "userinfo"
   }
 }
