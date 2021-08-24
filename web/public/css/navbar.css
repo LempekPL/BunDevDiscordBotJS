@@ -1,0 +1,45 @@
+nav {
+  z-index: 10;
+  background-color: var(--navbar-background);
+  height: var(--navbar-height);
+  width: 100%;
+  position: fixed;
+  top: 0;
+}
+nav .logo {
+  margin: 5px 10px;
+  height: calc(var(--navbar-height) - 10px);
+  border-radius: 100%;
+  float: left;
+}
+@media only screen and (max-width: 600px) {
+  nav .bigScreen {
+    display: none;
+  }
+  nav .smallScreen {
+    display: block;
+  }
+}
+@media only screen and (min-width: 601px) {
+  nav .bigScreen {
+    display: block;
+  }
+  nav .smallScreen {
+    display: none;
+  }
+}
+nav a {
+  height: var(--navbar-height);
+  width: calc(var(--navbar-height) * 3/2);
+  line-height: var(--navbar-height);
+  font-size: var(--navbar-font-size);
+  text-align: center;
+  float: left;
+  display: block;
+  text-decoration: none;
+  color: var(--navbar-text-primary);
+  background-color: var(--navbar-background);
+}
+nav a:hover {
+  filter: brightness(80%);
+}

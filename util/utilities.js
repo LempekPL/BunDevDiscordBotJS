@@ -392,3 +392,6 @@ module.exports.globalBaned = (client, message) => {
     client.util.footerEmbed(client, embed);
     message.channel.send({embeds: [embed]})
 }
+
+//----------------------------------------------------------------
+// dashboard exclusive utilities

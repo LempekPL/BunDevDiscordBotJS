@@ -18,12 +18,6 @@ module.exports = async (client) => {
         client.dbConn = await new client.db.Connection().connect();
     }, 24 * 60 * 60 * 1000);
 
-    // load commands
-    require("../../commandLoader")(client);
-
-    // load dashboard
-    //await require("../../../app/dashboard")(client);
-
     console.log(CliCol.cyan(`Discord Bot: ${client.user.tag} ready!`));
 }
 

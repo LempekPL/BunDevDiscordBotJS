@@ -3,7 +3,7 @@ const {Shoukaku, Libraries} = require('shoukaku');
 const Config = require("./data/config");
 
 const LavalinkServer = [{
-    name: process.env.DEV === "true" && Config.settings.devBotName != null ? Config.settings.devBotName : Config.settings.botName,
+    name: JSON.parse(process.env.DEV) && Config.settings.devBotName != null ? Config.settings.devBotName : Config.settings.botName,
     url: process.env.LAVALINK_URL,
     auth: process.env.LAVALINK_PASSWORD
 }];
@@ -37,14 +37,16 @@ class ExtendedClient extends Client {
     queue = {};
     lang = {};
     langCom = {};
-    db = require("./util/database.js");
-    util = require("./util/utilities.js");
+    db = require("./util/database");
+    util = require("./util/utilities");
     config = Config;
     shoukaku = new Shoukaku(new Libraries.DiscordJS(this), LavalinkServer, ShoukakuOptions);
+    dashboardServer = require("./web/dashboard")(this);
 }
 
 module.exports = (clientOld) => {
     if (clientOld) {
+        clientOld.dashboardServer.close()
         clientOld.destroy();
         for (const path in require.cache) {
             delete require.cache[path]
@@ -53,11 +55,10 @@ module.exports = (clientOld) => {
 
     // loading bot
     let client = new ExtendedClient({intents: discordIntentions});
+    require("./client/commandLoader")(client);
     require('./client/eventLoader')(client);
-    // loading commends in client/events/bot/ready.js, to make sure database loads
-    // loading dashboard in client/events/bot/ready.js, because website was loading to fast XDD
 
     // connecting bot
-    client.login(process.env.DEV === "true" && process.env.DEV_TOKEN != null ? process.env.DEV_TOKEN : process.env.TOKEN);
+    client.login(JSON.parse(process.env.DEV) && process.env.DEV_TOKEN != null ? process.env.DEV_TOKEN : process.env.TOKEN);
     return client;
 }

@@ -11,7 +11,7 @@ module.exports.run = async (client, message, args) => {
         case "commands":
             console.log(CliCol.cyan(`Reloading commands!`));
             message.channel.send("Reloading commands");
-            require("../../commandLoader")(client);
+            await require("../../commandLoader")(client);
             message.channel.send("Reloaded commands");
             console.log(CliCol.cyan(`Reloaded commands!`));
             break;
@@ -23,14 +23,14 @@ module.exports.run = async (client, message, args) => {
             message.channel.send("Reloaded database");
             console.log(CliCol.cyan(`Reloaded database!`));
             break;
-        case "bot":
+        case "client":
             console.log(CliCol.cyan(`Reloading client!`));
             await message.channel.send("Reloaded client");
-            client = require("../../../client.js")(client);
+            client = await require("../../../client")(client);
             console.log(CliCol.cyan(`Reloaded client!`));
             break;
         default:
-            message.channel.send("`commands` - reload commands\n`bot` - reload bot\n`bot` - reload database");
+            message.channel.send("`commands` - reload commands\n`client` - reload entire client\n`database` - reload database");
             break;
     }
 }

@@ -21,6 +21,10 @@
   },
   "website": {
     "1": {
+      "question": "Why not every server is showing up?",
+      "answer": "Probably you don't have MANAGE_GUILD permission"
+    },
+    "2": {
       "question": "Why this doesn't work?",
       "answer": "IDK?"
     }

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include("templates/head") %>
+    <link rel="stylesheet" href="/css/default.css">
+    <title>BunDev Dashboard</title>
+</head>
+<body>
+<%- include("templates/header") %>
+
+<div class="defaultBox">
+    <% if (discordUser?.guilds) { %>
+        <% discordUser.guilds.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0)); %>
+        <% discordUser.guilds.forEach(guild => { %>
+            <% if (!new Discord.Permissions(BigInt(guild.permissions)).has("MANAGE_GUILD")) return; %>
+            <% if (!botClient.guilds.cache.get(guild.id) && sortingType === "editable") return; %>
+            <div class="insideBox">
+                <% if (guild.icon) { %>
+                    <img class="guildIcon" src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png"
+                         alt="<%= guild.name %> icon">
+                <% } %>
+                <div class="infoInsideBox">
+                    <p class="guildName"><%= guild.name %></p>
+                    <% if (botClient.guilds.cache.get(guild.id)) { %>
+                        <a class="button" href="/settings/<%= guild.id %>">Edit</a>
+                        <!--            <a class="button" href="/clear/<%= guild.id %>">Delete data</a>-->
+                        <!--            <a class="button red" href="/kick/<%= guild.id %>">Kick</a>-->
+                    <% } else { %>
+                        <a class="button green"
+                           href="<%= `https://discord.com/api/oauth2/authorize?client_id=${botClient.user.id}&permissions=8&scope=bot&guild_id=${guild.id}` %>">Invite
+                            bot</a>
+                    <% } %>
+                </div>
+            </div>
+    <% });
+    } else { %>
+        <a class="button blue" href="/login">Login</a>
+        <a class="button" href="https://lempek.dev">Blog</a>
+        <a class="button" href="/changelog">Changelog</a>
+    <% } %>
+</div>
+<script src="/js/default.js"></script>
+</body>
+</html>

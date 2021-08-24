@@ -1,4 +1,3 @@
-const Discord = require("discord.js");
 const coolDown = new Map();
 
 module.exports = async (client, message) => {

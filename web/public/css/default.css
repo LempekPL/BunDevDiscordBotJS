@@ -1,0 +1,118 @@
+.defaultBox {
+    margin: var(--navbar-height) auto 0;
+    padding: 40px;
+    background: var(--box-background-primary);
+    color: var(--text-primary);
+    border-radius: 2rem;
+    width: 70%;
+}
+
+.insideBox {
+    margin: 1rem;
+    padding: 0.5rem;
+    height: 5rem;
+    border-radius: 2rem;
+    background: var(--box-background-secondary);
+}
+
+.guildIcon {
+    margin: 0.5rem;
+    border-radius: 100%;
+    transition: 500ms;
+    float: left;
+    height: 4rem;
+}
+
+div:hover > .guildIcon {
+    border-radius: 35%;
+    transition: 100ms;
+}
+
+.guildName {
+    font-size: 1.25rem;
+}
+
+.infoInsideBox {
+    margin: 0.5rem;
+    height: 4rem;
+}
+
+.searchBox {
+    margin: 0 auto;
+    height: 2.5rem;
+    width: 80%;
+    border-radius: 2rem;
+    border: 2px solid var(--box-background-secondary);
+}
+
+.searchBoxIcon {
+    margin: 0.5rem;
+    color: var(--box-background-secondary);
+}
+
+#searchGuildsBox {
+    height: inherit;
+    border: none;
+    padding: 0;
+    background: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+#searchGuildsBox:focus {
+    outline: none;
+}
+
+.button {
+    border: none;
+    color: var(--button-text);
+    background-color: var(--button-background-primary);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+    margin: .25rem;
+    cursor: pointer;
+    border-radius: 0.75rem;
+}
+
+.button:hover {
+    filter: brightness(80%);
+}
+
+.red {
+    background-color: #a50303;
+}
+
+.blue {
+    background-color: #2196F3;
+}
+
+.green {
+    background-color: #4ac100;
+}
+
+@media only screen and (max-width: 600px) {
+    .defaultBox {
+        width: 100%;
+        border-radius: 0;
+        padding: 0;
+    }
+
+    .insideBox {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .guildName {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .infoInsideBox {
+        padding: 0.5rem;
+    }
+}
