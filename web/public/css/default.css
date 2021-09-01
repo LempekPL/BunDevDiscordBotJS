@@ -21,6 +21,7 @@
     transition: 500ms;
     float: left;
     height: 4rem;
+    width: 4rem
 }
 
 div:hover > .guildIcon {
@@ -30,6 +31,9 @@ div:hover > .guildIcon {
 
 .guildName {
     font-size: 1.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .infoInsideBox {
@@ -38,35 +42,87 @@ div:hover > .guildIcon {
 }
 
 .searchBox {
-    margin: 0 auto;
+    margin: 0 auto 2.5rem;
     height: 2.5rem;
     width: 80%;
     border-radius: 2rem;
     border: 2px solid var(--box-background-secondary);
+    display: flex;
+    align-items: center;
 }
 
-.searchBoxIcon {
+.searchBoxItem1 {
     margin: 0.5rem;
     color: var(--box-background-secondary);
+    /*height: 1rem;*/
+    /*width: 1rem;*/
 }
 
-#searchGuildsBox {
-    height: inherit;
-    border: none;
+.searchBoxItem2 {
+    flex-grow: 4;
     padding: 0;
+    border: none;
     background: none;
     color: var(--text-primary);
     font-size: 1rem;
 }
 
-#searchGuildsBox:focus {
+.searchBoxItem2:focus {
     outline: none;
 }
 
-.button {
+.searchBoxItem3 {
+    flex-grow: 1;
+    align-items: center;
+    background-color: var(--box-background-secondary);
+    align-self: stretch;
+    border-radius: 2rem;
+}
+
+#guildEditableOnlyCheckbox {
+    appearance: none;
+}
+
+/*#guildEditableOnlyCheckbox:before {*/
+/*    -webkit-appearance: none;*/
+/*    background-color: #fafafa;*/
+/*    border: 1px solid #cacece;*/
+/*    box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);*/
+/*    padding: 9px;*/
+/*    border-radius: 3px;*/
+/*    display: inline-block;*/
+/*    position: relative;*/
+/*}*/
+
+/*#searchGuildsBox {*/
+/*    !*height: inherit;*!*/
+/*}*/
+
+
+/*.searchBoxIcon {*/
+/*    margin: 0.5rem;*/
+/*    color: var(--box-background-secondary);*/
+/*}*/
+
+/*.tezt {*/
+
+/*    display: inline;*/
+/*    !*display: flex;*!*/
+/*    !*align-items: center;*!*/
+/*    !*float: right;*!*/
+/*    !*padding-left: 1rem;*!*/
+/*    !*padding-right: 1rem;*!*/
+/*    !*width: 3rem;*!*/
+/*    height: inherit;*/
+/*    font-size: 1rem;*/
+/*    border-radius: 2rem;*/
+/*    background-color: var(--box-background-secondary);*/
+/*}*/
+
+.insideBoxButton {
     border: none;
     color: var(--button-text);
-    background-color: var(--button-background-primary);
+    background-color: var(--button-background-color, var(--button-background-primary));
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -77,42 +133,88 @@ div:hover > .guildIcon {
     border-radius: 0.75rem;
 }
 
-.button:hover {
+.insideBoxButton:hover {
     filter: brightness(80%);
 }
 
-.red {
-    background-color: #a50303;
-}
-
-.blue {
-    background-color: #2196F3;
-}
-
-.green {
-    background-color: #4ac100;
-}
-
 @media only screen and (max-width: 600px) {
+    body {
+        background-color: var(--box-background-primary);
+    }
+
     .defaultBox {
         width: 100%;
         border-radius: 0;
-        padding: 0;
+        padding: 1rem 0 0;
     }
 
     .insideBox {
         width: 100%;
-        margin: 0;
+        margin: 0.5rem 0;
         padding: 0;
-    }
-
-    .guildName {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        background: var(--button-background-color);
+        cursor: pointer;
     }
 
     .infoInsideBox {
-        padding: 0.5rem;
+        margin: 0;
+        height: 5rem;
     }
+
+    .guildName {;
+        margin-right: 1rem;
+        padding: 0.5rem;
+        border-radius: 0 2rem 2rem 0;
+        background: var(--box-background-secondary)
+    }
+
+    .guildIcon {
+        margin: 0;
+        padding: 0.5rem;
+        border-radius: 1.9rem 0 2rem 1.9rem;
+        background: var(--box-background-secondary);
+    }
+
+    div:hover > .guildIcon {
+        border-radius: 2rem 0 2rem 2rem;
+    }
+
+    .searchBox {
+        height: 3rem;
+        width: 90%;
+        margin-bottom: 1rem;
+    }
+
+    .insideBoxButton {
+        font-size: 1rem;
+        padding: 0;
+        margin: 0.75rem 1rem;
+        cursor: pointer;
+    }
+
+    .insideBoxButton:hover {
+        filter: none;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    .editableOnlyText {
+        display: none;
+    }
+}
+
+.red {
+    --button-background-color: #a50303;
+}
+
+.blue {
+    --button-background-color: #2196F3;
+}
+
+.green {
+    --button-background-color: #4ac100;
+}
+
+.yellow {
+    --button-background-color: #c1b700;
 }

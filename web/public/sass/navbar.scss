@@ -9,6 +9,7 @@ nav {
   .logo {
     margin: 5px 10px;
     height: calc(var(--navbar-height) - 10px);
+    width: calc(var(--navbar-height) - 10px);
     border-radius: 100%;
     float: left;
   }
@@ -46,5 +47,9 @@ nav {
     &:hover {
       filter: brightness(80%);
     }
+  }
+
+  #dropdownMenu {
+    display: none;
   }
 }

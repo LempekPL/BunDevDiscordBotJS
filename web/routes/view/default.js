@@ -5,8 +5,7 @@ const Discord = require("discord.js");
 router.get("/", async (req, res, next) => {
     res.render(`default`, {
         Discord,
-        sortingType: req.cookies.sortingType ?? "a-z",
-        sortingEditable: req.cookies.sortingEditable ?? false,
+        editableOnly: req.cookies.editableOnly ?? false,
         botClient: req.botClient,
         discordUser: req.discordUser ?? null
     });

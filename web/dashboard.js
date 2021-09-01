@@ -47,12 +47,6 @@ module.exports = (client) => {
     }));
     app.use(express.static(path.join(__dirname, "public")));
     app.use(loadClient(client));
-    // app.use(jwt({
-    //     secret: process.env.DASHBOARD_JWT_SECRET,
-    //     algorithms: ['HS256']
-    // }))
-
-    // setLocalsValues({"botClient": "test"}),
 
     // view
     app.use("/", getData, require("./routes/view/default"));

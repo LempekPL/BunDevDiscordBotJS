@@ -26,28 +26,35 @@
     --text-primary: #ccc;
 }
 
-/*.lempek {}*/
-
 * {
     margin: 0;
+    transition: 100ms;
 }
+
+/*.lempek {}*/
 
 body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     background-color: var(--background-primary);
 }
 
-/*body::-webkit-scrollbar {*/
-/*    width: 5px;*/
-/*}*/
+.button {
+    border: none;
+    color: var(--button-text);
+    background-color: var(--button-background-color, var(--button-background-primary));
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+    margin: .25rem;
+    cursor: pointer;
+    border-radius: 0.75rem;
+}
 
-/*body::-webkit-scrollbar-track {*/
-/*    background: var(--scrollbar-background);*/
-/*}*/
-
-/*body::-webkit-scrollbar-thumb {*/
-/*    background: var(--scrollbar);*/
-/*}*/
+.button:hover {
+    filter: brightness(80%);
+}
 
 p, h1 {
     color: var(--text-primary);
@@ -61,6 +68,7 @@ p, h1 {
     float: right;
 }
 
+
 .hr {
     width: 100%;
     border-top: 1px solid #7b7b7b;
@@ -69,10 +77,10 @@ p, h1 {
     overflow: auto;
 }
 
-:is(.light) .hr {
-    filter: brightness(120%);
-}
+/*:is(.light) .hr {*/
+/*    filter: brightness(120%);*/
+/*}*/
 
-:is(.dark) .hr {
-    filter: brightness(80%);
-}
+/*:is(.dark) .hr {*/
+/*    filter: brightness(80%);*/
+/*}*/
