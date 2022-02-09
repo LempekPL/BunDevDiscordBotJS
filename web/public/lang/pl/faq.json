@@ -1,0 +1,8 @@
+{
+  "bot": {
+    "1": {
+      "question": "Dlaczego niektórzy mają więcej komend niż ja?",
+      "answer": "Niektórzy są beta testerami lub są włascicielami tego bota i mogą mieć więcej dostępnych dla nich komend\n Lub właściciel serwera lub ty zablokowaliście kategorię komendy"
+    }
+  }
+}

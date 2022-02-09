@@ -1,11 +1,10 @@
 {
-  "name": "bunbun",
+  "name": "bundev",
   "version": "2.0.0",
   "description": "Multi purpose discord bot",
-  "main": "index.js",
   "scripts": {
-    "main": "node index.js",
-    "init": "npm i"
+    "init": "npm i",
+    "run": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -19,18 +18,17 @@
   "homepage": "https://github.com/LempekPL/BunBun#readme",
   "dependencies": {
     "cli-color": "^2.0.0",
-    "color": "^3.1.3",
+    "color": "^4.0.1",
     "cookie-parser": "^1.4.5",
-    "discord.js": "^12.5.1",
-    "discord.js-reaction-menu": "^1.1.1",
+    "discord.js": "^13.1.0",
+    "discord.js-reaction-menu": "^1.1.2",
+    "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
-    "express-session": "^1.17.1",
-    "memorystore": "^1.6.5",
+    "helmet": "^4.6.0",
     "node-fetch": "^2.6.1",
-    "passport": "^0.4.1",
-    "passport-discord": "^0.1.4",
     "rethinkdb": "^2.4.2",
-    "shoukaku": "^1.5.2"
+    "sass": "^1.38.0",
+    "shoukaku": "^2.0.1"
   }
 }

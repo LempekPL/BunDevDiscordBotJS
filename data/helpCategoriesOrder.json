@@ -1,0 +1,12 @@
+[
+  "basic",
+  "moderation",
+  "user",
+  "image",
+  "imageManipulation",
+  "text",
+  "textManipulation",
+  "beta",
+  "other",
+  "owner"
+]

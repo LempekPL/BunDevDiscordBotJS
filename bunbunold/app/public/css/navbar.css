@@ -1,0 +1,168 @@
+@charset "UTF-8";
+.navbar {
+  background-color: var(--navbar-background-primary);
+  position: fixed;
+  width: 100%;
+  height: var(--navbar-height);
+  top: 0;
+  z-index: 1;
+}
+
+.lempekText {
+  background-color: var(--lempek-color);
+  transition: 300ms;
+  position: absolute;
+  font-size: 25px;
+  height: var(--navbar-height);
+  line-height: var(--navbar-height);
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+}
+
+.navbar button {
+  border: none;
+  display: block;
+  color: var(--navbar-text-primary);
+  background-color: var(--navbar-background-primary);
+  text-align: center;
+  text-decoration: none;
+}
+.navbar a {
+  float: left;
+  display: block;
+  color: var(--navbar-text-primary);
+  text-align: center;
+  text-decoration: none;
+}
+.navbar .loginNav {
+  transition: 400ms;
+  float: right;
+  height: var(--navbar-height);
+  padding: 0 20px;
+  line-height: var(--navbar-height);
+  color: var(--navbar-text-primary);
+  background-color: var(--navbar-background-primary);
+  font-size: 20px;
+  text-align: center;
+}
+
+.dropdown {
+  position: relative;
+  display: inline;
+  float: right;
+}
+
+.dropdown-content {
+  position: absolute;
+  background-color: var(--navbar-background-primary);
+  display: none;
+  min-width: 160px;
+  z-index: 1;
+  right: 0;
+  overflow: auto;
+}
+.dropdown-content a {
+  background-color: var(--navbar-background-primary);
+  padding: 10px;
+  margin: 0 auto;
+  min-width: 140px;
+  text-decoration: none;
+  display: block;
+  font-size: 20px;
+}
+
+.drop-button {
+  transition: 400ms;
+  background-color: var(--navbar-background-primary);
+  color: var(--navbar-text-primary);
+  font-size: 25px;
+  border: none;
+  cursor: pointer;
+  height: var(--navbar-height);
+  padding: 0 18px;
+}
+
+.custom-select {
+  position: relative;
+  display: flex;
+  width: 90%;
+  height: 3em;
+  line-height: 3;
+  background-color: var(--select-background-primary);
+  overflow: hidden;
+  border-radius: 20px;
+  margin: 10px auto;
+}
+.custom-select select {
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0;
+  flex: 1;
+  padding: 0 16px;
+  color: var(--text-primary);
+  background-color: var(--select-background-primary);
+  cursor: pointer;
+}
+
+.custom-select::after {
+  content: "▼";
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 10px;
+  color: var(--text-primary);
+  background-color: var(--select-background-primary);
+  cursor: pointer;
+  pointer-events: none;
+  filter: brightness(80%);
+}
+
+.arrowChangeNavbar::after {
+  content: "▲";
+}
+
+.show {
+  display: block;
+}
+
+.dropdown a {
+  transition: 300ms;
+}
+
+:is(.light, .lempek) .navbar button:is(:hover, :focus) {
+  filter: brightness(80%);
+}
+:is(.light, .lempek) .navbar a:hover {
+  filter: brightness(70%);
+}
+:is(.light, .lempek) .navbar .loginNav:hover {
+  filter: brightness(80%);
+}
+:is(.light, .lempek) .dropdown-content {
+  filter: brightness(90%);
+}
+:is(.light, .lempek) .lempekText {
+  filter: brightness(90%);
+}
+
+:is(.dark, .amoled) .navbar button:is(:hover, :focus) {
+  filter: brightness(130%);
+}
+:is(.dark, .amoled) .navbar a:hover {
+  filter: brightness(140%);
+}
+:is(.dark, .amoled) .navbar .loginNav:hover {
+  filter: brightness(130%);
+}
+:is(.dark, .amoled) .dropdown-content {
+  filter: brightness(120%);
+}
+:is(.dark, .amoled) .lempekText {
+  filter: brightness(80%);
+}
+
+.dark .dropdown-content {
+  filter: brightness(90%);
+}

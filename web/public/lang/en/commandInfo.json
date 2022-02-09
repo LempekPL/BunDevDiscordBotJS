@@ -1,0 +1,12 @@
+{
+  "commandName": {
+    "example": "#PREFIX##COMMAND# <additionalstuff>",
+    "explanation": "string handler in help command or something XD",
+    "userPerms": "leave empty or don't include if bot doesn't need more than SEND_MESSAGES",
+    "botPerms": "leave empty or don't include if bot doesn't need more than SEND_MESSAGES"
+  },
+  "avatar": {
+    "example": "`#PREFIX##COMMAND# [@userid]` \n`#PREFIX##COMMAND# <key> <value>`",
+    "explanation": "Sends embeded message using Discord.MessageEmbed() method that will contain attachment of your currently selected avatar that you have set some time ago"
+  }
+}

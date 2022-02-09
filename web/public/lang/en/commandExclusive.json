@@ -1,0 +1,29 @@
+{
+  "commandName": {
+    "default": "default",
+    "aliases": [
+      "alias1",
+      "alias2"
+    ],
+    "args": {
+      "arg1": "arg1"
+    }
+  },
+  "avatar": {
+    "default": "avatar",
+    "aliases": [
+      "av"
+    ],
+    "args": {
+      "user": "user",
+      "size": "size",
+      "format": "format"
+    }
+  },
+  "botinfo": {
+    "default": "botinfo"
+  },
+  "userinfo": {
+    "default": "userinfo"
+  }
+}

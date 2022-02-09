@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include("templates/head") %>
+    <link rel="stylesheet" href="/css/default.css">
+    <title>BunDev Dashboard</title>
+</head>
+<body>
+<%- include("templates/header") %>
+<div class="defaultBox">
+    <% if (discordUser?.guilds) { %>
+        <div class="searchBox">
+            <i class="fas fa-search searchBoxItem1"></i>
+            <input class="searchBoxItem2" type="text" id="searchGuildsBox" placeholder="Search for guilds...">
+            <label class="searchBoxItem3">
+                <input type="checkbox" id="guildEditableOnlyCheckbox">
+                <span class="editableOnlyText">Editable</span>
+            </label>
+        </div>
+        <div id="listOfGuilds">
+            <% discordUser.guilds.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0)); %>
+            <% discordUser.guilds.forEach(guild => { %>
+                <% if (!new Discord.Permissions(BigInt(guild.permissions)).has("MANAGE_GUILD")) return; %>
+                <% if (!botClient.guilds.cache.get(guild.id) && editableOnly) return; %>
+                <% let isGuildWithBot = botClient.guilds.cache.get(guild.id); %>
+                <div class="insideBox <%- isGuildWithBot ? `yellow` : `green` %>">
+                    <% if (guild.icon) { %>
+                        <img class="guildIcon"
+                             src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png"
+                             alt="Guild icon">
+                    <% } else { %>
+                        <img class="guildIcon"
+                             src="/img/bunGreyNoIcon.png"
+                             alt="No set icon">
+                    <% } %>
+                    <div class="infoInsideBox">
+                        <p class="guildName"><%= guild.name %></p>
+                        <% if (isGuildWithBot) { %>
+                            <a class="insideBoxButton yellow" href="/settings/<%= guild.id %>">Edit</a>
+                            <!--            <a class="insideBoxButton" href="/clear/<%= guild.id %>">Delete data</a>-->
+                            <!--            <a class="insideBoxButton red" href="/kick/<%= guild.id %>">Kick</a>-->
+                        <% } else { %>
+                            <a class="insideBoxButton green"
+                               href="<%= `https://discord.com/api/oauth2/authorize?client_id=${botClient.user.id}&permissions=8&scope=bot&guild_id=${guild.id}` %>">Invite
+                                bot</a>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <a class="button blue" href="/login">Login</a>
+        <a class="button" href="https://lempek.dev">Blog</a>
+        <a class="button" href="/changelog">Changelog</a>
+    <% } %>
+    <script src="/js/default.js"></script>
+</div>
+</body>
+</html>

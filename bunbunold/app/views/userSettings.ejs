@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include('./templates/head', { bot, user, path, title: wordsD.settings.settings.replace(/#TARGET#/, user.username) }) %>
+  <link rel='stylesheet' type="text/css" href='/css/settings.css' />
+</head>
+
+<body>
+  <%- include('./templates/header', { bot, user, path, botData, cookiez}) %>
+  <div class="setbox">
+    <img class="ico" src="https://cdn.discordapp.com/avatars/<%- user.id %>/<%- user.avatar %>.png"
+      alt="<%= user.username %> icon" height="100">
+    <p style="font-size: 50px;"><%= user.username %>#<%= user.discriminator %></p>
+    <form style="margin-top: 1em;" method="POST">
+      <div class="sbox">
+        <p><%= wordsD.settings.language %>:</p>
+        <select class="s" name="language.lang">
+          <option value="en" <%= optionz.language.lang === 'en' ? `selected`:``;%>>English</option>
+          <option value="pl" <%= optionz.language.lang === 'pl' ? `selected`:``;%>>Polski</option>
+        </select><br>
+        <p><%= wordsD.settings.commandLanguage %></p>
+        <select class="s" name="language.commands">
+          <option value="en" <%= optionz.language.commands === 'en' ? `selected`:``;%>>English</option>
+          <option value="pl" <%= optionz.language.commands === 'pl' ? `selected`:``;%>>Polski</option>
+        </select>
+      </div>
+      <div class="sbox">
+        <p><%= wordsD.settings.disableCategory %></p>
+        <% codenames.codes.forEach(code => { %>
+          <p style="margin-bottom: 5px"><%= codenames.category[code] %></p>
+          <label for="<%= code %>" class="switch">
+            <input class="s" type="checkbox" name="disabledCategory.<%= code %>" id="<%= code %>">
+            <span class="slider round"></span>
+          </label>
+        <% }); %>
+      </div>
+      <button type="submit" class="butto"><%= wordsD.settings.saveSettings %></button>
+    </form>
+    <button class="butto" onclick="window.location.reload(true);"><%= wordsD.settings.resetChanges %></button>
+    <!-- <button class="butto" onclick="window.location.reload(true);">Delete settings</button> -->
+    <!-- <a class="butto red" href="/clear/">Delete data</a> -->
+    <a class="butto" href="/">Dashboard</a>
+  </div>
+  <script>
+    // don't even ask why
+    let optz =<%-JSON.stringify(optionz)%>;
+    let chList = [];
+
+    function checkD(el) {
+      let butto = document.getElementsByClassName("butto")[0];
+      console.log(el.value)
+      dataz = el.name.includes(".") ? optz[el.name.split('.')[0]][el.name.split('.')[1]] : optz[el.name];
+      if ((el.value !== 'on' && el.value != dataz) || (el.value === 'on' && el.checked !== dataz)) {
+        chList.push(el.name);
+      } else {
+        let index = chList.indexOf(el.name);
+        if (index > -1) {
+          chList.splice(index, 1);
+        }
+      }
+      let uniq = new Set(chList);
+      chList = [...uniq];
+      if (chList.length > 0) {
+        if (butto.classList.contains('blu')) return;
+        butto.classList.toggle('blu')
+      } else {
+        butto.classList.remove('blu')
+      }
+    }
+
+    // function autoC(aC) {
+    //   let txtC = document.getElementById(aC.name);
+    //   if (aC.checked && txtC != null) {
+    //     txtC.innerHTML = "Enabled";
+    //   } else if (txtC != null) {
+    //     txtC.innerHTML = "Disabled";
+    //   }
+    // }
+
+    let inpu = document.querySelectorAll('.s');
+    inpu.forEach(inp => {
+      inp.addEventListener('keyup', (event) => {
+        checkD(inp);
+      });
+      inp.addEventListener('change', (event) => {
+        checkD(inp);
+        autoC(inp);
+      });
+    });
+
+  </script>
+</body>
+
+</html>

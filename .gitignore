@@ -104,5 +104,4 @@ dist
 .tern-port
 
 # added manually
-config.json
 .idea

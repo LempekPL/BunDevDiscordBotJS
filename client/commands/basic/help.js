@@ -1,68 +1,84 @@
-let Discord = require("discord.js");
-let naming = require("../../../data/codenames.json");
-let vers = require("../../../package.json").version;
-let rm = require('discord.js-reaction-menu');
-let randomhelpinfo = require("../../../data/randomhelpinfo.json");
+const Discord = require("discord.js");
+const Order = require("../../../data/helpCategoriesOrder.json");
 
 module.exports.info = {
     name: "help",
-    lang: {
-        en: {
-            main: "help",
-            aliases: ["h", "?", "info"]
-        },
-        pl: {
-            main: "pomoc",
-            aliases: ["p", "?"]
-        }
-    },
     tags: ["help", "?", "how", "how to", "info", "basic"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client, __dirname, message)) return;
-    let helpinfo = randomhelpinfo[Math.floor(Math.random() * randomhelpinfo.length)];
-    let prefix = client.dbCache.guilds[message.guild.id].prefix;
-    // let discatgui = await client.db.get("guilds", message.guild.id, "disabledCategory");
-    // let discatuse = await client.db.get("users", message.author.id, "disabledCategory");
-    // let randoin = await client.db.get("users", message.author.id, "randomhelpinfo");
-    // let dis = await client.db.get("users", message.author.id, "display");
-    let timesused = client.dbCache.bot[client.user.id].commands;
-    let stop = false;
-    /*allinone - (default) every command with category
-    pages - reduced number of categories to make pages (maybe in the future)
-    pagesone - one category per page
-    pagesexp - one category per page with info/explanation*/
-    let embed = new Discord.MessageEmbed();
-    embed.setColor(client.util.randomColorConfig(client));
-    if (!args[0] || !isNaN(Number(args[0])) || naming.codes.includes(args[0])) {
-        embed.setAuthor(client.config.settings.botname + ' commands', client.user.avatarURL());
-        allcom = 0;
-        naming.codes.forEach(catego => {
-            comcount = 0;
-            coms = [];
-            client.commands.forEach(command => {
-                if (catego == command.category) {
-                    coms.push(command.info.lang[client.wordsCom.lang].main);
-                }
-                comcount++;
-            });
-            embed.addField(`${naming.category[catego]} [${comcount}]`, `\`${coms.join(", ")}\``);
-            allcom += comcount;
-        });
-        embed.setDescription(`Commands List: [${allcom}]` + ` | Prefix: \`${prefix}\` | Bot version: \`v${vers}\``);
-        //if (randoin) {
-            embed.addField('\u200b', '\u200b');
-            embed.addField(`Random info`, `${helpinfo.replace(/#PREFIX#/g,prefix).replace(/#BOT_USED#/g,timesused)}`);
-        //}
-
-
+    if (!args[0]) {
+        helpMenuFull(client, message);
     } else {
+        helpInfo(client, message, args)
+    }
+}
 
+function helpMenuFull(client, message) {
+    let embed = new Discord.MessageEmbed();
+    embed.setColor(client.util.randomColor());
+    embed.setAuthor(`${client.user.username} commands`, client.user.avatarURL());
+    let categoryMap = new Map();
+    let totalCommands = 0;
+    client.commands.each(command => {
+        if (command.category === "owner" && message.author.id !== client.config.settings.ownerId && !client.config.settings.subOwnersIds.includes(message.author.id)) return;
+        totalCommands++;
+        if (categoryMap.has(command.category)) {
+            let tempCom = categoryMap.get(command.category);
+            categoryMap.set(command.category, `${tempCom}, \`${client.langCom[command.info.name]?.default ?? command.info.name}\``);
+        } else {
+            categoryMap.set(command.category, `\`${command.info.name}\``);
+        }
+    });
+    for (const element of Order) if (categoryMap.has(element)) {
+        embed.addField(`[${categoryMap.get(element).split("`, `").length}] ${client.lang[element]} (${element})`, categoryMap.get(element))
     }
-    client.util.setFooterOwner(client, embed);
-    embed.setTimestamp();
-    if (!stop) {
-        message.channel.send(embed);
+
+    embed.setDescription(`Shown command amount: \`${totalCommands}\` | Prefix: \`${client.dbData.guilds.prefix}\` | Bot version: \`v${require("../../../package.json").version}\``);
+    embed.addField('\u200b', '\u200b');
+
+    const HelpInfos = require(`../../../web/public/lang/${client.dbData.guilds.language.force ? client.dbData.guilds.language.main : client.dbData.users.language.main}/helpInfo.json`);
+    if (HelpInfos.length > 0) {
+        let randomHelpInfo = HelpInfos[Math.floor(Math.random() * HelpInfos.length)];
+        embed.addField(`Random info`, `${randomHelpInfo
+            .replaceAll(/#PREFIX#/g, client.dbData.guilds.prefix)
+            .replaceAll(/#BOT_USED#/g, client.dbData.bot.commands)
+            .replaceAll(/#OWNERS#/g, client.util.ownerString(client))
+            .replaceAll(/#TRANSLATON_CREATORS#/g,
+                (() => {
+                    let translationCreatorsList = "";
+                    client.lang.translationCreators.forEach(user => {
+                        translationCreatorsList += (translationCreatorsList === "" ? client.users.cache.get(user).tag : `, ${client.users.cache.get(user).tag}`);
+                    })
+                    return translationCreatorsList;
+                })()
+            )}`);
     }
+    client.util.footerEmbed(client, embed);
+    message.channel.send({embeds: [embed]})
+}
+
+function helpInfo(client, message, args) {
+    const commandFile = client.commands.get(client.commandMap.get(`${args[0]}|${client.dbData.guilds.language.force ? client.dbData.guilds.language.commands : client.dbData.users.language.commands}`)) ?? client.commands.get(args[0]);
+    if (!commandFile) return;
+    const DefCommandInfo = require(`../../../web/public/lang/en/commandInfo.json`)[commandFile.info.name];
+    const SetCommandInfo = require(`../../../web/public/lang/${client.dbData.guilds.language.force ? client.dbData.guilds.language.main : client.dbData.users.language.main}/commandInfo.json`)[commandFile.info.name];
+    const commandInfo = {...DefCommandInfo, ...SetCommandInfo};
+    let embed = new Discord.MessageEmbed();
+    embed.setColor(client.util.randomColor());
+    embed.setAuthor(`${client.user.username} [${commandFile.info.name}] command`, client.user.avatarURL());
+    embed.addField("Category", commandFile.category, true);
+    embed.addField("Blocked status", `Server: \`unlocked\`\nUser: \`unlocked\``, true);
+    embed.addField("Used by you", `\`${client.dbData.users.favouriteCommands[commandFile.info.name] ?? 0}\` times`, true);
+    embed.addField("Examples", commandInfo?.example?.replaceAll(/#PREFIX#/g, client.dbData.guilds.prefix).replaceAll(/#COMMAND#/g, commandFile.info.name) ?? `${client.dbData.guilds.prefix}${commandFile.info.name}`);
+    const aliases = (client.langCom[commandFile.info.name]?.default != null ? client.langCom[commandFile.info.name].default : commandFile.info.name) + (client.langCom[commandFile.info.name]?.aliases?.length > 0 ? `, ${client.langCom[commandFile.info.name].aliases.join(", ")}` : "")
+    embed.addField("Aliases", aliases);
+    embed.addField("Info", commandInfo.explanation ?? "Test and see.");
+    embed.addField("User permissions", `${commandInfo?.userPerms ? commandInfo.userPerms + ", " : ""} SEND_MESSAGES`, true);
+    embed.addField("Bot permissions", `${commandInfo?.botPerms ? commandInfo.botPerms + ", " : ""} SEND_MESSAGES`, true);
+    if (!commandInfo?.example) {
+        embed.setDescription("Following data is not 100% verified. Report this to owners of this bot.")
+    }
+    client.util.footerEmbed(client, embed);
+    message.channel.send({embeds: [embed]})
 }

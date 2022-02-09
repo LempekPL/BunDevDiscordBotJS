@@ -1,0 +1,26 @@
+{
+  "guilds": {
+    "version": "0.1",
+    "prefix": "b,",
+    "slowmode": 5,
+    "language": {
+      "main": "en",
+      "commands": "en",
+      "force": false
+    }
+  },
+  "users": {
+    "version": "0.2",
+    "language": {
+      "main": "en",
+      "commands": "en"
+    },
+    "favouriteCommands": {},
+    "achievements": []
+  },
+  "bot": {
+    "version": "1",
+    "globalBans": [],
+    "commands": 0
+  }
+}

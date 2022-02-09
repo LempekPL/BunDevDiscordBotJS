@@ -1,115 +1,108 @@
-let Discord = require("discord.js");
+const Discord = require("discord.js");
 
 module.exports.info = {
     name: "userinfo",
-    lang: {
-        en: {
-            main: "userinfo",
-            aliases: ["ui", "user", "uinfo"]
-        },
-        pl: {
-            main: "użytinfo",
-            aliases: ["użytkownikinfo","informacjaoużytkowniku"]
-        }
-    },
     tags: ["user", "info", "userinfo", "basic"]
 }
 
 module.exports.run = async (client, message, args) => {
-    if (await client.util.blockCheck(client, __dirname, message)) return;
-    let gra = `The user isn't playing anything.`;
-    client.util.searchUser(message, args[0]).then(async member => {
-        let memberb = await message.guild.member(member);
-        let pseudo = member.nickname;
-        try {
-            gra = member.presence.game.name;
-        } catch (err) {}
-
-        if (pseudo == null) {
-            pseudo = member.username;
-        }
-
-        let ucreated = client.util.dateFull(Date.now() - new Date(member.createdAt));
-        let ujoined = client.util.dateFull(Date.now() - new Date(memberb.joinedAt));
-        let dformat = client.util.dateFormat(member.createdAt);
-        let dformat2 = client.util.dateFormat(memberb.joinedAt);
-
-        let emo;
-        let emoja = member.presence.status;
-        if (emoja == "online") {
-            emo = "<:onlinediscord:620240031553945634>";
-        } else if (emoja == "idle") {
-            emo = "<:idlediscord:620240031486967827>";
-        } else if (emoja == "dnd") {
-            emo = "<:dnddiscord:620240031067406357>";
-        } else {
-            emo = "<:invisiblediscord:620240031461802004>";
-        }
-
-        let relation = "";
-        if (client.guilds.cache.get(client.config.settings.supportServer).member(member)) {
-            relation = "Known user";
-            if (client.guilds.cache.get(client.config.settings.supportServer).members.cache.get(member.id).roles.cache.has(client.config.settings.betaroleid)) {
-                relation = "Beta Tester";
-            }
-            no = 0;
-            client.config.settings.subowners.forEach(sub => {
-                if (member.id == sub) {
-                    relation = "Co-owner";
-                }
-            });
-            if (client.config.settings.subowners.length > 0 && member.id == client.config.settings.ownerid) {
-                relation = "Co-owner";
-            } else if (member.id == client.config.settings.ownerid) {
-                relation = "Owner";
-            }
-        } else {
-            relation = "None";
-        }
-
-        let fav = await client.db.get("users", member.id, "favCommands");
-        let com = "";
-        let coun = 0;
-        let total = 0;
-        for (let comm in fav) {
-            if (fav[comm] > coun) {
-                com = comm;
-                coun = fav[comm];
-            }
-            total += fav[comm];
-        }
-        if (!fav || Object.keys(fav).length == 0) {
-            com = 'none';
-        }
-
-        let embed = new Discord.MessageEmbed;
-        embed.setColor(client.util.randomColorConfig(client));
-        embed.setAuthor(member.tag, member.avatarURL);
-        embed.addField("Username:", member.username, true);
-        embed.addField("Tag:", "#" + member.discriminator, true);
-        embed.addField(`Nickname:`, pseudo, true);
-        embed.addField(`Game:`, "`" + gra + "`", true);
-        embed.addField("ID:", member.id, true);
-        embed.addField("Status:", emo + " " + member.presence.status, true);
-        embed.addField("Relation:", relation, true);
-        embed.addField("Commands sent:", total, true);
-        embed.addField("Favourite command:", com, true);
-        embed.addField(`Created at`, dformat + `\n(Created: \`${ucreated.years} ${ucreated.ty}\` \`${ucreated.days} ${ucreated.td}\` \`${ucreated.hours} ${ucreated.th}\` \`${ucreated.mins} ${ucreated.tm}\` \`${ucreated.secs} ${ucreated.ts}\` ago)`);
-        embed.addField(`Joined at`, dformat2 + `\n(Joined: \`${ujoined.years} ${ujoined.ty}\` \`${ujoined.days} ${ujoined.td}\` \`${ujoined.hours} ${ujoined.th}\` \`${ujoined.mins} ${ujoined.tm}\` \`${ujoined.secs} ${ujoined.ts}\` ago)`);
-        embed.setThumbnail(member.avatarURL);
-        if (client.config.settings.subowners.length==0) {
-            embed.setFooter("© "+client.users.cache.get(client.config.settings.ownerid).username, client.users.cache.get(client.config.settings.ownerid).avatarURL());
-        } else {
-            let owners = client.users.cache.get(client.config.settings.ownerid).username
-            client.config.settings.subowners.forEach(sub => {
-                owners+=` & ${client.users.cache.get(sub).username}`;
-            });
-            embed.setFooter("© "+owners, client.user.avatarURL());
-        }
-        embed.setTimestamp();
-        message.channel.send(embed);
-    }).catch((err) => {
-        client.emit("uisae", "B04", message, "");
-        console.log(err);
+    let user = await client.util.searchUser(client, message, args[0], {
+        returnAuthor: true,
+        ignoreBots: false,
+        allowChoose: true
     });
+    if (!user) return;
+    let member = await message.guild.members.cache.get(user.id);
+    if (member.deleted) return;
+
+    const CreatedAt = (user.createdTimestamp / 1000).toFixed(0);
+    const JoinedAt = (member.joinedTimestamp / 1000).toFixed(0);
+    const RelationWithBot = getRelation(client, user);
+    const Status = getStatus(client, member);
+    let Available = "nowhere";
+    if (member.presence && member.presence?.status !== "offline") {
+        Available = Object.keys(member.presence?.clientStatus).join(", ").replace("web", client.lang.web).replace("desktop", client.lang.desktop).replace("mobile", client.lang.mobile)
+    }
+    let userData;
+    if (!user.bot) {
+        userData = await client.dbConn.get("users", user.id);
+    }
+    const [FavouriteCommand, CommandsSent] = getCommandDatas(client, userData?.favouriteCommands);
+
+    let embed = new Discord.MessageEmbed();
+    embed.setColor(client.util.randomColor());
+    embed.setTitle(user.tag);
+    embed.addField("Username", user.username, true);
+    embed.addField("Tag", "#" + user.discriminator, true);
+    if (member.nickname) {
+        embed.addField(`Nickname`, member.nickname, true);
+    } else {
+        embed.addField("\u200b", "\u200b", true);
+    }
+    embed.addField("User Id", `${member.id}`, true);
+    embed.addField("Is a bot?", `${user.bot ? client.lang.yes : client.lang.no}`, true);
+    embed.addField("Relation", RelationWithBot, true);
+    if (FavouriteCommand) {
+        embed.addField("Favourite command", FavouriteCommand, true);
+        embed.addField("Commands sent", `${CommandsSent}`, true);
+        embed.addField("\u200b", "\u200b", true);
+    }
+    embed.addField("Status", Status, true)
+    embed.addField("Available in", Available, true);
+    if (member.presence?.status) {
+        let activities = "";
+        member.presence?.activities?.forEach(activity => {
+            const TimestampFixed = (activity.createdTimestamp / 1000).toFixed(0);
+            const ActivityName = activity.type === "CUSTOM" ? activity.state : activity.name;
+            activities += activities === "" ? `${client.lang[activity.type]} **${ActivityName}** ${client.lang.since} <t:${TimestampFixed}:d><t:${TimestampFixed}:T>` : `\n${client.lang[activity.type]} **${ActivityName}** ${client.lang.since} <t:${TimestampFixed}:d><t:${TimestampFixed}:T>`
+        });
+        if (activities) {
+            embed.addField("Activities", activities);
+        }
+    }
+    embed.addField(`Joined at`, `<t:${JoinedAt}> (<t:${JoinedAt}:R>)`);
+    embed.addField(`Created at`, `<t:${CreatedAt}> (<t:${CreatedAt}:R>)`);
+    embed.setThumbnail(user.avatarURL());
+    client.util.footerEmbed(client, embed);
+    let messageData = message.channel.send({embeds: [embed]});
+    await client.util.logger("command", process.env.WEBHOOK_IMAGE_COMMANDS, {
+        client,
+        user,
+        message,
+        messageData,
+        title: `${user.tag} used \`${module.exports.info.name}\` command`,
+        description: `\`${user.avatarURL()}\``,
+        thumbnail: user.avatarURL()
+    });
+}
+
+function getRelation(client, user) {
+    let mainServer = client.guilds.cache.get(client.config.settings.supportServerId);
+    if (user.id === client.config.settings.ownerId) return client.lang.owner;
+    if (client.config.settings.subOwnersIds.includes(user.id)) return client.lang.coowner;
+    if (mainServer.members.cache.get(user.id)?.roles.cache.has(client.config.settings.betaRoleId)) return client.lang.betaTester;
+    if (mainServer.members.cache.get(user.id)?.roles.cache.has(client.config.settings.translatorRoleId)) return client.lang.translator;
+    if (mainServer.members.cache.get(user.id)) return client.lang.knownUser;
+    return client.lang.none;
+}
+
+function getStatus(client, member) {
+    if (member.presence?.status === "online") return `<:onlineStatus:876900150025531442> ${client.lang.online}`;
+    if (member.presence?.status === "idle") return `<:idleStatus:876900149593505813> ${client.lang.idle}`;
+    if (member.presence?.status === "dnd") return `<:dndStatus:876900149656420383> ${client.lang.dnd}`;
+    return `<:invisibleStatus:876900150117802014> ${client.lang.invisible}`;
+}
+
+function getCommandDatas(client, favCommands) {
+    let max = -Infinity;
+    let favCom;
+    let total = 0;
+    for (const Command in favCommands) {
+        if (favCommands[Command] > max) {
+            max = favCommands[Command];
+            favCom = Command;
+        }
+        total += favCommands[Command];
+    }
+    return total === 0 ? [false, false] : [`[${max}] ${favCom}`, total];
 }
