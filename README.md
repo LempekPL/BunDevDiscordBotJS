@@ -1,3 +1,4 @@
+# PROJECT DISCONTINUED
 # BunDev the multipurpose discord bot
 ## bot still doesn't work
 Use .env.example as an example of values you need to put in for .env
